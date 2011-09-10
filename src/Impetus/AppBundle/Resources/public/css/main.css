@@ -20,19 +20,16 @@ html {
     background-color: #fff;
     border: 1px solid #dfdfdf;
     border-radius: 10px 10px 10px 10px;
+    display: block;
     padding: 0;
 }
 
-#test:after {
+#main:after {
     clear: both;
     content: " ";
     display: block;
     height: 0;
     visibility: hidden;
-}
-
-#test {
-    display: block;
 }
 
 #content-wrapper {
