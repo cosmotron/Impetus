@@ -1,0 +1,7 @@
+parameters:
+#    impetus_app.example.class: Impetus\AppBundle\Example
+
+services:
+#    impetus_app.example:
+#        class: %impetus_app.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

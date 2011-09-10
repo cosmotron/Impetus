@@ -1,0 +1,8 @@
+ImpetusAppBundle_index:
+    pattern: /
+    defaults: { _controller: ImpetusAppBundle:Default:index }
+
+
+#ImpetusAppBundle_homepage:
+#    pattern:  /hello/{name}
+#    defaults: { _controller: ImpetusAppBundle:Default:index }

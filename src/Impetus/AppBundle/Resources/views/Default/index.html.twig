@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>IMPETUS - {% block title %}Home{% endblock %}</title>
+        {% stylesheets '@ImpetusAppBundle/Resources/public/css/main.css' %}
+            <link type="text/css" href="{{ asset_url }}" rel="stylesheet" />
+        {% endstylesheets %}
+        {% javascripts '@ImpetusAppBundle/Resources/public/js/jquery-1.6.3.min.js' %}
+            <script type="text/javascript" href="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="header">
+                <span id="title">IMPETUS Tutoring and Mentoring</span>
+            </div>
+            <div id="main">
+                <div id="test">
+                    <div id="content-wrapper">
+                        <div id="content">
+                            <h1>Header</h1>
+                            <p>content</p>
+                            <p>content</p>
+                            <p>content</p>
+                            <p>content</p>
+                            <p>content</p>
+                            <p>content</p>
+                        </div>
+                    </div>
+                    <div id="navigation">
+                        <ul id="menu-links">
+                            <li>Home</li>
+                            <li>Quiz</li>
+                            <li>Survey</li>
+                            <li>Attendance</li>
+                            <li>Schedule</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
