@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>IMPETUS - Login</title>
+        {% stylesheets '@ImpetusAppBundle/Resources/public/css/login.css' %}
+            <link type="text/css" href="{{ asset_url }}" rel="stylesheet" />
+        {% endstylesheets %}
+    </head>
+    <body>
+        <div id="content">
+            <h1>IMPETUS Login</h1>
+            <form action="{{ path('_login_check') }}"  id="login-form" method="post" {{ form_enctype(form) }}>
+                <div>
+                    {{ form_label(form.username, 'Username:') }}
+                    <br />
+                    {{ form_widget(form.username, { 'attr': {'name': '_username'} }) }}
+                    {{ form_errors(form.username) }}
+                </div>
+                <div>
+                    {{ form_label(form.password, 'Password:') }}
+                    <br />
+                    {{ form_widget(form.password, { 'attr': {'name': '_password'} }) }}
+                    {{ form_errors(form.password) }}
+                </div>
+
+                {{ form_rest(form) }}
+
+                <input type="submit" value="Login" />
+            </form>
+        </div>
+    </body>
+</html>

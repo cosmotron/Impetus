@@ -3,13 +3,22 @@ html {
     font-family: Helvetica, Arial, sans-serif;
 }
 
+a {
+    color: #000;
+}
+
+h1 {
+    margin: 0;
+    padding: 0;
+}
+
 #wrapper {
     margin: 0 auto;
     padding: 0 50px;
 }
 
 #header {
-    padding: 30px 30px 20px;
+    padding: 20px 30px;
 }
 
 #title {
@@ -19,17 +28,10 @@ html {
 #main {
     background-color: #fff;
     border: 1px solid #dfdfdf;
-    border-radius: 10px 10px 10px 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px -1px rgba(200, 200, 200, 0.7);
     display: block;
     padding: 0;
-}
-
-#main:after {
-    clear: both;
-    content: " ";
-    display: block;
-    height: 0;
-    visibility: hidden;
 }
 
 #content-wrapper {
@@ -38,12 +40,53 @@ html {
 }
 
 #content {
+    border-left: 1px solid #dfdfdf;
     margin-left: 200px;
-    padding: 40px, 50px;
+    min-height: 400px;
+    padding: 40px 50px;
+}
+
+#content h1 {
+    font-size: 20px;
 }
 
 #navigation {
     float: left;
     margin-left: -100%;
     width: 200px;
+}
+
+#menu-links {
+    margin: 0;
+    padding: 0;
+}
+
+#menu-links li {
+    background-color: #efefef;
+    border-bottom: 1px solid #dfdfdf;
+    display: block;
+    list-style: none outside none;
+}
+
+#menu-links li a {
+    cursor: pointer;
+    display: block;
+    padding: 20px 40px;
+    text-decoration: none;
+}
+
+#menu-links li a:hover {
+    background-color: #e7e7e7;
+}
+
+#menu-links li:first-child, #menu-links li:first-child a {
+    border-radius: 10px 0 0 0;
+}
+
+.selected {
+    background-color: #d7d7d7 !important;
+}
+
+.clear-fix {
+    clear: both;
 }

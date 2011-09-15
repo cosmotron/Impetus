@@ -1,38 +1,32 @@
 security:
     encoders:
-        Symfony\Component\Security\Core\User\User: plaintext
-
-    role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        Impetus\AppBundle\Entity\User:
+            algorithm: sha256
+            encode-as-base64: true
+            iterations: 10
 
     providers:
-        in_memory:
-            users:
-                user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-                admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+        main:
+            entity: { class: Impetus\AppBundle\Entity\User, property: username }
 
     firewalls:
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        login:
-            pattern:  ^/demo/secured/login$
-            security: false
+        main:
+            pattern: ^/
+            form_login: ~
+            logout: ~
+            security: true
+            anonymous: true
 
-        secured_area:
-            pattern:    ^/demo/secured/
-            form_login:
-                check_path: /demo/secured/login_check
-                login_path: /demo/secured/login
-            logout:
-                path:   /demo/secured/logout
-                target: /demo/
-            #anonymous: ~
-            #http_basic:
-            #    realm: "Secured Demo Area"
+    role_hierarchy:
+        ROLE_TA: ROLE_STUDENT
+        ROLE_MENTOR: ROLE_STUDENT
+        ROLE_TEACHER: [ROLE_TA, ROLE_MENTOR]
+        ROLE_ADMIN: [ROLE_TA, ROLE_MENTOR, ROLE_TEACHER]
 
     access_control:
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
-        #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }
+        - { path: ^/attendance, roles: ROLE_STUDENT }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

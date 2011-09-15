@@ -1,6 +1,52 @@
-ImpetusAppBundle_index:
+_home:
     pattern: /
-    defaults: { _controller: ImpetusAppBundle:Default:index }
+    defaults: { _controller: ImpetusAppBundle:Home:get }
+
+_quiz:
+    pattern: /quiz
+    defaults: { _controller: ImpetusAppBundle:Quiz:get }
+
+_survey:
+    pattern: /survey
+    defaults: { _controller: ImpetusAppBundle:Survey:get }
+
+_attendance:
+    pattern: /attendance
+    defaults: { _controller: ImpetusAppBundle:Attendance:get }
+
+_schedule:
+    pattern: /schedule
+    defaults: { _controller: ImpetusAppBundle:Schedule:get }
+
+_register:
+    pattern: /register
+    defaults: { _controller: ImpetusAppBundle:Register:get }
+    requirements:
+        _method: GET
+
+_register_process:
+    pattern: /register
+    defaults: { _controller: ImpetusAppBundle:Register:post }
+    requirements:
+        _method: POST
+
+_login:
+    pattern: /login
+    defaults: { _controller: ImpetusAppBundle:Login:get }
+    requirements:
+        _method: GET
+
+_login_process:
+    pattern: /login
+    defaults: { _controller: ImpetusAppBundle:Login:post }
+    requirements:
+        _method: POST
+
+_login_check:
+    pattern: /login_check
+
+_logout:
+    pattern: /logout
 
 
 #ImpetusAppBundle_homepage:
