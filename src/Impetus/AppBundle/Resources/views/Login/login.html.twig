@@ -10,21 +10,21 @@
     <body>
         <div id="content">
             <h1>IMPETUS Login</h1>
-            <form action="{{ path('_login_check') }}"  id="login-form" method="post" {{ form_enctype(form) }}>
-                <div>
-                    {{ form_label(form.username, 'Username:') }}
-                    <br />
-                    {{ form_widget(form.username, { 'attr': {'name': '_username'} }) }}
-                    {{ form_errors(form.username) }}
-                </div>
-                <div>
-                    {{ form_label(form.password, 'Password:') }}
-                    <br />
-                    {{ form_widget(form.password, { 'attr': {'name': '_password'} }) }}
-                    {{ form_errors(form.password) }}
-                </div>
+            {% if error %}
+                <div id="error">{{ error.message }}</div>
+            {% endif %}
 
-                {{ form_rest(form) }}
+            <form action="{{ path('_login_check') }}"  id="login-form" method="post">
+                <div>
+                    <label for="username">Username:</label>
+                    <br />
+                    <input id="username" name="_username" type="text" value="{{ last_username }}" />
+                </div>
+                <div>
+                    <label for="password">Password:</label>
+                    <br />
+                    <input id="password" name="_password" type="password" />
+                </div>
 
                 <input type="submit" value="Login" />
             </form>

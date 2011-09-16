@@ -3,37 +3,23 @@
 namespace Impetus\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Impetus\AppBundle\Form\LoginForm;
+use Symfony\Component\Security\Core\SecurityContext;
 
 
-class LoginController extends Controller
-{
-    public function getAction()
-    {
-        $form = $this->createLoginForm();
+class LoginController extends Controller {
+    public function loginAction() {
+        $request = $this->getRequest();
+        $session = $request->getSession();
+
+        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
+            $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
+        } else {
+            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+        }
 
         return $this->render('ImpetusAppBundle:Login:login.html.twig',
-                             array('form' => $form->createView()));
-    }
-
-    public function postAction(Request $request)
-    {
-        $form = $this->createLoginForm();
-        $form->bindRequest($request);
-
-        if ($form->isValid()) {
-            return $this->redirect($this->generateUrl('_attendance'));
-        }
-    }
-
-    private function createLoginForm() {
-        $loginForm = new LoginForm();
-
-        return $this->createFormBuilder($loginForm)
-            ->add('username', 'text')
-            ->add('password', 'password')
-            ->getForm();
+                             array('last_username' => $session->get(SecurityContext::LAST_USERNAME),
+                                   'error'         => $error,)
+                             );
     }
 }

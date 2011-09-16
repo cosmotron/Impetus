@@ -25,6 +25,11 @@ h1 {
     font-size: 24px;
 }
 
+#user-info {
+    float: right;
+    padding-top: 3px;
+}
+
 #main {
     background-color: #fff;
     border: 1px solid #dfdfdf;
@@ -47,6 +52,10 @@ h1 {
 }
 
 #content h1 {
+    font-size: 24px;
+}
+
+#content h2 {
     font-size: 20px;
 }
 

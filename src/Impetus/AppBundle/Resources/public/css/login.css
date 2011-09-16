@@ -35,3 +35,10 @@ form div input {
     margin: 100px auto;
     width: 300px;
 }
+
+#error {
+    background-color: #F9CCCA;
+    border: 1px solid #990000;
+    margin-bottom: 20px;
+    padding: 5px 20px;
+}

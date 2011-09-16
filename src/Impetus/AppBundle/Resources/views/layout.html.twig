@@ -3,17 +3,26 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>IMPETUS - {% block title %}{% endblock %}</title>
-        {% stylesheets '@ImpetusAppBundle/Resources/public/css/main.css' %}
+        {% stylesheets '@ImpetusAppBundle/Resources/public/css/main.css'
+                       '@ImpetusAppBundle/Resources/public/css/quiz.css' %}
             <link type="text/css" href="{{ asset_url }}" rel="stylesheet" />
         {% endstylesheets %}
         {% javascripts '@ImpetusAppBundle/Resources/public/js/jquery-1.6.3.min.js' %}
             <script type="text/javascript" href="{{ asset_url }}"></script>
         {% endjavascripts %}
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
     </head>
     <body>
         <div id="wrapper">
             <div id="header">
                 <span id="title">IMPETUS Tutoring and Mentoring</span>
+                <div id="user-info">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        Welcome {{ app.user.username }} - <a href="{{ path('_logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ path('_login') }}">Login</a>
+                    {% endif %}
+                </div>
             </div>
             <div id="main">
                 <div id="content-wrapper">

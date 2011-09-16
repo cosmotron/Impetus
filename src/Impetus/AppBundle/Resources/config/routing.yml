@@ -32,15 +32,7 @@ _register_process:
 
 _login:
     pattern: /login
-    defaults: { _controller: ImpetusAppBundle:Login:get }
-    requirements:
-        _method: GET
-
-_login_process:
-    pattern: /login
-    defaults: { _controller: ImpetusAppBundle:Login:post }
-    requirements:
-        _method: POST
+    defaults: { _controller: ImpetusAppBundle:Login:login }
 
 _login_check:
     pattern: /login_check

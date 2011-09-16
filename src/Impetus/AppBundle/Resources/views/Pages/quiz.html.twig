@@ -2,8 +2,68 @@
 
 {% block title "Quiz" %}
 
+{% block extrascripts %}
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true
+        }
+        "HTML-CSS": { scale: 100 }
+    });
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+{% endblock %}
+
 {% block content %}
-    <h1>Quiz {{ page }}</h1>
-    <p>quiz page content 1</p>
-    <p>quiz page content 2</p>
+<form action="#" method="POST">
+    <h1>Quiz 1 - Linear Equations</h1>
+    <h2>Instructions</h2>
+    <div style="border: 1px solid #B3698E; margin: 10px 0 30px 0; padding: 20px;">
+        For each problem, solve for <span style="font-family: STIXGeneral; font-size: 20px; font-style: italic;">x</span>.
+    </div>
+
+    <h2>Problem 1</h2>
+    <div class="problem">
+        <div class="question">
+\[
+2x + 8 = 16
+\]
+
+        </div>
+        <div class="divider"></div>
+        <div class="answer">
+            x = <input type="text" size="5" style="font-size: 20px;" />
+        </div>
+
+        <br class="clear-fix" />
+    </div>
+
+    <h2>Problem 2</h2>
+    <div class="problem">
+        <div class="question">
+\[
+10 + 3x = 31
+\]
+
+        </div>
+        <div class="divider"></div>
+        <div class="answer">
+            x =
+            <br />
+            <input type="radio" name="answer-2" value="3" /> 3<br />
+            <input type="radio" name="answer-2" value="4" /> 4<br />
+            <input type="radio" name="answer-2" value="5" /> 5<br />
+            <input type="radio" name="answer-2" value="6" /> 6<br />
+            <input type="radio" name="answer-2" value="7" /> 7
+        </div>
+
+        <br class="clear-fix" />
+    </div>
+
+    <input type="submit" value="Submit for Grading" class="submit" />
+</form>
 {% endblock %}

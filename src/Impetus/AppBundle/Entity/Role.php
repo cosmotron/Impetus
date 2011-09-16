@@ -45,7 +45,7 @@ class Role implements RoleInterface {
     }
 
     public function getName() {
-        return $name;
+        return $this->name;
     }
 
     public function setCreatedAt($createdAt) {
@@ -53,7 +53,7 @@ class Role implements RoleInterface {
     }
 
     public function getCreatedAt() {
-        return $createdAt;
+        return $this->createdAt;
     }
 
     public function getRole() {
