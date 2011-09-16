@@ -1,6 +1,6 @@
 {% extends "ImpetusAppBundle::layout.html.twig" %}
 
-{% block title "Quiz" %}
+{% block title "Quiz "~id %}
 
 {% block extrascripts %}
 <script type="text/x-mathjax-config">
@@ -20,9 +20,9 @@
 
 {% block content %}
 <form action="#" method="POST">
-    <h1>Quiz 1 - Linear Equations</h1>
+    <h1>Quiz {{ id }} - Linear Equations</h1>
     <h2>Instructions</h2>
-    <div style="border: 1px solid #B3698E; margin: 10px 0 30px 0; padding: 20px;">
+    <div id="instructions">
         For each problem, solve for <span style="font-family: STIXGeneral; font-size: 20px; font-style: italic;">x</span>.
     </div>
 

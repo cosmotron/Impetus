@@ -1,0 +1,13 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Quiz List" %}
+
+{% block content %}
+<h1>Quiz List</h1>
+
+<ol>
+    <li><a href="{{ path('_quiz_show', { 'id': 1 }) }}">Linear Equations</a></li>
+</ol>
+<br />
+<a href="{{ path('_quiz_new') }}">Create a New Quiz</a>
+{% endblock %}

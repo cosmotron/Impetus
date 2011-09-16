@@ -9,7 +9,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 class QuizController extends Controller {
-    public function getAction() {
-        return $this->render('ImpetusAppBundle:Pages:quiz.html.twig', array('page' => 'quiz'));
+    public function listAction() {
+        return $this->render('ImpetusAppBundle:Pages:quiz_list.html.twig', array('page' => 'quiz'));
+    }
+
+    public function showAction($id) {
+        return $this->render('ImpetusAppBundle:Pages:quiz.html.twig', array('page' => 'quiz',
+                                                                            'id' => $id));
+    }
+
+    public function newAction() {
+        return $this->render('ImpetusAppBundle:Pages:quiz_new.html.twig', array('page' => 'quiz'));
     }
 }
