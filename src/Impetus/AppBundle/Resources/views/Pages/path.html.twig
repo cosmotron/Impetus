@@ -1,0 +1,16 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Path" %}
+
+{% block extrascripts %}
+    <script type="text/javascript">
+      $(function() {
+          PathMap.init('../../bundles/impetusapp/images/');
+      });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h1>Path</h1>
+    <div id="map-canvas"></div>
+{% endblock %}

@@ -3,14 +3,20 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>IMPETUS - {% block title %}{% endblock %}</title>
-        {% stylesheets '@ImpetusAppBundle/Resources/public/css/main.css'
-                       '@ImpetusAppBundle/Resources/public/css/quiz.css' %}
+        {% stylesheets filter='cssrewrite'
+                       'bundles/impetusapp/css/main.css'
+                       'bundles/impetusapp/css/quiz.css' %}
             <link type="text/css" href="{{ asset_url }}" rel="stylesheet" />
         {% endstylesheets %}
-        {% javascripts '@ImpetusAppBundle/Resources/public/js/jquery-1.6.3.min.js' %}
-            <script type="text/javascript" href="{{ asset_url }}"></script>
+        {% if page == 'path' %}
+            <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        {% endif %}
+        {% javascripts 'bundles/impetusapp/js/jquery-1.6.3.min.js'
+                       'bundles/impetusapp/js/pathmap.js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+        {% block extrascripts %}
+        {% endblock %}
     </head>
     <body>
         <div id="wrapper">
@@ -35,6 +41,9 @@
                     <ul id="menu-links">
                         <li class="{% if page == 'home' %}selected{% endif %}">
                             <a href="{{ path('_home') }}">Home</a>
+                        </li>
+                        <li class="{% if page == 'path' %}selected{% endif %}">
+                            <a href="{{ path('_path') }}">Path</a>
                         </li>
                         <li class="{% if page == 'quiz' %}selected{% endif %}">
                             <a href="{{ path('_quiz') }}">Quiz</a>

@@ -2,31 +2,23 @@ _home:
     pattern: /
     defaults: { _controller: ImpetusAppBundle:Home:get }
 
-_quiz:
-    pattern: /quiz
-    defaults: { _controller: ImpetusAppBundle:Quiz:list }
-
-_quiz_show:
-    pattern: /quiz/{id}
-    defaults: { _controller: ImpetusAppBundle:Quiz:show }
-    requirements:
-        id: \d+
-
-_quiz_new:
-    pattern: /quiz/new
-    defaults: { _controller: ImpetusAppBundle:Quiz:new }
-
-_survey:
-    pattern: /survey
-    defaults: { _controller: ImpetusAppBundle:Survey:get }
-
 _attendance:
     pattern: /attendance
     defaults: { _controller: ImpetusAppBundle:Attendance:get }
 
-_schedule:
-    pattern: /schedule
-    defaults: { _controller: ImpetusAppBundle:Schedule:get }
+_login:
+    pattern: /login
+    defaults: { _controller: ImpetusAppBundle:Login:login }
+
+_login_check:
+    pattern: /login_check
+
+_logout:
+    pattern: /logout
+
+_path:
+    pattern: /path
+    defaults: { _controller: ImpetusAppBundle:Path:get }
 
 _register:
     pattern: /register
@@ -40,17 +32,24 @@ _register_process:
     requirements:
         _method: POST
 
-_login:
-    pattern: /login
-    defaults: { _controller: ImpetusAppBundle:Login:login }
+_schedule:
+    pattern: /schedule
+    defaults: { _controller: ImpetusAppBundle:Schedule:get }
 
-_login_check:
-    pattern: /login_check
+_survey:
+    pattern: /survey
+    defaults: { _controller: ImpetusAppBundle:Survey:get }
 
-_logout:
-    pattern: /logout
+_quiz:
+    pattern: /quiz
+    defaults: { _controller: ImpetusAppBundle:Quiz:list }
 
+_quiz_show:
+    pattern: /quiz/{id}
+    defaults: { _controller: ImpetusAppBundle:Quiz:show }
+    requirements:
+        id: \d+
 
-#ImpetusAppBundle_homepage:
-#    pattern:  /hello/{name}
-#    defaults: { _controller: ImpetusAppBundle:Default:index }
+_quiz_new:
+    pattern: /quiz/new
+    defaults: { _controller: ImpetusAppBundle:Quiz:new }

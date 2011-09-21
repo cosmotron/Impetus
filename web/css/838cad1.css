@@ -1,0 +1,44 @@
+html {
+    background-color: #efefef;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+input {
+    font-size: 14px;
+}
+
+h1 {
+    text-align: center;
+}
+
+a {
+    color: #000;
+}
+
+form {
+    background-color: #fff;
+    border: 1px solid #dfdfdf;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px -1px rgba(200, 200, 200, 0.7);
+    padding: 20px;
+}
+
+form div {
+    margin-bottom: 20px;
+}
+
+form div input {
+    width: 98%;
+}
+
+#content {
+    margin: 100px auto;
+    width: 300px;
+}
+
+#error {
+    background-color: #F9CCCA;
+    border: 1px solid #990000;
+    margin-bottom: 20px;
+    padding: 5px 20px;
+}
