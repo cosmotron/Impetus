@@ -8,13 +8,20 @@
                        'bundles/impetusapp/css/quiz.css' %}
             <link type="text/css" href="{{ asset_url }}" rel="stylesheet" />
         {% endstylesheets %}
+
+            <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script type="text/javascript" src="{{ path('fos_js_routing_js', { "callback": "fos.Router.setData" }) }}"></script>
+
         {% if page == 'path' %}
             <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+            <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/FastMarkerOverlay.js') }}"></script>
         {% endif %}
+
         {% javascripts 'bundles/impetusapp/js/jquery-1.6.3.min.js'
                        'bundles/impetusapp/js/pathmap.js' %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
+
         {% block extrascripts %}
         {% endblock %}
     </head>

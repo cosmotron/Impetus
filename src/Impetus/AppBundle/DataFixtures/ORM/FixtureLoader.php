@@ -3,6 +3,7 @@
 namespace Impetus\AppBundle\DataFIxtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Impetus\AppBundle\Entity\PathNode;
 use Impetus\AppBundle\Entity\Role;
 use Impetus\AppBundle\Entity\User;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
@@ -27,6 +28,22 @@ class FixtureLoader implements FixtureInterface {
         $user->setPassword($password);
 
         $manager->persist($user);
+
+        // Create two path map nodes, one of which is a prereq
+        $addition = new PathNode();
+        $addition->setName("Addition 1");
+        $addition->setHPos(0);
+        $addition->setVPos(0);
+
+        $manager->persist($addition);
+
+        $subtraction = new PathNode();
+        $subtraction->setName("Subtraction 1");
+        $subtraction->setHPos(0.5);
+        $subtraction->setVPos(-0.5);
+        $subtraction->addPathNode($addition);
+
+        $manager->persist($subtraction);
 
         // Write to database
         $manager->flush();

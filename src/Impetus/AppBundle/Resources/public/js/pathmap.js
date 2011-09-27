@@ -1,9 +1,11 @@
 var PathMap = {
     imageRoot: null,
     map: null,
-    overlay: null,
     markers: [],
+    nodes: [],
     nodeSpacing: {lat: 0.392, lng: 0.35},
+    overlay: null,
+
     mapTypeOptions: {
         getTileUrl: function(coord, zoom) {
             return PathMap.getHorizontallyRepeatingTileUrl(coord, zoom,
@@ -11,10 +13,10 @@ var PathMap = {
                            return PathMap.imageRoot + 'field_1.jpg';
                        });
         },
-        tileSize: new google.maps.Size(256, 256),
+        isPng: false,
         maxZoom: 10,
         minZoom: 7,
-        isPng: false
+        tileSize: new google.maps.Size(256, 256)
     },
 
     init: function(imageRoot) {
@@ -23,7 +25,7 @@ var PathMap = {
         this.map = new google.maps.Map(document.getElementById('map-canvas'), {
             mapTypeControl: false,
             streetViewControl: false,
-            scrollWheel: false,
+            scrollwheel: false,
         });
 
         var pathMapType = new google.maps.ImageMapType(this.mapTypeOptions);
@@ -33,74 +35,89 @@ var PathMap = {
         this.map.setCenter(new google.maps.LatLng(0, 0));
         this.map.setZoom(9);
 
+        this.getPathNodes();
 
-        this.drawMarkers();
-        this.drawPaths();
+        this.drawMap();
     },
 
-    drawMarkers: function() {
-        var additionMarker = new google.maps.Marker({
-            position: new google.maps.LatLng((0 * this.nodeSpacing.lat),
-                                             (0 * this.nodeSpacing.lng)),
-            map: this.map,
-            title: 'Addition 1'
-        });
+    getPathNodes: function() {
+        var ajaxResponse = [];
 
-        var multiplicationMarker = new google.maps.Marker({
-            position: new google.maps.LatLng((-0.5 * this.nodeSpacing.lat),
-                                             (0 * this.nodeSpacing.lng)),
-            map: this.map,
-            title: 'Multiplication 1'
-        });
+        $.ajax({
+            async: false,
+            dataType: 'json',
+            type: 'GET',
+            url: Routing.generate('_path_nodes'),
+            success: function(data) {
+                ajaxResponse = eval(data);
 
-        var subtractionMarker = new google.maps.Marker({
-            position: new google.maps.LatLng((-0.5 * this.nodeSpacing.lat),
-                                             (0.5 * this.nodeSpacing.lng)),
-            map: this.map,
-            title: 'Subtraction 1'
+                for (var i = 0; i < ajaxResponse.length; i++) {
+                    var node = {
+                        id: null,
+                        name: null,
+                        latLng: null,
+                        prereqs: []
+                    };
+
+                    node.id = ajaxResponse[i].id;
+                    node.name = ajaxResponse[i].name;
+                    node.latLng = new google.maps.LatLng(
+                        (ajaxResponse[i].v_pos * PathMap.nodeSpacing.lat),
+                        (ajaxResponse[i].h_pos * PathMap.nodeSpacing.lng)
+                    );
+                    node.prereqs = ajaxResponse[i].prereqs;
+
+                    PathMap.nodes.push(node);
+                }
+            },
+            error: function() {
+                alert("There was an HTTP error getting the path map markers. Try again.");
+                return;
+            }
         });
     },
 
-    drawPaths: function() {
-        var add = new google.maps.LatLng((0 * this.nodeSpacing.lat),
-                                         (0 * this.nodeSpacing.lng));
-        var mul = new google.maps.LatLng((-0.5 * this.nodeSpacing.lat),
-                                         (0 * this.nodeSpacing.lng));
-        var sub = new google.maps.LatLng((-0.5 * this.nodeSpacing.lat),
-                                         (0.5 * this.nodeSpacing.lng));
+    drawMap: function() {
+        for (var i = 0; i < this.nodes.length; i++) {
+            var node = this.nodes[i];
 
-        var addToSub = [add, sub];
-        var addToMul = [add, mul];
+            var marker = new com.redfin.FastMarker(
+                'marker-' + node.id,
+                node.latLng,
+                ['<div class="pathNode">' + node.name + '</div>'],
+                '',
+                1,
+                0,0);
 
-        var addToSub = new google.maps.Polyline({
-            path: addToSub,
-            strokeColor: '#0000ff',
-            strokeOpacity: 1.0,
-            strokeWeight: 1.0,
-            clickable: false,
-            map: this.map
-        });
+            this.markers.push(marker);
 
-        var addToSub = new google.maps.Polyline({
-            path: addToMul,
-            strokeColor: '#808080',
-            strokeOpacity: 1.0,
-            strokeWeight: 1.0,
-            clickable: false,
-            map: this.map
-        });
+            this.drawPrereqPaths(node);
+        }
 
-        /*
-        var addToSub = google.maps.Polyline({
-            path: [new google.maps.LatLng(),
-                   new google.maps.LatLng()],
-            strokeColor: '#ffff00',
-            strokeOpacity: 1.0,
-            strokeWeight: 5.0,
-            clickable: false,
-            map: this.map
-        });
-        */
+        // Draw the overlay containing the node markers
+        new com.redfin.FastMarkerOverlay(this.map, this.markers);
+    },
+
+    drawPrereqPaths: function(node) {
+        var source = node.id - 1;
+
+        for (var i = 0; i < node.prereqs.length; i++) {
+            var target = node.prereqs[i].id - 1;
+
+            var endPoints = [
+                this.nodes[source].latLng,
+                this.nodes[target].latLng
+            ];
+
+            var path = new google.maps.Polyline({
+                path: endPoints,
+                strokeColor: '#0000ff',
+                strokeOpacity: 1.0,
+                strokeWeight: 2.0,
+                clickable: false,
+                map: PathMap.map
+            });
+        }
     },
 
     getHorizontallyRepeatingTileUrl: function(coord, zoom, urlfunc) {

@@ -104,3 +104,14 @@ h1 {
     height: 500px;
     width: 100%;
 }
+
+.pathNode {
+    background-color: #fff;
+    border: 1px solid #000;
+    left: -40px;
+    padding: 2px 5px;
+    position: relative;
+    text-align: center;
+    top: -10px;
+    width: 80px;
+}

@@ -20,6 +20,12 @@ _path:
     pattern: /path
     defaults: { _controller: ImpetusAppBundle:Path:get }
 
+_path_nodes:
+    pattern: /path_nodes
+    defaults: { _controller: ImpetusAppBundle:Path:nodes, _format: json }
+    options:
+        expose: true
+
 _register:
     pattern: /register
     defaults: { _controller: ImpetusAppBundle:Register:get }
