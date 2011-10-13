@@ -1,0 +1,17 @@
+#map-canvas {
+    border: 1px solid #d7d7d7;
+    height: 700px;
+    width: 100%;
+}
+
+.pathNode {
+    background-color: #fff;
+    border: 1px solid #666;
+    font-size: 13px;
+    left: -45px;
+    padding: 2px 5px;
+    position: relative;
+    text-align: center;
+    top: -10px;
+    width: 90px;
+}

@@ -1,0 +1,107 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% set fullName = user.firstName ~ " " ~ user.lastName %}
+
+{% block title "Profile: " ~ fullName %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/user.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <div id="user-profile">
+        <div id="user-heading">
+            <div id="user-avatar">
+                No Avatar
+            </div>
+            <div id="user-basic-info">
+                <h1>{{ fullName }} ({{ user.username }})</h1>
+
+                <p>
+                    {% for role in user.userRoles %}
+                        {% if role == "ROLE_ADMIN" %}
+                            Administrator
+                        {% elseif role == "ROLE_STUDENT" %}
+                            Student at {{ districts[0].name }}
+                        {% endif %}
+                    {% endfor %}
+                </p>
+
+                <p>{{ user.email }}</p>
+            </div>
+
+            <br class="clear-fix" />
+        </div>
+
+        <div class="user-panel">
+            <h2>Personal</h2>
+            <table>
+                <tr>
+                    <th class="label">Birthday</th>
+                    <td class="data">{{ user.birthday|date("Y-m-d") }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="divider"><hr /></td>
+                </tr>
+                <tr>
+                    <th class="label">Ethnicity</th>
+                    <td class="data">{{ user.ethnicity }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="divider"><hr /></td>
+                </tr>
+                <tr>
+                    <th class="label">Gender</th>
+                    <td class="data">{{ user.gender }}</td>
+                </tr>
+            </table>
+
+            <h2>Education</h2>
+            <table>
+                <tr>
+                    <th class="label">Academic Terms</th>
+                    {% for grade in grades %}
+                        <td class="data">Grade {{ grade.grade }} in {{ grade.year.year }}</td>
+                    {% else %}
+                        <td class="data"><i>Not in any grades</i></td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td colspan="2" class="divider"><hr /></td>
+                </tr>
+                <tr>
+                    <th class="label">STEP Participation</th>
+                    <td class="data">Since 2011</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="divider"><hr /></td>
+                </tr>
+                <tr>
+                    <th class="label">College</th>
+                    <td class="data"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="divider"><hr /></td>
+                </tr>
+                <tr>
+                    <th class="label">Major</th>
+                    <td class="data"></td>
+                </tr>
+            </table>
+
+            <br class="clear-fix" />
+        </div>
+
+        <div style="float: right; width: 48%">
+            <h2>Actions</h2>
+
+            <ul style="padding-left: 16px;">
+                <li><a href="#">View Classes</a></li>
+                <li><a href="#">View Assessment and Exam Data</a></li>
+                <li><a href="{{ path('_user_edit', {'id': user.id }) }}">Edit User</a></li>
+            </ul>
+        </div>
+
+        <br class="clear-fix" />
+    </div>
+{% endblock %}

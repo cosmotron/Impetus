@@ -17,32 +17,58 @@ class User implements UserInterface {
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $username;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=64)
      */
-    private $password;
+    protected $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $salt;
+    protected $salt;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $username;
 
     /**
      * @ORM\ManyToMany(targetEntity="Role")
-     * @ORM\JoinTable(
-     *     name="user_role",
-     *     joinColumns={ @ORM\JoinColumn(name="user_id", referencedColumnName="id") },
-     *     inverseJoinColumns={ @ORM\JoinColumn(name="role_id", referencedColumnName="id") }
-     * )
      */
-    private $userRoles;
+    protected $userRoles;
+
+    // Extra
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    protected $birthday;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $email;
+
+   /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    protected $ethnicity;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=6, nullable=true)
+     */
+    protected $gender;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $lastName;
 
     public function __construct() {
         $this->userRoles = new ArrayCollection();
@@ -52,47 +78,96 @@ class User implements UserInterface {
         return $this->id;
     }
 
-    public function setUsername($username) {
-        $this->username = $username;
-    }
-
-    public function getUsername() {
-        return $this->username;
+    public function getPassword() {
+        return $this->password;
     }
 
     public function setPassword($password) {
         $this->password = $password;
     }
 
-    public function getPassword() {
-        return $this->password;
-    }
-
-    public function setSalt($salt) {
-        $this->salt = $salt;
+    public function getRoles() {
+        return $this->getUserRoles()->toArray();
     }
 
     public function getSalt() {
         return $this->salt;
     }
 
-    public function setUserRoles($userRoles) {
-        $this->userRoles = $userRoles;
+    public function setSalt($salt) {
+        $this->salt = $salt;
+    }
+
+    public function getUsername() {
+        return $this->username;
+    }
+
+    public function setUsername($username) {
+        $this->username = $username;
     }
 
     public function getUserRoles() {
         return $this->userRoles;
     }
 
-    public function eraseCredentials() {
-        ;
+    public function setUserRoles($userRoles) {
+        $this->userRoles[] = $userRoles;
     }
 
-    public function getRoles() {
-        return $this->getUserRoles()->toArray();
+    // Extra
+    public function getBirthday() {
+        return $this->birthday;
+    }
+
+    public function setBirthday($birthday) {
+        $this->birthday = $birthday;
+    }
+
+    public function getEmail() {
+        return $this->email;
+    }
+
+    public function setEmail($email) {
+        $this->email = $email;
+    }
+
+    public function getEthnicity() {
+        return $this->ethnicity;
+    }
+
+    public function setEthnicity($ethnicity) {
+        $this->ethnicity = $ethnicity;
+    }
+
+    public function getFirstName() {
+        return $this->firstName;
+    }
+
+    public function setFirstName($firstName) {
+        $this->firstName = $firstName;
+    }
+
+    public function getGender() {
+        return $this->gender;
+    }
+
+    public function setGender($gender) {
+        $this->gender = $gender;
+    }
+
+    public function getLastName() {
+        return $this->lastName;
+    }
+
+    public function setLastName($lastName) {
+        $this->lastName = $lastName;
     }
 
     public function equals(UserInterface $user) {
         return md5($this->getUsername()) == md5($user->getUsername());
+    }
+
+    public function eraseCredentials() {
+        ;
     }
 }

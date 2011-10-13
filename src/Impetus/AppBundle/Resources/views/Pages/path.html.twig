@@ -3,6 +3,12 @@
 {% block title "Path" %}
 
 {% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/path.css') }}" rel="stylesheet" />
+
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/FastMarkerOverlay.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/path.js') }}"></script>
+
     <script type="text/javascript">
       $(function() {
           PathMap.init('../../bundles/impetusapp/images/');

@@ -1,0 +1,74 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Edit District: " %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/district.css') }}" rel="stylesheet" />
+
+    <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/district.js') }}"></script>
+
+    <script type="text/javascript">
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h1>Edit District</h1>
+    {% if message is defined %}
+        {{ message }}
+    {% endif %}
+    <form action="{{ path('_district_edit', { 'id': id }) }}" id="district-form" method="post" novalidate="novalidate" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+
+        {{ form_rest(form) }}
+
+        <input type="submit" value="Edit District" />
+    </form>
+
+    <h1 style="margin-top: 20px;">Roster</h1>
+    <h2>Teachers</h2>
+    <div id="teacher" class="perm-box">
+        <div class="perm-row">
+            <div class="perm-name">Mister Mister</div>
+            <div class="perm-delete"><a href="#">Delete</a></div>
+        </div>
+
+        <br class="clear-fix" />
+    </div>
+    <p class="add">
+        <a href="#" id="add-teacher">Add Teacher</a>
+    </p>
+
+    <h2>Teaching Assistants</h2>
+    <div id="tas" class="perm-box">
+        <div class="perm-row">
+            <div class="perm-name">Ryan</div>
+            <div class="perm-delete"><a href="#">Delete</a></div>
+        </div>
+        <div class="perm-row">
+            <div class="perm-name">Kelso</div>
+            <div class="perm-delete"><a href="#">Delete</a></div>
+        </div>
+
+        <br class="clear-fix" />
+    </div>
+    <p class="add">
+        <a href="#" id="add-ta">Add Teaching Assistant</a>
+    </p>
+
+    <h2>Students</h2>
+    <div id="students" class="perm-box">
+        <div class="perm-row">
+            <div class="perm-name">Alice</div>
+            <div class="perm-delete"><a href="#">Delete</a></div>
+        </div>
+        <div class="perm-row">
+            <div class="perm-name">Bob</div>
+            <div class="perm-delete"><a href="#">Delete</a></div>
+        </div>
+
+        <br class="clear-fix" />
+    </div>
+    <p class="add">
+        <a href="#" id="add-student">Add Student</a>
+    </p>
+{% endblock %}

@@ -35,4 +35,8 @@ class PathController extends Controller {
 
         return new Response($json);
     }
+
+    public function showAction($id) {
+        return $this->render('ImpetusAppBundle:Pages:path-node.html.twig', array('page' => 'path'));
+    }
 }

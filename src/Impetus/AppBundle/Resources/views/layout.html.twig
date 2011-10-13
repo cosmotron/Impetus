@@ -3,24 +3,12 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>IMPETUS - {% block title %}{% endblock %}</title>
-        {% stylesheets filter='cssrewrite'
-                       'bundles/impetusapp/css/main.css'
-                       'bundles/impetusapp/css/quiz.css' %}
-            <link type="text/css" href="{{ asset_url }}" rel="stylesheet" />
-        {% endstylesheets %}
 
-            <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-            <script type="text/javascript" src="{{ path('fos_js_routing_js', { "callback": "fos.Router.setData" }) }}"></script>
+        <link type="text/css" href="{{ asset('bundles/impetusapp/css/main.css') }}" rel="stylesheet" />
 
-        {% if page == 'path' %}
-            <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
-            <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/FastMarkerOverlay.js') }}"></script>
-        {% endif %}
-
-        {% javascripts 'bundles/impetusapp/js/jquery-1.6.3.min.js'
-                       'bundles/impetusapp/js/pathmap.js' %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
+        <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script type="text/javascript" src="{{ path('fos_js_routing_js', { "callback": "fos.Router.setData" }) }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/jquery-1.6.3.min.js') }}"></script>
 
         {% block extrascripts %}
         {% endblock %}
@@ -28,10 +16,12 @@
     <body>
         <div id="wrapper">
             <div id="header">
-                <span id="title">IMPETUS Tutoring and Mentoring</span>
+                <span id="title">
+                    <a href="{{ path('_home') }}">IMPETUS Cooperative Learning</a>
+                </span>
                 <div id="user-info">
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                        Welcome {{ app.user.username }} - <a href="{{ path('_logout') }}">Logout</a>
+                        Welcome <a href="{{ path('_user_show', {'id': app.user.id}) }}">{{ app.user.username }}</a> &mdash; Term: <select><option>2011</option></select> &mdash; <a href="{{ path('_logout') }}">Logout</a>
                     {% else %}
                         <a href="{{ path('_login') }}">Login</a>
                     {% endif %}
@@ -64,6 +54,15 @@
                         <li class="{% if page == 'schedule' %}selected{% endif %}">
                             <a href="{{ path('_schedule') }}">Schedule</a>
                         </li>
+
+                        {% if is_granted('ROLE_TA') %}
+                        <li class="{% if page == 'user' %}selected{% endif %}">
+                            <a href="{{ path('_user_list') }}">Users</a>
+                        </li>
+                        <li class="{% if page == 'district' %}selected{% endif %}">
+                            <a href="{{ path('_district_list') }}">Districts</a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
 

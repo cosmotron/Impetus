@@ -7,6 +7,10 @@ a {
     color: #000;
 }
 
+a:hover {
+    color: #666;
+}
+
 h1 {
     margin: 0;
     padding: 0;
@@ -15,6 +19,7 @@ h1 {
 #wrapper {
     margin: 0 auto;
     padding: 0 50px;
+    min-width: 1000px;
 }
 
 #header {
@@ -98,20 +103,4 @@ h1 {
 
 .clear-fix {
     clear: both;
-}
-
-#map-canvas {
-    height: 500px;
-    width: 100%;
-}
-
-.pathNode {
-    background-color: #fff;
-    border: 1px solid #000;
-    left: -40px;
-    padding: 2px 5px;
-    position: relative;
-    text-align: center;
-    top: -10px;
-    width: 80px;
 }

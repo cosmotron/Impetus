@@ -1,4 +1,7 @@
 security:
+    acl:
+        connection: default
+
     encoders:
         Impetus\AppBundle\Entity\User:
             algorithm: sha256
@@ -28,5 +31,6 @@ security:
         ROLE_ADMIN: [ROLE_TA, ROLE_MENTOR, ROLE_TEACHER]
 
     access_control:
+#        - { path: ^/user/new, roles: [ROLE_TA, ROLE_MENTOR] }
         - { path: ^/attendance, roles: ROLE_STUDENT }
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

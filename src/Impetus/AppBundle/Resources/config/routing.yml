@@ -6,6 +6,20 @@ _attendance:
     pattern: /attendance
     defaults: { _controller: ImpetusAppBundle:Attendance:get }
 
+_district_edit:
+    pattern: /district/{id}/edit
+    defaults: { _controller: ImpetusAppBundle:District:edit }
+    requirements:
+        id: \d+
+
+_district_list:
+    pattern: /district
+    defaults: { _controller: ImpetusAppBundle:District:list }
+
+_district_new:
+    pattern: /district/new
+    defaults: { _controller: ImpetusAppBundle:District:new }
+
 _login:
     pattern: /login
     defaults: { _controller: ImpetusAppBundle:Login:login }
@@ -26,17 +40,13 @@ _path_nodes:
     options:
         expose: true
 
-_register:
-    pattern: /register
-    defaults: { _controller: ImpetusAppBundle:Register:get }
+_path_show:
+    pattern: /path/{id}
+    defaults: { _controller: ImpetusAppBundle:Path:show }
+    options:
+        expose: true
     requirements:
-        _method: GET
-
-_register_process:
-    pattern: /register
-    defaults: { _controller: ImpetusAppBundle:Register:post }
-    requirements:
-        _method: POST
+        id: \d+
 
 _schedule:
     pattern: /schedule
@@ -59,3 +69,23 @@ _quiz_show:
 _quiz_new:
     pattern: /quiz/new
     defaults: { _controller: ImpetusAppBundle:Quiz:new }
+
+_user_edit:
+    pattern: /user/{id}/edit
+    defaults: { _controller: ImpetusAppBundle:User:edit }
+    requirements:
+        id: \d+
+
+_user_list:
+    pattern: /user
+    defaults: { _controller: ImpetusAppBundle:User:list }
+
+_user_new:
+    pattern: /user/new
+    defaults: { _controller: ImpetusAppBundle:User:new }
+
+_user_show:
+    pattern: /user/{id}
+    defaults: { _controller: ImpetusAppBundle:User:show }
+    requirements:
+        id: \d+

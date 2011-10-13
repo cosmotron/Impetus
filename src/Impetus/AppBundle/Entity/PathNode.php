@@ -15,22 +15,22 @@ class PathNode {
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    protected $name;
 
     /**
      * @ORM\Column(type="float")
      */
-    private $h_pos;
+    protected $h_pos;
 
     /**
      * @ORM\Column(type="float")
      */
-    private $v_pos;
+    protected $v_pos;
 
     /**
      * @ORM\ManyToMany(targetEntity="PathNode")
@@ -40,7 +40,7 @@ class PathNode {
      *     inverseJoinColumns={ @ORM\JoinColumn(name="prereq_node_id", referencedColumnName="id") }
      * )
      */
-    private $prereqs;
+    protected $prereqs;
 
     public function __construct() {
         $this->prereqs = new ArrayCollection();

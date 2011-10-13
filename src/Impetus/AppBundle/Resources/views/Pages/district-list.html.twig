@@ -1,0 +1,18 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "District List" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/district.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Districts</h1>
+    <ul>
+    {% for district in districts %}
+        <li><a href="{{ path('_district_edit', { 'id': district.id }) }}">{{ district.name }}</a></li>
+    {% endfor %}
+    </ul>
+
+    <p><a href="{{ path('_district_new') }}" style="font-size: 16px;">New District</a></p>
+{% endblock %}

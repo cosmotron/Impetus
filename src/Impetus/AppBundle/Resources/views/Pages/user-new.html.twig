@@ -1,0 +1,57 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "New User" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/user.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>New User</h1>
+    {% if message is defined %}
+        {{ message }}
+    {% endif %}
+    <form action="{{ path('_user_new') }}" id="user-form" method="post" novalidate="novalidate" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+
+        <fieldset class="user-panel">
+            <legend>Required</legend>
+            {{ form_row(form.username) }}
+            {{ form_row(form.password) }}
+            {{ form_row(form.firstName) }}
+            {{ form_row(form.lastName) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.userRoles) }}
+        </fieldset>
+
+        <fieldset class="user-panel">
+            <legend>Supplemental</legend>
+
+            {{ form_row(form.gender) }}
+            {{ form_row(form.birthday) }}
+            {{ form_row(form.ethnicity) }}
+
+            <div>
+                <label>Grade</label>
+                In
+                <select class="grade_year" name="grade_year_0">
+                    {% for year in years %}
+                        <option>{{ year.getYear }}</option>
+                    {% endfor %}
+                </select>
+                this student is in grade
+                <select class="grade" name="grade_0">
+                    {% for i in range(1, 12) %}
+                        <option>{{ i }}</option>
+                        {% endfor %}
+                </select>
+            </div>
+        </fieldset>
+
+        {{ form_rest(form) }}
+
+        <br class="clear-fix" />
+
+        <input type="submit" value="Create User" />
+    </form>
+{% endblock %}

@@ -32,7 +32,7 @@ var PathMap = {
         this.map.mapTypes.set('pathmap', pathMapType);
         this.map.setMapTypeId('pathmap');
 
-        this.map.setCenter(new google.maps.LatLng(0, 0));
+        this.map.setCenter(new google.maps.LatLng(-0.75, 0));
         this.map.setZoom(9);
 
         this.getPathNodes();
@@ -94,11 +94,34 @@ var PathMap = {
             this.drawPrereqPaths(node);
         }
 
+        this.drawOverlay();
+    },
+
+    drawOverlay: function() {
         // Draw the overlay containing the node markers
-        new com.redfin.FastMarkerOverlay(this.map, this.markers);
+        this.overlay = new com.redfin.FastMarkerOverlay(this.map, this.markers);
+        this.overlay.drawOriginal = this.overlay.draw;
+
+        this.overlay.draw = function() {
+            this.drawOriginal();
+
+            var pathNodes = $('.pathNode');
+
+            pathNodes.each(function() {
+                $(this).click(function() {
+                    var marker = $(this).parent().attr('id');
+                    var markerId = marker.substring(marker.lastIndexOf('-') + 1);
+
+                    window.location.href = Routing.generate('_path_show', { id: markerId });
+                }).hover(function() {
+                    $(this).css('cursor', 'pointer');
+                });
+            });
+        }
     },
 
     drawPrereqPaths: function(node) {
+        // Subtract 1 because sql auto increment starts ids at 1 rather than 0
         var source = node.id - 1;
 
         for (var i = 0; i < node.prereqs.length; i++) {

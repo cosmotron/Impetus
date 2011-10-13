@@ -1,0 +1,81 @@
+#user-profile h2 {
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+}
+
+#user-profile #user-avatar {
+    border: 1px solid #dfdfdf;
+    color: #bbb;
+    float: left;
+    height: 100px;
+    line-height: 6em;
+    text-align: center;
+    width: 100px;
+}
+
+#user-profile #user-basic-info {
+    float: left;
+    margin-left: 20px;
+}
+
+#user-profile table{
+    margin-right: 40px;
+    width: 100%;
+}
+
+#user-profile table .divider hr {
+    background: none repeat scroll 0 0 #999;
+    border-width: 0;
+    color: #999;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+}
+
+#user-profile tr .label {
+    color: #555;
+    line-height: 20px;
+    padding-top: 3px;
+    text-align: left;
+    vertical-align: top;
+    width: 150px;
+}
+
+#user-profile tr .data {
+    line-height: 20px;
+    padding-top: 3px;
+    vertical-align: top;
+}
+
+#user-form {
+    margin-top: 10px;
+}
+
+#user-form label {
+    font-size: 18px;
+    display:block;
+}
+
+#user-form legend {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    padding: 0;
+}
+
+#user-form input, #user-form select {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+#user-form input:not([type=submit]) {
+    width: 500px;
+}
+
+.user-panel {
+    border: 0;
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: 48%;
+}

@@ -3,6 +3,8 @@
 {% block title "Quiz "~id %}
 
 {% block extrascripts %}
+<link type="text/css" href="{{ asset('bundles/impetusapp/css/quiz.css') }}" rel="stylesheet" />
+
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         extensions: ["tex2jax.js"],
@@ -11,7 +13,7 @@
             inlineMath: [ ['$','$'], ["\\(","\\)"] ],
             displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
             processEscapes: true
-        }
+        },
         "HTML-CSS": { scale: 100 }
     });
 </script>

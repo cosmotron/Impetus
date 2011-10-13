@@ -1,0 +1,21 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "New District" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/district.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>New District</h1>
+    {% if message is defined %}
+        {{ message }}
+    {% endif %}
+    <form action="{{ path('_district_new') }}" id="district-form" method="post" novalidate="novalidate" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+
+        {{ form_rest(form) }}
+
+        <input type="submit" value="Create District" />
+    </form>
+{% endblock %}
