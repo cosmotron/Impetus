@@ -5,6 +5,7 @@ namespace Impetus\AppBundle\Controller;
 use Impetus\AppBundle\Entity\User;
 use Impetus\AppBundle\Form\Type\CreateUserType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class UserController extends BaseController {
@@ -81,9 +82,27 @@ class UserController extends BaseController {
 
     }
 
+    public function searchAction($type, Request $request) {
+        $repository = $this->getDoctrine()->getRepository('ImpetusAppBundle:User');
+
+        // TODO: add permission checks. e.g. non-admins shouldn't be able to query for admin usernames
+
+        switch ($type) {
+            case 'student':
+                $users = $repository->findByApproximateStudentName($request->query->get('term'));
+                break;
+            default:
+                throw $this->createNotFoundException('"'. $type . '" is and invalid user type');
+        }
+
+        $json = json_encode($users);
+
+        return new Response($json);
+    }
+
     public function showAction($id) {
-        $em = $this->getDoctrine()->getEntityManager();
-        $user = $em->getRepository('ImpetusAppBundle:User')->find($id);
+        $repository = $this->getDoctrine()->getRepository('ImpetusAppBundle:User');
+        $user = $repository->find($id);
 
         if (!$user) {
             throw $this->createNotFoundException('No user found for id ' . $id);

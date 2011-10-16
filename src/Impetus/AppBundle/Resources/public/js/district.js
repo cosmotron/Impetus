@@ -3,6 +3,14 @@ var UserSearch = {
 }
 
 $(function() {
+    $("#add-student input").autocomplete({
+        source: Routing.generate('_user_search'),
+        minLength: 2,
+        select: function(event, ui) {
+            alert(ui.item.value);
+        }
+    });
+
     $('[placeholder]').focus(function() {
         var input = $(this);
         if (input.val() == input.attr('placeholder')) {
