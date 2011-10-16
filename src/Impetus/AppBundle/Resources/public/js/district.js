@@ -4,7 +4,7 @@ var UserSearch = {
 
 $(function() {
     $("#add-student input").autocomplete({
-        source: Routing.generate('_user_search'),
+        source: Routing.generate('_user_search', {'type': 'student'}),
         minLength: 2,
         select: function(event, ui) {
             alert(ui.item.value);
