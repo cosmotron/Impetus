@@ -1,3 +1,5 @@
+{% import "ImpetusAppBundle:Macros:sidebar.html.twig" as sidebar %}
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -36,33 +38,15 @@
                 </div>
                 <div id="navigation">
                     <ul id="menu-links">
-                        <li class="{% if page == 'home' %}selected{% endif %}">
-                            <a href="{{ path('_home') }}">Home</a>
-                        </li>
-                        <li class="{% if page == 'path' %}selected{% endif %}">
-                            <a href="{{ path('_path') }}">Path</a>
-                        </li>
-                        <li class="{% if page == 'quiz' %}selected{% endif %}">
-                            <a href="{{ path('_quiz') }}">Quiz</a>
-                        </li>
-                        <li class="{% if page == 'survey' %}selected{% endif %}">
-                            <a href="{{ path('_survey') }}">Survey</a>
-                        </li>
-                        <li class="{% if page == 'attendance' %}selected{% endif %}">
-                            <a href="{{ path('_attendance') }}">Attendance</a>
-                        </li>
-                        <li class="{% if page == 'schedule' %}selected{% endif %}">
-                            <a href="{{ path('_schedule') }}">Schedule</a>
-                        </li>
+                        {{ sidebar.nav_link('Home', '_home', 'home', page) }}
+                        {{ sidebar.nav_link('Path', '_path', 'path', page) }}
+                        {{ sidebar.nav_link('Quiz', '_quiz', 'quiz', page) }}
+                        {{ sidebar.nav_link('Survey', '_survey', 'survey', page) }}
+                        {{ sidebar.nav_link('Attendance', '_attendance', 'attendance', page) }}
+                        {{ sidebar.nav_link('Schedule', '_schedule', 'schedule', page) }}
 
-                        {% if is_granted('ROLE_TA') %}
-                        <li class="{% if page == 'user' %}selected{% endif %}">
-                            <a href="{{ path('_user_list') }}">Users</a>
-                        </li>
-                        <li class="{% if page == 'district' %}selected{% endif %}">
-                            <a href="{{ path('_district_list') }}">Districts</a>
-                        </li>
-                        {% endif %}
+                        {{ sidebar.nav_link('Users', '_user_list', 'user', page, 'ROLE_TA') }}
+                        {{ sidebar.nav_link('Districts', '_district_list', 'district', page, 'ROLE_TA') }}
                     </ul>
                 </div>
 

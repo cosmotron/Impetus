@@ -1,0 +1,12 @@
+{% macro info_row(name, value) %}
+    <tr>
+        <th class="label">{{ name }}</th>
+        <td class="data">{{ value|default('<i>Not entered</i>')|raw }}</td>
+    </tr>
+{% endmacro %}
+
+{% macro divider() %}
+    <tr>
+        <td colspan="2" class="divider"><hr /></td>
+    </tr>
+{% endmacro %}

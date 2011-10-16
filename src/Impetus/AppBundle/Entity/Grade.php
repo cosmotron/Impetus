@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Impetus\AppBundle\Repository\GradeRepository")
  * @ORM\Table(name="grade")
  */
 class Grade {

@@ -1,4 +1,5 @@
 {% extends "ImpetusAppBundle::layout.html.twig" %}
+{% import "ImpetusAppBundle:Macros:table.html.twig" as table %}
 
 {% set fullName = user.firstName ~ " " ~ user.lastName %}
 
@@ -22,7 +23,7 @@
                         {% if role == "ROLE_ADMIN" %}
                             Administrator
                         {% elseif role == "ROLE_STUDENT" %}
-                            Student at {{ districts[0].name }}
+                            Student
                         {% endif %}
                     {% endfor %}
                 </p>
@@ -36,24 +37,13 @@
         <div class="user-panel">
             <h2>Personal</h2>
             <table>
-                <tr>
-                    <th class="label">Birthday</th>
-                    <td class="data">{{ user.birthday|date("Y-m-d") }}</td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="divider"><hr /></td>
-                </tr>
-                <tr>
-                    <th class="label">Ethnicity</th>
-                    <td class="data">{{ user.ethnicity }}</td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="divider"><hr /></td>
-                </tr>
-                <tr>
-                    <th class="label">Gender</th>
-                    <td class="data">{{ user.gender }}</td>
-                </tr>
+                {{ table.info_row('Birthday', user.birthday|date("Y-m-d")) }}
+                {{ table.divider }}
+
+                {{ table.info_row('Ethnicity', user.ethnicity) }}
+                {{ table.divider }}
+
+                {{ table.info_row('Gender', user.gender) }}
             </table>
 
             <h2>Education</h2>
@@ -66,27 +56,15 @@
                         <td class="data"><i>Not in any grades</i></td>
                     {% endfor %}
                 </tr>
-                <tr>
-                    <td colspan="2" class="divider"><hr /></td>
-                </tr>
-                <tr>
-                    <th class="label">STEP Participation</th>
-                    <td class="data">Since 2011</td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="divider"><hr /></td>
-                </tr>
-                <tr>
-                    <th class="label">College</th>
-                    <td class="data"></td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="divider"><hr /></td>
-                </tr>
-                <tr>
-                    <th class="label">Major</th>
-                    <td class="data"></td>
-                </tr>
+                {{ table.divider }}
+
+                {{ table.info_row('STEP Participation') }}
+                {{ table.divider }}
+
+                {{ table.info_row('College') }}
+                {{ table.divider }}
+
+                {{ table.info_row('Major') }}
             </table>
 
             <br class="clear-fix" />

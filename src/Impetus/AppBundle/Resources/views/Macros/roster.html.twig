@@ -1,0 +1,20 @@
+{% macro perm_row(user) %}
+    <li>
+        <div class="user-list-row">
+            <div id="delete-{{ user.id }}" class="action"><a href="#">Delete</a></div>
+            <div class="data">{{ user.firstName }} {{ user.lastName }} </div>
+        </div>
+    </li>
+{% endmacro %}
+
+{% macro user_list(users, list_id, empty_message) %}
+    <div class="user-list-wrapper">
+        <ul id="{{ list_id }}" class="user-list">
+            {% for user in users %}
+                {{ _self.perm_row(user) }}
+            {% else %}
+                <li class="empty-list">{{ empty_message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endmacro %}

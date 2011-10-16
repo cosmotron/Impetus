@@ -24,7 +24,8 @@ class CoreUserType extends AbstractType {
         $builder->add('firstName', null, array('label' => 'First Name'));
         $builder->add('lastName', null, array('label' => 'Last Name'));
         $builder->add('email');
-        $builder->add('birthday', 'birthday', array('required' => false));
+        $builder->add('birthday', 'birthday', array('years' => range(date('Y'), (date('Y') - 100)),
+                                                    'required' => false));
         $builder->add('ethnicity', 'choice', array('choices' => array('american_indian' => 'American Indian',
                                                                       'asian' => 'Asian',
                                                                       'black' => 'Black or African American',

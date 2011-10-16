@@ -1,5 +1,23 @@
+h2 {
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+    width: 510px;
+}
+
+input, select {
+    font-size: 18px;
+}
+
+input:not([type=submit]) {
+    width: 500px;
+}
+
 #district-form {
     margin-top: 10px;
+}
+
+#district-form input, #district-form select {
+    margin-bottom: 15px;
 }
 
 #district-form label {
@@ -7,50 +25,45 @@
     display:block;
 }
 
-#district-form input, #district-form select {
-    font-size: 18px;
-    margin-bottom: 15px;
-}
-
-#district-form input:not([type=submit]) {
+.user-list-wrapper {
+    max-height: 500px;
+    overflow-y: auto;
     width: 500px;
 }
 
-.perm-box {
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-    border-top: 1px solid black;
-    width: 500px;
+.user-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-.perm-row {
-}
-
-.perm-name {
-    border-right: 1px solid black;
+.user-list li {
     border-bottom: 1px solid black;
-    float: left;
-    padding: 10px;
-    width: 399px;
+    padding: 5px;
 }
 
-.perm-delete {
-    border-bottom: 1px solid black;
+.user-list .empty-list {
+    border: 0;
+    font-style: italic;
+    margin: 10px 0;
+}
+
+.data {
+    display: table-cell;
+    height: 50px;
+    vertical-align: middle;
+}
+
+.action {
     float: right;
-    text-align: center;
+    margin-top: 16px;
 }
 
-.perm-delete a {
-    color: #990000;
-    display: block;
-    padding: 10px;
-    width:60px;
+.user-add-form {
+    margin: 0;
 }
 
-.perm-delete a:hover {
-    background-color: #FFCCCC;
-}
-
-.add {
-    margin: 25px 0;
+.placeholder {
+    color: #a1a1a1;
+    font-style: italic;
 }

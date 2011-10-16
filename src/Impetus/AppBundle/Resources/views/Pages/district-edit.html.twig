@@ -1,4 +1,5 @@
 {% extends "ImpetusAppBundle::layout.html.twig" %}
+{% import "ImpetusAppBundle:Macros:roster.html.twig" as roster %}
 
 {% block title "Edit District: " %}
 
@@ -24,51 +25,22 @@
         <input type="submit" value="Edit District" />
     </form>
 
-    <h1 style="margin-top: 20px;">Roster</h1>
+    <h1 style="margin-top: 20px;">Roster for Academic Year 2011</h1>
     <h2>Teachers</h2>
-    <div id="teacher" class="perm-box">
-        <div class="perm-row">
-            <div class="perm-name">Mister Mister</div>
-            <div class="perm-delete"><a href="#">Delete</a></div>
-        </div>
+    <form id="add-teacher" class="user-add-form">
+        <input type="text" placeholder="Search for a teacher to add..." />
+    </form>
+    {{ roster.user_list(teachers, 'teacher-list', 'No teachers') }}
 
-        <br class="clear-fix" />
-    </div>
-    <p class="add">
-        <a href="#" id="add-teacher">Add Teacher</a>
-    </p>
-
-    <h2>Teaching Assistants</h2>
-    <div id="tas" class="perm-box">
-        <div class="perm-row">
-            <div class="perm-name">Ryan</div>
-            <div class="perm-delete"><a href="#">Delete</a></div>
-        </div>
-        <div class="perm-row">
-            <div class="perm-name">Kelso</div>
-            <div class="perm-delete"><a href="#">Delete</a></div>
-        </div>
-
-        <br class="clear-fix" />
-    </div>
-    <p class="add">
-        <a href="#" id="add-ta">Add Teaching Assistant</a>
-    </p>
+    <h2>Assistants</h2>
+    <form id="add-assistant" class="user-add-form">
+        <input type="text" placeholder="Search for an assistant to add..." />
+    </form>
+    {{ roster.user_list(assistants, 'assistant-list', 'No assistants') }}
 
     <h2>Students</h2>
-    <div id="students" class="perm-box">
-        <div class="perm-row">
-            <div class="perm-name">Alice</div>
-            <div class="perm-delete"><a href="#">Delete</a></div>
-        </div>
-        <div class="perm-row">
-            <div class="perm-name">Bob</div>
-            <div class="perm-delete"><a href="#">Delete</a></div>
-        </div>
-
-        <br class="clear-fix" />
-    </div>
-    <p class="add">
-        <a href="#" id="add-student">Add Student</a>
-    </p>
+    <form id="add-student" class="user-add-form">
+        <input type="text" placeholder="Search for a student to add..." />
+    </form>
+    {{ roster.user_list(students, 'student-list', 'No students') }}
 {% endblock %}

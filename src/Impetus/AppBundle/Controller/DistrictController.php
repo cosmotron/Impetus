@@ -9,8 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DistrictController extends BaseController {
     public function editAction($id, Request $request) {
-        $repository = $this->getDoctrine()->getRepository('ImpetusAppBundle:District');
-        $district = $repository->find($id);
+        $doctrine = $this->getDoctrine();
+        $district = $doctrine->getRepository('ImpetusAppBundle:District')->find($id);
 
         if (!$district) {
             throw $this->createNotFoundException('No district found for id ' . $id);
@@ -18,18 +18,32 @@ class DistrictController extends BaseController {
 
         $form = $this->createForm(new NewDistrictType(), $district);
 
+        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear(2011);
+        //$roster = $doctrine->getRepository('ImpetusAppBundle:Roster')->findOneByDistrictAndYear($district, $year);
+
+        $roster = $district->getRosters()->filter(function($roster) use ($year) { return $roster->getYear() === $year; })->first();
+
+        $teachers = $roster->getTeachers();
+        $assistants = $roster->getAssistants();
+        $students = $roster->getStudents();
+
         if ($request->getMethod() == 'POST') {
             // Process update
-            //$this->postNewAction($form, $request);
+            //$this->postEditAction($form, $request);
         }
 
         return $this->render('ImpetusAppBundle:Pages:district-edit.html.twig',
                              array('page' => 'district',
                                    'id' => $id,
-                                   'form' => $form->createView()));
+                                   'form' => $form->createView(),
+                                   'teachers' => $teachers,
+                                   'assistants' => $assistants,
+                                   'students' => $students,
+                                   )
+                             );
     }
 
-    public function listAction() {
+    Public function listAction() {
         $repository = $this->getDoctrine()->getRepository('ImpetusAppBundle:District');
         $districts = $repository->findAll();
 

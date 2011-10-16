@@ -83,40 +83,19 @@ class UserController extends BaseController {
 
     public function showAction($id) {
         $em = $this->getDoctrine()->getEntityManager();
-        $query = $em->createQuery('SELECT u FROM ImpetusAppBundle:User u WHERE u.id = :id')
-            ->setParameter('id', $id)->setMaxResults(1);
+        $user = $em->getRepository('ImpetusAppBundle:User')->find($id);
 
-        try {
-            $user = $query->getSingleResult();
-        } catch (\Doctrine\Orm\NoResultException $e) {
+        if (!$user) {
             throw $this->createNotFoundException('No user found for id ' . $id);
         }
 
-        $query = $em->createQuery('SELECT g, y FROM ImpetusAppBundle:Grade g
-                                   INNER JOIN g.year y
-                                   WHERE g.user = :user')->setParameter('user', $user);
-
-        try {
-            $grades = $query->getResult();
-        } catch (\Doctrine\Orm\NoResultException $e) {
-            $grades = null;
-        }
-
-        $query = $em->createQuery('SELECT d, s FROM ImpetusAppBundle:District d
-                                   INNER JOIN d.students s
-                                   WHERE s.id = :id')->setParameter('id', $id);
-
-        try {
-            $districts = $query->getResult();
-        } catch (\Doctrine\Orm\NoResultException $e) {
-            $districts = null;
-        }
+        $grades = $em->getRepository('ImpetusAppBundle:Grade')->findAllByUser($user);
 
         return $this->render('ImpetusAppBundle:Pages:user-show.html.twig',
                              array('page' => 'user',
                                    'user' => $user,
                                    'grades' => $grades,
-                                   'districts' => $districts)
-                                   );
+                                   )
+                             );
     }
 }

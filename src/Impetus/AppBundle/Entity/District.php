@@ -2,11 +2,12 @@
 
 namespace Impetus\AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Impetus\AppBundle\Repository\DistrictRepository")
  * @ORM\Table(name="district")
  */
 class District {
@@ -24,45 +25,28 @@ class District {
     protected $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="district_students",
-     *     joinColumns={ @ORM\JoinColumn(name="district_id", referencedColumnName="id") },
-     *     inverseJoinColumns={ @ORM\JoinColumn(name="user_id", referencedColumnName="id") }
-     * )
+     * @ORM\OneToMany(targetEntity="Roster", mappedBy="district")
      */
-    protected $students;
+    protected $rosters;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="district_teaching_assitants",
-     *     joinColumns={ @ORM\JoinColumn(name="district_id", referencedColumnName="id") },
-     *     inverseJoinColumns={ @ORM\JoinColumn(name="user_id", referencedColumnName="id") }
-     * )
-     */
-    protected $teachingAssistants;
+    public function __construct() {
+        $this->rosters = new ArrayCollection();
+    }
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="district_teachers",
-     *     joinColumns={ @ORM\JoinColumn(name="district_id", referencedColumnName="id") },
-     *     inverseJoinColumns={ @ORM\JoinColumn(name="user_id", referencedColumnName="id") }
-     * )
-     */
-    protected $teachers;
-
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
     }
 
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
+    }
+
+    public function getRosters() {
+        return $this->rosters;
     }
 
     public function __toString() {

@@ -1,0 +1,7 @@
+{% macro nav_link(title, route, page, current_page, role) %}
+    {% if is_granted(role|default('IS_AUTHENTICATED_ANONYMOUSLY')) %}
+        <li class="{% if page == current_page %}selected{% endif %}">
+            <a href="{{ path(route) }}">{{ title }}</a>
+        </li>
+    {% endif %}
+{% endmacro %}
