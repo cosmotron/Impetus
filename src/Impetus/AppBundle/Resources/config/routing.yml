@@ -20,6 +20,15 @@ _district_new:
     pattern: /district/new
     defaults: { _controller: ImpetusAppBundle:District:new }
 
+_district_update_grade:
+    pattern: /district/user/{userId}/grade
+    defaults: { _controller: ImpetusAppBundle:District:updateGrade }
+    options:
+        expose: true
+    requirements:
+        userId: \d+
+        _method: POST
+
 _login:
     pattern: /login
     defaults: { _controller: ImpetusAppBundle:Login:login }
@@ -47,7 +56,6 @@ _path_show:
         expose: true
     requirements:
         id: \d+
-        _method: POST
 
 _schedule:
     pattern: /schedule

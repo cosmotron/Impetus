@@ -1,14 +1,14 @@
-h2 {
+#ccontent h2 {
     border-bottom: 1px solid black;
     margin-bottom: 10px;
     width: 510px;
 }
 
-input, select {
+#content input, #content select {
     font-size: 18px;
 }
 
-input:not([type=submit]) {
+#content input:not([type=submit]) {
     width: 500px;
 }
 
@@ -38,7 +38,7 @@ input:not([type=submit]) {
 }
 
 .user-list li {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #999;
     padding: 5px;
 }
 

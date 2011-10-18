@@ -10,6 +10,9 @@
     <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/district.js') }}"></script>
 
     <script type="text/javascript">
+      $(function() {
+          District.init({{ id }});
+      });
     </script>
 {% endblock %}
 
@@ -27,6 +30,12 @@
     </form>
 
     <h1 style="margin-top: 20px;">Roster for Academic Year 2011</h1>
+    <div style="width: 48%; float: right;">
+        <h2>Actions</h2>
+        <ul>
+            <li><a href="#">Import Roster from Academic Year 2010</a></li>
+        </ul>
+    </div>
     <h2>Teachers</h2>
     <form id="add-teacher" class="user-add-form">
         <input type="text" placeholder="Search for a teacher to add..." />
@@ -43,5 +52,5 @@
     <form id="add-student" class="user-add-form">
         <input type="text" placeholder="Search for a student to add..." />
     </form>
-    {{ roster.user_list(students, 'student-list', 'No students') }}
+    {{ roster.student_list(students, 'student-list', 'No students') }}
 {% endblock %}

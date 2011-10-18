@@ -4,7 +4,11 @@ namespace Impetus\AppBundle\Controller;
 
 use Impetus\AppBundle\Entity\District;
 use Impetus\AppBundle\Form\Type\NewDistrictType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
 class DistrictController extends BaseController {
@@ -23,9 +27,10 @@ class DistrictController extends BaseController {
 
         $roster = $district->getRosters()->filter(function($roster) use ($year) { return $roster->getYear() === $year; })->first();
 
-        $teachers = $roster->getTeachers();
-        $assistants = $roster->getAssistants();
-        $students = $roster->getStudents();
+        $teachers = ($roster) ? $roster->getTeachers() : null;
+        $assistants = ($roster) ? $roster->getAssistants() : null;
+        $students = ($roster) ? $roster->getStudents() : null;
+
 
         if ($request->getMethod() == 'POST') {
             // Process update
@@ -63,6 +68,35 @@ class DistrictController extends BaseController {
         return $this->render('ImpetusAppBundle:Pages:district-new.html.twig',
                              array('page' => 'district',
                                    'form' => $form->createView()));
+    }
+
+    /**
+     * @Secure(roles="ROLE_ADMIN")
+     */
+    public function updateGradeAction($userId, Request $request) {
+        $newGrade = $request->request->get('grade');
+
+        if (!preg_match('/\d+/', $newGrade)) {
+            throw new HttpException('Bad Request', 400);
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $grade = $em->createQuery('SELECT s
+                                   FROM ImpetusAppBundle:Student s
+                                   INNER JOIN s.roster r
+                                       INNER JOIN r.year y
+                                   INNER JOIN s.user u
+                                   WHERE y.year = 2011 AND u.id = :userId'
+                                  )->setParameter('userId', $userId)->getSingleResult();
+
+        if (!$grade) {
+            throw $this->createNotFoundException('No grade found for year 2011 and user id '.$userId);
+        }
+
+        $grade->setGrade($newGrade);
+        $em->flush();
+
+        return new Response("success");
     }
 
     private function postNewAction($form, Request $request) {

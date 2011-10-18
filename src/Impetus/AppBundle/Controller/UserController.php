@@ -89,7 +89,7 @@ class UserController extends BaseController {
 
         switch ($type) {
             case 'student':
-                $users = $repository->findByApproximateStudentName($request->query->get('term'));
+                $users = $repository->findByApproximateUnenrolledStudentName($request->query->get('term'));
                 break;
             default:
                 throw $this->createNotFoundException('"'. $type . '" is and invalid user type');
@@ -101,19 +101,30 @@ class UserController extends BaseController {
     }
 
     public function showAction($id) {
-        $repository = $this->getDoctrine()->getRepository('ImpetusAppBundle:User');
-        $user = $repository->find($id);
+        $doctrine = $this->getDoctrine();
+        $em = $doctrine->getEntityManager();
+
+        $user = $doctrine->getRepository('ImpetusAppBundle:User')->find($id);
 
         if (!$user) {
             throw $this->createNotFoundException('No user found for id ' . $id);
         }
 
-        $grades = $em->getRepository('ImpetusAppBundle:Grade')->findAllByUser($user);
+        $district = $em->createQuery('SELECT d.name, s.grade, y.year
+                                      FROM ImpetusAppBundle:Roster r
+                                      INNER JOIN r.students s
+                                          INNER JOIN s.user u
+                                      INNER JOIN r.district d
+                                      INNER JOIN r.year y
+                                      WHERE y.year = 2011 AND u.id = :id'
+                                     )->setParameter('id', $id)->getSingleResult();
+
+        //$grades = $doctrine->getRepository('ImpetusAppBundle:Grade')->findAllByUser($user);
 
         return $this->render('ImpetusAppBundle:Pages:user-show.html.twig',
                              array('page' => 'user',
                                    'user' => $user,
-                                   'grades' => $grades,
+                                   'district' => $district,
                                    )
                              );
     }

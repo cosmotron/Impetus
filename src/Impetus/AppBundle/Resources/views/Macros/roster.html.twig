@@ -1,20 +1,55 @@
-{% macro perm_row(user) %}
-    <li>
-        <div class="user-list-row">
-            <div id="delete-{{ user.id }}" class="action"><a href="#">Delete</a></div>
-            <div class="data">{{ user.firstName }} {{ user.lastName }} </div>
-        </div>
-    </li>
-{% endmacro %}
-
 {% macro user_list(users, list_id, empty_message) %}
     <div class="user-list-wrapper">
         <ul id="{{ list_id }}" class="user-list">
             {% for user in users %}
-                {{ _self.perm_row(user) }}
+                {{ _self.user_row(user) }}
             {% else %}
                 <li class="empty-list">{{ empty_message }}</li>
             {% endfor %}
         </ul>
     </div>
+{% endmacro %}
+
+{% macro user_row(user) %}
+    <li id="user-{{ user.id }}" class="user-list-row">
+        <div>
+            <div class="action"><a href="#">Delete</a></div>
+            <div class="data">
+                <span class="name">{{ user.firstName }} {{ user.lastName }}</span>
+            </div>
+        </div>
+    </li>
+{% endmacro %}
+
+{% macro student_list(students, list_id, empty_message) %}
+    <div class="user-list-wrapper">
+        <ul id="{{ list_id }}" class="user-list">
+            {% for student in students %}
+                {{ _self.student_row(student) }}
+            {% else %}
+                <li class="empty-list">{{ empty_message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endmacro %}
+
+{% macro student_row(student) %}
+    <li id="user-{{ student.user.id }}" class="student-list-row">
+        <div class="action"><a href="#">Delete</a></div>
+        <div class="data">
+            <span class="name">{{ student.user.firstName }} {{ student.user.lastName }}</span>
+            <form class="user-grade" style="display: inline;">
+                &mdash; Grade:
+                <select style="font-size: 14px;" class="grade-selector" name="grade">
+                    {% for i in range(12, 1) %}
+                        {% set selected = '' %}
+                        {% if i == student.grade %}
+                            {% set selected = 'selected="selected"' %}
+                        {% endif %}
+                        <option {{ selected }}>{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </li>
 {% endmacro %}

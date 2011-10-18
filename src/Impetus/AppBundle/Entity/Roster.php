@@ -19,7 +19,7 @@ class Roster {
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="District", inversedBy="rosters")
+     * @ORM\ManyToOne(targetEntity="District")
      */
     protected $district;
 
@@ -29,8 +29,7 @@ class Roster {
     protected $year;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="roster_students")
+     * @ORM\OneToMany(targetEntity="Student", mappedBy="roster")
      */
     protected $students;
 

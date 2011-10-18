@@ -23,7 +23,7 @@
                         {% if role == "ROLE_ADMIN" %}
                             Administrator
                         {% elseif role == "ROLE_STUDENT" %}
-                            Student
+                            Student at {{ district.name }}
                         {% endif %}
                     {% endfor %}
                 </p>
@@ -49,12 +49,15 @@
             <h2>Education</h2>
             <table>
                 <tr>
-                    <th class="label">Academic Terms</th>
+                    <th class="label">Academic Term</th>
+                    <td class="data">Grade {{ district.grade }} at {{ district.name }}</td>
+{#
                     {% for grade in grades %}
                         <td class="data">Grade {{ grade.grade }} in {{ grade.year.year }}</td>
                     {% else %}
                         <td class="data"><i>Not in any grades</i></td>
                     {% endfor %}
+#}
                 </tr>
                 {{ table.divider }}
 
