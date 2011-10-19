@@ -35,6 +35,24 @@ h1 {
     padding-top: 3px;
 }
 
+#flash-notice-wrapper {
+    left: 0;
+    padding: 0;
+    position: absolute;
+    text-align: center;
+    top: 60px;
+    width: 100%
+}
+
+#flash-notice {
+    background-color: #CCE6FF;
+    border: 1px solid #2e5ad6;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    display: inline-block;
+    padding: 5px 15px;
+}
+
 #main {
     background-color: #fff;
     border: 1px solid #dfdfdf;
@@ -103,4 +121,23 @@ h1 {
 
 .clear-fix {
     clear: both;
+}
+
+.ui-autocomplete {
+    background-color: white;
+    border: 1px solid black;
+    list-style: none;
+    padding: 0;
+    width: 500px;
+}
+
+a.ui-corner-all {
+    display: block;
+    margin: 0;
+    padding: 5px 10px;
+}
+
+a.ui-state-hover {
+    background-color: #e7e7e7 !important;
+    display: block;
 }

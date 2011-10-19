@@ -4,19 +4,32 @@ namespace Impetus\AppBundle\Controller;
 
 use Impetus\AppBundle\Entity\User;
 use Impetus\AppBundle\Form\Type\CreateUserType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
+/**
+ * @Route("/user")
+ */
 class UserController extends BaseController {
+    /**
+     * @Route("/{id}/edit", name="_user_edit", requirements={"id"="\d+"})
+     */
     public function editAction($id, Request $request) {
 
     }
 
+    /**
+     * @Route("/", name="_user_list")
+     */
     public function listAction() {
 
     }
 
+    /**
+     * @Route("/new", name="_user_new")
+     */
     public function newAction(Request $request) {
         $user = new User();
         $form = $this->createForm(new CreateUserType(), $user);
@@ -82,12 +95,21 @@ class UserController extends BaseController {
 
     }
 
+    /**
+     * @Route("{type}/search", name="_user_search", options={"expose"=true})
+     */
     public function searchAction($type, Request $request) {
         $repository = $this->getDoctrine()->getRepository('ImpetusAppBundle:User');
 
         // TODO: add permission checks. e.g. non-admins shouldn't be able to query for admin usernames
 
         switch ($type) {
+            case 'assistant':
+                $users = $repository->findByApproximateAssistantName($request->query->get('term'));
+                break;
+            case 'teacher':
+                $users = $repository->findByApproximateTeacherName($request->query->get('term'));
+                break;
             case 'student':
                 $users = $repository->findByApproximateUnenrolledStudentName($request->query->get('term'));
                 break;
@@ -100,6 +122,9 @@ class UserController extends BaseController {
         return new Response($json);
     }
 
+    /**
+     * @Route("/{id}", name="_user_show", requirements={"id"="\d+"})
+     */
     public function showAction($id) {
         $doctrine = $this->getDoctrine();
         $em = $doctrine->getEntityManager();

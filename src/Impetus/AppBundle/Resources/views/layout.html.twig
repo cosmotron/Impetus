@@ -11,6 +11,13 @@
         <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script type="text/javascript" src="{{ path('fos_js_routing_js', { "callback": "fos.Router.setData" }) }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/jquery-1.6.3.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/main.js') }}"></script>
+
+        <script type="text/javascript">
+          $(function() {
+              Impetus.init();
+          });
+        </script>
 
         {% block extrascripts %}
         {% endblock %}
@@ -21,6 +28,14 @@
                 <span id="title">
                     <a href="{{ path('_home') }}">IMPETUS Cooperative Learning</a>
                 </span>
+                {% if app.session.hasFlash('notice') %}
+                    <div id="flash-notice-wrapper">
+                        <div id="flash-notice">
+                            {{ app.session.flash('notice') }} &mdash;
+                            <a href="#" class="dismiss">Dismiss</a>
+                        </div>
+                    </div>
+                {% endif %}
                 <div id="user-info">
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                         Welcome <a href="{{ path('_user_show', {'id': app.user.id}) }}">{{ app.user.username }}</a> &mdash; Term: <select><option>2011</option></select> &mdash; <a href="{{ path('_logout') }}">Logout</a>

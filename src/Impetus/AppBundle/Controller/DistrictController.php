@@ -5,13 +5,23 @@ namespace Impetus\AppBundle\Controller;
 use Impetus\AppBundle\Entity\District;
 use Impetus\AppBundle\Form\Type\NewDistrictType;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
+/**
+ * @Route("/district")
+ */
 class DistrictController extends BaseController {
+    /**
+     * @Route("/{id}/edit",
+     *        name="_district_edit", requirements={"id"="\d+"})
+     * @Secure(roles="ROLE_ADMIN")
+     */
     public function editAction($id, Request $request) {
         $doctrine = $this->getDoctrine();
         $district = $doctrine->getRepository('ImpetusAppBundle:District')->find($id);
@@ -31,10 +41,17 @@ class DistrictController extends BaseController {
         $assistants = ($roster) ? $roster->getAssistants() : null;
         $students = ($roster) ? $roster->getStudents() : null;
 
-
         if ($request->getMethod() == 'POST') {
-            // Process update
-            //$this->postEditAction($form, $request);
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $doctrine->getEntityManager()->flush();
+
+                $this->get('session')->setFlash('notice', 'Your changes were saved!');
+            }
+            else {
+                throw new HttpException('Bad Request', 400);
+            }
         }
 
         return $this->render('ImpetusAppBundle:Pages:district-edit.html.twig',
@@ -48,6 +65,9 @@ class DistrictController extends BaseController {
                              );
     }
 
+    /**
+     * @Route("/", name="_district_list")
+     */
     Public function listAction() {
         $repository = $this->getDoctrine()->getRepository('ImpetusAppBundle:District');
         $districts = $repository->findAll();
@@ -57,6 +77,9 @@ class DistrictController extends BaseController {
                                    'districts' => $districts));
     }
 
+    /**
+     * @Route("/new", name="_district_new")
+     */
     public function newAction(Request $request) {
         $district = new District();
         $form = $this->createForm(new NewDistrictType(), $district);
@@ -71,6 +94,8 @@ class DistrictController extends BaseController {
     }
 
     /**
+     * @Route("/user/{userId}/grade", name="_district_update_grade", options={"expose"=true}, requirements={"userId"="\d+"})
+     * @Method({"POST"})
      * @Secure(roles="ROLE_ADMIN")
      */
     public function updateGradeAction($userId, Request $request) {

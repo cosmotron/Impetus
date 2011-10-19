@@ -6,28 +6,9 @@ _attendance:
     pattern: /attendance
     defaults: { _controller: ImpetusAppBundle:Attendance:get }
 
-_district_edit:
-    pattern: /district/{id}/edit
-    defaults: { _controller: ImpetusAppBundle:District:edit }
-    requirements:
-        id: \d+
-
-_district_list:
-    pattern: /district
-    defaults: { _controller: ImpetusAppBundle:District:list }
-
-_district_new:
-    pattern: /district/new
-    defaults: { _controller: ImpetusAppBundle:District:new }
-
-_district_update_grade:
-    pattern: /district/user/{userId}/grade
-    defaults: { _controller: ImpetusAppBundle:District:updateGrade }
-    options:
-        expose: true
-    requirements:
-        userId: \d+
-        _method: POST
+_district:
+    resource: "@ImpetusAppBundle/Controller/DistrictController.php"
+    type:     annotation
 
 _login:
     pattern: /login
@@ -79,28 +60,6 @@ _quiz_new:
     pattern: /quiz/new
     defaults: { _controller: ImpetusAppBundle:Quiz:new }
 
-_user_edit:
-    pattern: /user/{id}/edit
-    defaults: { _controller: ImpetusAppBundle:User:edit }
-    requirements:
-        id: \d+
-
-_user_list:
-    pattern: /user
-    defaults: { _controller: ImpetusAppBundle:User:list }
-
-_user_new:
-    pattern: /user/new
-    defaults: { _controller: ImpetusAppBundle:User:new }
-
-_user_search:
-    pattern: /user/{type}/search
-    defaults: { _controller: ImpetusAppBundle:User:search }
-    options:
-        expose: true
-
-_user_show:
-    pattern: /user/{id}
-    defaults: { _controller: ImpetusAppBundle:User:show }
-    requirements:
-        id: \d+
+_user:
+    resource: "@ImpetusAppBundle/Controller/UserController.php"
+    type:     annotation

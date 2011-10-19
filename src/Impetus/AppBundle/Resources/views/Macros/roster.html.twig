@@ -15,7 +15,9 @@
         <div>
             <div class="action"><a href="#">Delete</a></div>
             <div class="data">
-                <span class="name">{{ user.firstName }} {{ user.lastName }}</span>
+                <span class="name">
+                    <a href="{{ path('_user_show', { 'id': user.id }) }}">{{ user.firstName }} {{ user.lastName }}</a>
+                </span>
             </div>
         </div>
     </li>
@@ -37,7 +39,9 @@
     <li id="user-{{ student.user.id }}" class="student-list-row">
         <div class="action"><a href="#">Delete</a></div>
         <div class="data">
-            <span class="name">{{ student.user.firstName }} {{ student.user.lastName }}</span>
+            <span class="name">
+                <a href="{{ path('_user_show', { 'id': student.user.id }) }}">{{ student.user.firstName }} {{ student.user.lastName }}</a>
+            </span>
             <form class="user-grade" style="display: inline;">
                 &mdash; Grade:
                 <select style="font-size: 14px;" class="grade-selector" name="grade">

@@ -5,20 +5,44 @@ var District = {
 
     init: function(district_id) {
         this.id = district_id;
-        this.student_row = $('.student-list-row:first').clone();
-        this.user_row = $('.user-list-row:first').clone();
+        this.student_row_html = $('.student-list-row:first').clone();
+        this.user_row_html = $('.user-list-row:first').clone();
 
         this.bindAutoCompletes();
         this.bindGradeUpdators();
-        this.bindPlaceholderReplacement();
     },
 
     bindAutoCompletes: function() {
-        $('add-student input').autocomplete({
+        $('#add-teacher input').autocomplete({
+            source: Routing.generate('_user_search', {'type': 'teacher'}),
+            minLength: 2,
+            select: function(event, ui) {
+                // TODO: $.ajax call to add student to the roster
+                District.createUserListRow(ui.item, District.user_row_html, '#teacher-list');
+                $('#add-teacher input').val('');
+                return false;
+            }
+        });
+
+        $('#add-assistant input').autocomplete({
+            source: Routing.generate('_user_search', {'type': 'assistant'}),
+            minLength: 2,
+            select: function(event, ui) {
+                // TODO: $.ajax call to add student to the roster
+                District.createUserListRow(ui.item, District.user_row_html, '#assistant-list');
+                $('#add-assistant input').val('');
+                return false;
+            }
+        });
+
+        $('#add-student input').autocomplete({
             source: Routing.generate('_user_search', {'type': 'student'}),
             minLength: 2,
             select: function(event, ui) {
-                District.createUserListRow(ui.item, student_row, '#student-list');
+                // TODO: $.ajax call to add student to the roster
+                District.createUserListRow(ui.item, District.student_row_html, '#student-list');
+                $('#add-student input').val('');
+                return false;
             }
         });
     },
@@ -37,31 +61,6 @@ var District = {
                 },
                 error: function() {
                     alert("Error saving grade.");
-                }
-            });
-        });
-    },
-
-    bindPlaceholderReplacement: function() {
-        $('[placeholder]').focus(function() {
-            var input = $(this);
-            if (input.val() == input.attr('placeholder')) {
-                input.val('');
-                input.removeClass('placeholder');
-            }
-        }).blur(function() {
-            var input = $(this);
-            if (input.val() == '' || input.val() == input.attr('placeholder')) {
-                input.addClass('placeholder');
-                input.val(input.attr('placeholder'));
-            }
-        }).blur().parents('form').submit(function(event) {
-            event.preventDefault();
-
-            $(this).find('[placeholder]').each(function() {
-                var input = $(this);
-                if (input.val() == input.attr('placeholder')) {
-                    input.val('');
                 }
             });
         });
