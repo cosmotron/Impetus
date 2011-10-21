@@ -34,5 +34,9 @@ var Impetus = {
                 }
             });
         });
+    },
+
+    errorAlert: function() {
+        alert("Error processing request.");
     }
 }

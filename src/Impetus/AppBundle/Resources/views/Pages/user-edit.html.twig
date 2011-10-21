@@ -8,12 +8,14 @@
 
 {% block content %}
     <h1>New User</h1>
-    <form action="{{ path('_user_new') }}" id="user-form" method="post" novalidate="novalidate" {{ form_enctype(form) }}>
+    <form action="{{ path('_user_edit', { 'id': id }) }}" id="user-form" method="post" novalidate="novalidate" {{ form_enctype(form) }}>
         {{ form_errors(form) }}
 
         <fieldset class="user-panel">
             <legend>Required</legend>
-            {{ form_row(form.username) }}
+            <label>Username</label>
+            <input type="text" disabled="disabled" value="{{ username }}" />
+
             {{ form_row(form.password) }}
             {{ form_row(form.firstName) }}
             {{ form_row(form.lastName) }}
@@ -34,6 +36,6 @@
 
         <br class="clear-fix" />
 
-        <input type="submit" value="Create User" />
+        <input type="submit" value="Edit User" />
     </form>
 {% endblock %}

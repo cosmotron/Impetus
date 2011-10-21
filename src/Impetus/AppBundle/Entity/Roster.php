@@ -4,6 +4,8 @@ namespace Impetus\AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Impetus\AppBundle\Entity\Student;
+use Impetus\AppBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -55,15 +57,39 @@ class Roster {
         return $this->year;
     }
 
+    public function addStudent(Student $student) {
+        $this->students->add($student);
+    }
+
     public function getStudents() {
         return $this->students;
+    }
+
+    public function removeStudent(Student $student) {
+        $this->students->removeElement($student);
+    }
+
+    public function addAssistant(User $assistant) {
+        $this->assistants->add($assistant);
     }
 
     public function getAssistants() {
         return $this->assistants;
     }
 
+    public function removeAssistant(User $assistant) {
+        $this->assistants->removeElement($assistant);
+    }
+
+    public function addTeacher(User $teacher) {
+        $this->teachers->add($teacher);
+    }
+
     public function getTeachers() {
         return $this->teachers;
+    }
+
+    public function removeTeacher(User $teacher) {
+        $this->teachers->removeElement($teacher);
     }
 }

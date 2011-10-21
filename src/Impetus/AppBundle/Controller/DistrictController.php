@@ -3,6 +3,7 @@
 namespace Impetus\AppBundle\Controller;
 
 use Impetus\AppBundle\Entity\District;
+use Impetus\AppBundle\Entity\Student;
 use Impetus\AppBundle\Form\Type\NewDistrictType;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -24,6 +25,8 @@ class DistrictController extends BaseController {
      */
     public function editAction($id, Request $request) {
         $doctrine = $this->getDoctrine();
+        $em = $doctrine->getEntityManager();
+
         $district = $doctrine->getRepository('ImpetusAppBundle:District')->find($id);
 
         if (!$district) {
@@ -33,7 +36,6 @@ class DistrictController extends BaseController {
         $form = $this->createForm(new NewDistrictType(), $district);
 
         $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear(2011);
-        //$roster = $doctrine->getRepository('ImpetusAppBundle:Roster')->findOneByDistrictAndYear($district, $year);
 
         $roster = $district->getRosters()->filter(function($roster) use ($year) { return $roster->getYear() === $year; })->first();
 
@@ -45,12 +47,12 @@ class DistrictController extends BaseController {
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                $doctrine->getEntityManager()->flush();
+                $em->flush();
 
                 $this->get('session')->setFlash('notice', 'Your changes were saved!');
             }
             else {
-                throw new HttpException('Bad Request', 400);
+                throw new HttpException(400, 'Bad Request');
             }
         }
 
@@ -105,14 +107,12 @@ class DistrictController extends BaseController {
             throw new HttpException('Bad Request', 400);
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
-        $grade = $em->createQuery('SELECT s
-                                   FROM ImpetusAppBundle:Student s
-                                   INNER JOIN s.roster r
-                                       INNER JOIN r.year y
-                                   INNER JOIN s.user u
-                                   WHERE y.year = 2011 AND u.id = :userId'
-                                  )->setParameter('userId', $userId)->getSingleResult();
+        $doctrine = $this->getDoctrine();
+        $em = $doctrine->getEntityManager();
+
+        $repository = $doctrine->getRepository('ImpetusAppBundle:Student');
+        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear(2011);
+        $grade = $repository->findOneByUserIdAndYear($userId, $year);
 
         if (!$grade) {
             throw $this->createNotFoundException('No grade found for year 2011 and user id '.$userId);
@@ -122,6 +122,73 @@ class DistrictController extends BaseController {
         $em->flush();
 
         return new Response("success");
+    }
+
+    /**
+     * @Route("/{districtId}/roster/{type}/{userId}/add", name="_district_roster_add", options={"expose"=true}, requirements={"districtId"="\d+", "userId"="\d+"})
+     */
+    public function rosterAddAction($districtId, $type, $userId) {
+        return $this->rosterPerformAction($districtId, $type, $userId, 'add');
+    }
+
+    /**
+     * @Route("/{districtId}/roster/{type}/{userId}/delete", name="_district_roster_remove", options={"expose"=true}, requirements={"districtId"="\d+", "userId"="\d+"})
+     */
+    public function rosterRemoveAction($districtId, $type, $userId) {
+        return $this->rosterPerformAction($districtId, $type, $userId, 'remove');
+    }
+
+    private function rosterPerformAction($districtId, $type, $userId, $action) {
+        // TODO: Move to RosterService
+        $doctrine = $this->getDoctrine();
+        $em = $doctrine->getEntityManager();
+
+        $district = $doctrine->getRepository('ImpetusAppBundle:District')->find($districtId);
+        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear(2011);
+        $roster = $doctrine->getRepository('ImpetusAppBundle:Roster')->findOneByDistrictAndYear($district, $year);
+        $user = $doctrine->getRepository('ImpetusAppBundle:User')->find($userId);
+
+        if ($type == 'assistant') {
+            if ($action == 'add') {
+                $roster->addAssistant($user);
+            }
+            else if ($action == 'remove') {
+                $roster->removeAssistant($user);
+            }
+        }
+        else if ($type ==  'teacher') {
+            if ($action == 'add') {
+                $roster->addTeacher($user);
+            }
+            else if ($action == 'remove') {
+                $roster->removeTeacher($user);
+            }
+        }
+        else if ($type == 'student') {
+            if ($action == 'add') {
+                $student = new Student();
+                $student->setGrade(1);
+                $student->setRoster($roster);
+                $student->setUser($user);
+                $em->persist($student);
+
+                $roster->addStudent($student);
+            }
+            else if ($action == 'remove') {
+                $student = $doctrine->getRepository('ImpetusAppBundle:Student')->findOneByUserIdAndYear($userId, $year);
+
+                $roster->removeStudent($student);
+                $student->setRoster(null);
+                $em->remove($student);
+            }
+        }
+        else {
+            throw $this->createNotFoundException('"'. $type . '" is and invalid user type');
+        }
+
+        $em->flush();
+
+        return new Response('success');
     }
 
     private function postNewAction($form, Request $request) {

@@ -1,8 +1,8 @@
-{% macro user_list(users, list_id, empty_message) %}
+{% macro user_list(users, type, empty_message) %}
     <div class="user-list-wrapper">
-        <ul id="{{ list_id }}" class="user-list">
+        <ul id="list-{{ type }}" class="user-list">
             {% for user in users %}
-                {{ _self.user_row(user) }}
+                {{ _self.user_row(user, type) }}
             {% else %}
                 <li class="empty-list">{{ empty_message }}</li>
             {% endfor %}
@@ -10,10 +10,10 @@
     </div>
 {% endmacro %}
 
-{% macro user_row(user) %}
-    <li id="user-{{ user.id }}" class="user-list-row">
+{% macro user_row(user, type) %}
+    <li id="{{ type }}-{{ user.id }}" class="user-list-row">
         <div>
-            <div class="action"><a href="#">Delete</a></div>
+            <div class="action"><a href="#" class="remove-{{ type }}">Remove</a></div>
             <div class="data">
                 <span class="name">
                     <a href="{{ path('_user_show', { 'id': user.id }) }}">{{ user.firstName }} {{ user.lastName }}</a>
@@ -23,9 +23,9 @@
     </li>
 {% endmacro %}
 
-{% macro student_list(students, list_id, empty_message) %}
+{% macro student_list(students, empty_message) %}
     <div class="user-list-wrapper">
-        <ul id="{{ list_id }}" class="user-list">
+        <ul id="list-student" class="user-list">
             {% for student in students %}
                 {{ _self.student_row(student) }}
             {% else %}
@@ -36,8 +36,8 @@
 {% endmacro %}
 
 {% macro student_row(student) %}
-    <li id="user-{{ student.user.id }}" class="student-list-row">
-        <div class="action"><a href="#">Delete</a></div>
+    <li id="student-{{ student.user.id }}" class="student-list-row">
+        <div class="action"><a href="#" class="remove-student">Remove</a></div>
         <div class="data">
             <span class="name">
                 <a href="{{ path('_user_show', { 'id': student.user.id }) }}">{{ student.user.firstName }} {{ student.user.lastName }}</a>

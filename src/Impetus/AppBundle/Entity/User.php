@@ -5,6 +5,7 @@ namespace Impetus\AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -21,6 +22,7 @@ class User implements UserInterface {
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank(message="Enter a password")
      */
     protected $password;
 

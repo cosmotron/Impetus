@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Impetus\AppBundle\Repository\StudentRepository")
  * @ORM\Table(name="roster_students")
  */
 class Student {
@@ -40,7 +40,15 @@ class Student {
         return $this->roster;
     }
 
+    public function setRoster($roster) {
+        $this->roster = $roster;
+    }
+
     public function getUser() {
         return $this->user;
+    }
+
+    public function setUser($user) {
+        $this->user = $user;
     }
 }

@@ -1,7 +1,7 @@
-#ccontent h2 {
+#content h2 {
     border-bottom: 1px solid black;
     margin-bottom: 10px;
-    width: 510px;
+    width: 48%;
 }
 
 #content input, #content select {
@@ -61,9 +61,4 @@
 
 .user-add-form {
     margin: 0;
-}
-
-.placeholder {
-    color: #a1a1a1;
-    font-style: italic;
 }

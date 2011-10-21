@@ -141,3 +141,8 @@ a.ui-state-hover {
     background-color: #e7e7e7 !important;
     display: block;
 }
+
+.placeholder {
+    color: #a1a1a1;
+    font-style: italic;
+}

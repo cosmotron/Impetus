@@ -32,5 +32,5 @@ security:
 
     access_control:
 #        - { path: ^/user/new, roles: [ROLE_TA, ROLE_MENTOR] }
-        - { path: ^/attendance, roles: ROLE_STUDENT }
+#        - { path: ^/attendance, roles: ROLE_STUDENT }
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

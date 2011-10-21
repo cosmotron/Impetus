@@ -50,14 +50,11 @@
             <table>
                 <tr>
                     <th class="label">Academic Term</th>
-                    <td class="data">Grade {{ district.grade }} at {{ district.name }}</td>
-{#
-                    {% for grade in grades %}
-                        <td class="data">Grade {{ grade.grade }} in {{ grade.year.year }}</td>
+                    {% if district != null %}
+                        <td class="data">Grade {{ district.grade }} at {{ district.name }}</td>
                     {% else %}
-                        <td class="data"><i>Not in any grades</i></td>
-                    {% endfor %}
-#}
+                        <td class="data"><i>Not entered</i></td>
+                    {% endif %}
                 </tr>
                 {{ table.divider }}
 

@@ -3,10 +3,13 @@
 namespace Impetus\AppBundle\Controller;
 
 use Impetus\AppBundle\Entity\User;
+use Impetus\AppBundle\Form\Type\CoreUserType;
 use Impetus\AppBundle\Form\Type\CreateUserType;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 
 /**
@@ -15,65 +18,86 @@ use Symfony\Component\HttpFoundation\Response;
 class UserController extends BaseController {
     /**
      * @Route("/{id}/edit", name="_user_edit", requirements={"id"="\d+"})
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function editAction($id, Request $request) {
+        $doctrine = $this->getDoctrine();
+        $em = $doctrine->getEntityManager();
 
+        $user = $doctrine->getRepository('ImpetusAppBundle:User')->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('No user found for id ' . $id);
+        }
+
+        $form = $this->createForm(new CoreUserType(), $user);
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            // TODO: Solve issue with ignoring blank password validation
+            if ($form->isValid()) {
+                $em->flush();
+
+                $this->get('session')->setFlash('notice', 'Your changes were saved!');
+            }
+        }
+
+        return $this->render('ImpetusAppBundle:Pages:user-edit.html.twig',
+                             array('page' => 'user',
+                                   'id' => $id,
+                                   'username' => $user->getUsername(),
+                                   'form' => $form->createView())
+                             );
     }
 
     /**
      * @Route("/", name="_user_list")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function listAction() {
+        $users = $this->getDoctrine()->getRepository('ImpetusAppBundle:User')->findAll();
 
+        return $this->render('ImpetusAppBundle:Pages:user-list.html.twig',
+                             array('page' => 'user',
+                                   'users' => $users)
+                             );
     }
 
     /**
      * @Route("/new", name="_user_new")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function newAction(Request $request) {
         $user = new User();
         $form = $this->createForm(new CreateUserType(), $user);
 
-        $repository = $this->getDoctrine()->getRepository('ImpetusAppBundle:Year');
-        $years = $repository->findAll();
-
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
 
-            echo $request->get('testField');
+            if ($form->isValid()) {
+                // TODO: Move to a UserService
+                $user->setSalt(md5(rand()));
 
-            //if ($form->isValid()) {
-            //
-            //}
+                $encoder = new MessageDigestPasswordEncoder('sha256', true, 10);
+                $password = $encoder->encodePassword('impetus', $user->getSalt());
+                $user->setPassword($password);
 
-            return $this->render('ImpetusAppBundle:Pages:user-new.html.twig',
-                                 array('page' => 'user',
-                                       'form' => $form->createView(),
-                                       'message' => 'completed')
-                                 );
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($user);
+                $em->flush();
+
+                $form = $this->createForm(new CreateUserType(), new User());
+                $this->get('session')->setFlash('notice', 'User created!');
+            }
         }
 
         return $this->render('ImpetusAppBundle:Pages:user-new.html.twig',
                              array('page' => 'user',
-                                   'form' => $form->createView(),
-                                   'years' => $years)
+                                   'form' => $form->createView())
                              );
 
         /*
-
-        $form = $this->createForm(new CreateUserType(), $user);
-        $form->bindRequest($request);
-
-        if ($form->isValid()) {
-            $user->setSalt(md5(rand()));
-
-            $encoder = new MessageDigestPasswordEncoder('sha256', true, 10);
-            $password = $encoder->encodePassword('impetus', $user->getSalt());
-            $user->setPassword($password);
-
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($user);
-            $em->flush();
 
             // Set ACL on District if User is TA, Mentor, or Teacher
             $role = $user->getUserRoles()->get(0)->getName();
@@ -82,21 +106,12 @@ class UserController extends BaseController {
             }
 
             $this->setAcl($user, $user);
-
-            $form = $this->createForm(new CreateUserType(), new User());
-
-            return $this->render('ImpetusAppBundle:Pages:user.html.twig',
-                                 array('page' => 'user',
-                                       'type' => 'Create User',
-                                       'form' => $form->createView(),
-                                       'message' => 'completed'));
-
          */
 
     }
 
     /**
-     * @Route("{type}/search", name="_user_search", options={"expose"=true})
+     * @Route("/{type}/search", name="_user_search", options={"expose"=true})
      */
     public function searchAction($type, Request $request) {
         $repository = $this->getDoctrine()->getRepository('ImpetusAppBundle:User');
@@ -123,9 +138,10 @@ class UserController extends BaseController {
     }
 
     /**
-     * @Route("/{id}", name="_user_show", requirements={"id"="\d+"})
+     * @Route("/{id}", name="_user_show", options={"expose"=true}, requirements={"id"="\d+"})
      */
     public function showAction($id) {
+        // TODO: Secure so that only shown user, parent, district ta/teach, and admin can see
         $doctrine = $this->getDoctrine();
         $em = $doctrine->getEntityManager();
 
@@ -135,16 +151,21 @@ class UserController extends BaseController {
             throw $this->createNotFoundException('No user found for id ' . $id);
         }
 
-        $district = $em->createQuery('SELECT d.name, s.grade, y.year
+        $query = $em->createQuery('SELECT d.name, s.grade, y.year
                                       FROM ImpetusAppBundle:Roster r
                                       INNER JOIN r.students s
                                           INNER JOIN s.user u
                                       INNER JOIN r.district d
                                       INNER JOIN r.year y
                                       WHERE y.year = 2011 AND u.id = :id'
-                                     )->setParameter('id', $id)->getSingleResult();
+                                     )->setParameter('id', $id)->setMaxResults(1);
 
-        //$grades = $doctrine->getRepository('ImpetusAppBundle:Grade')->findAllByUser($user);
+        try {
+            $district = $query->getSingleResult();
+        }
+        catch(\Doctrine\Orm\NoResultException $e) {
+            $district = null;
+        }
 
         return $this->render('ImpetusAppBundle:Pages:user-show.html.twig',
                              array('page' => 'user',

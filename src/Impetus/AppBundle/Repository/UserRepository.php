@@ -50,7 +50,7 @@ class UserRepository extends EntityRepository {
         $query = $em->createQuery("SELECT u.id, CONCAT(u.firstName, CONCAT(' ', u.lastName)) as value
                                    FROM ImpetusAppBundle:User u
                                    INNER JOIN u.userRoles role
-                                   WHERE role.name = 'ROLE_ADMIN'
+                                   WHERE role.name = 'ROLE_STUDENT'
                                        AND (u.firstName LIKE :fname OR u.lastName LIKE :lname)
                                        AND u.id NOT IN (
                                            SELECT su.id
