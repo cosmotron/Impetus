@@ -1,0 +1,21 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "New Message" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/message.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>New Message</h1>
+    <form action="{{ path('_message_new') }}" id="message-form" method="post" novalidate="novalidate" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+
+        <label for="recipients">To</label>
+        <input type="text" id="recipients" />
+
+        {{ form_rest(form) }}
+
+        <input type="submit" value="Send Message" />
+    </form>
+{% endblock %}

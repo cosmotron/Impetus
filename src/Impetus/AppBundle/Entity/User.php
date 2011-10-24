@@ -22,6 +22,7 @@ class User implements UserInterface {
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Assert\MinLength(6)
      * @Assert\NotBlank(message="Enter a password")
      */
     protected $password;
@@ -33,22 +34,28 @@ class User implements UserInterface {
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\MinLength(2)
+     * @Assert\NotBlank()
      */
     protected $username;
 
     /**
      * @ORM\ManyToMany(targetEntity="Role")
+     * @Assert\NotBlank()
      */
     protected $userRoles;
 
     // Extra
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Assert\Date()
      */
     protected $birthday;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Email()
+     * @Assert\NotBlank()
      */
     protected $email;
 
@@ -59,16 +66,21 @@ class User implements UserInterface {
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\MinLength(2)
+     * @Assert\NotBlank()
      */
     protected $firstName;
 
     /**
      * @ORM\Column(type="string", length=6, nullable=true)
+     * @Assert\Choice(choices = {"male", "female"})
      */
     protected $gender;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\MinLength(2)
+     * @Assert\NotBlank()
      */
     protected $lastName;
 

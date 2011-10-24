@@ -6,6 +6,9 @@ _attendance:
     pattern: /attendance
     defaults: { _controller: ImpetusAppBundle:Attendance:get }
 
+_analytics:
+    pattern: /analytics
+
 _district:
     resource: "@ImpetusAppBundle/Controller/DistrictController.php"
     type:     annotation
@@ -20,23 +23,13 @@ _login_check:
 _logout:
     pattern: /logout
 
+_message:
+    resource: "@ImpetusAppBundle/Controller/MessageController.php"
+    type:     annotation
+
 _path:
-    pattern: /path
-    defaults: { _controller: ImpetusAppBundle:Path:get }
-
-_path_nodes:
-    pattern: /path_nodes
-    defaults: { _controller: ImpetusAppBundle:Path:nodes, _format: json }
-    options:
-        expose: true
-
-_path_show:
-    pattern: /path/{id}
-    defaults: { _controller: ImpetusAppBundle:Path:show }
-    options:
-        expose: true
-    requirements:
-        id: \d+
+    resource: "@ImpetusAppBundle/Controller/PathController.php"
+    type:     annotation
 
 _schedule:
     pattern: /schedule

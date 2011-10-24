@@ -25,8 +25,8 @@ security:
             anonymous: true
 
     role_hierarchy:
-        ROLE_TA: ROLE_STUDENT
-        ROLE_MENTOR: ROLE_STUDENT
+        ROLE_TA: ROLE_STUDENT, ROLE_PARENT
+        ROLE_MENTOR: ROLE_STUDENT, ROLE_PARENT
         ROLE_TEACHER: [ROLE_TA, ROLE_MENTOR]
         ROLE_ADMIN: [ROLE_TA, ROLE_MENTOR, ROLE_TEACHER]
 

@@ -60,8 +60,12 @@
                         {{ sidebar.nav_link('Attendance', '_attendance', 'attendance', page) }}
                         {{ sidebar.nav_link('Schedule', '_schedule', 'schedule', page) }}
 
+                        {{ sidebar.nav_link('Messaging', '_message_list', 'message', page, 'ROLE_PARENT') }}
+
                         {{ sidebar.nav_link('Users', '_user_list', 'user', page, 'ROLE_TA') }}
                         {{ sidebar.nav_link('Districts', '_district_list', 'district', page, 'ROLE_TA') }}
+
+                        {{ sidebar.nav_link('Analytics', '_analytics', 'analytics', page, 'ROLE_ADMIN') }}
                     </ul>
                 </div>
 

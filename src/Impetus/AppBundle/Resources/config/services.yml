@@ -2,6 +2,11 @@ parameters:
 #    impetus_app.example.class: Impetus\AppBundle\Example
 
 services:
+    impetus_app.event.initial_academic_year_setter:
+        class: Impetus\AppBundle\EventListener\ImpetusControllerListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
+
 #    impetus_app.example:
 #        class: %impetus_app.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]

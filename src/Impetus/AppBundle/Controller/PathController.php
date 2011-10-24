@@ -2,6 +2,7 @@
 
 namespace Impetus\AppBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -10,11 +11,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 //use Symfony\Component\Serializer\Serializer;
 
 
+/**
+ * @Route("/path")
+ */
 class PathController extends Controller {
+    /**
+     * @Route("/", name="_path")
+     */
     public function getAction() {
         return $this->render('ImpetusAppBundle:Pages:path.html.twig', array('page' => 'path'));
     }
 
+    /**
+     * @Route("/nodes", name="_path_nodes", options={"expose"=true}, defaults={"_format"="json"})
+     */
     public function nodesAction() {
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -36,6 +46,9 @@ class PathController extends Controller {
         return new Response($json);
     }
 
+    /**
+     * @Route("/{id}", name="_path_show", options={"expose"=true}, requirements={"id"="\d+"})
+     */
     public function showAction($id) {
         return $this->render('ImpetusAppBundle:Pages:path-node.html.twig', array('page' => 'path'));
     }
