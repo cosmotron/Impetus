@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Impetus\AppBundle\Repository\StudentRepository")
- * @ORM\Table(name="roster_students")
+ * @ORM\Table(name="message")
  */
 class Message {
     /**
@@ -29,7 +29,7 @@ class Message {
     protected $parent;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User)
+     * @ORM\ManyToMany(targetEntity="User")
      * @ORM\JoinTable(name="message_recipients")
      */
     protected $recipients;

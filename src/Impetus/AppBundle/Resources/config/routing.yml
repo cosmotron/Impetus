@@ -56,3 +56,7 @@ _quiz_new:
 _user:
     resource: "@ImpetusAppBundle/Controller/UserController.php"
     type:     annotation
+
+_year:
+    resource: "@ImpetusAppBundle/Controller/YearController.php"
+    type:     annotation

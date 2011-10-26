@@ -29,28 +29,31 @@
         <input type="submit" value="Edit District" />
     </form>
 
-    <h1 style="margin-top: 20px;">Roster for Academic Year 2011</h1>
-    <div style="width: 48%; float: right;">
+    <h1 style="margin-top: 20px;">Roster</h1>
+    <div class="district-panel">
+        <h2>Teachers</h2>
+        <form id="add-teacher" class="user-add-form">
+            <input type="text" placeholder="Search for a teacher to add..." />
+        </form>
+        {{ roster.user_list(teachers, 'teacher', 'No teachers') }}
+
+        <h2>Assistants</h2>
+        <form id="add-assistant" class="user-add-form">
+            <input type="text" placeholder="Search for an assistant to add..." />
+        </form>
+        {{ roster.user_list(assistants, 'assistant', 'No assistants') }}
+
+        <h2>Students</h2>
+        <form id="add-student" class="user-add-form">
+            <input type="text" placeholder="Search for a student to add..." />
+        </form>
+        {{ roster.student_list(students, 'No students') }}
+    </div>
+
+    <div style="float: right; width: 48%;">
         <h2>Actions</h2>
         <ul>
-            <li><a href="#">Import Roster from Academic Year 2010</a></li>
+            <li><a href="#">Import Roster from Previous Academic Year</a></li>
         </ul>
     </div>
-    <h2>Teachers</h2>
-    <form id="add-teacher" class="user-add-form">
-        <input type="text" placeholder="Search for a teacher to add..." />
-    </form>
-    {{ roster.user_list(teachers, 'teacher', 'No teachers') }}
-
-    <h2>Assistants</h2>
-    <form id="add-assistant" class="user-add-form">
-        <input type="text" placeholder="Search for an assistant to add..." />
-    </form>
-    {{ roster.user_list(assistants, 'assistant', 'No assistants') }}
-
-    <h2>Students</h2>
-    <form id="add-student" class="user-add-form">
-        <input type="text" placeholder="Search for a student to add..." />
-    </form>
-    {{ roster.student_list(students, 'No students') }}
 {% endblock %}

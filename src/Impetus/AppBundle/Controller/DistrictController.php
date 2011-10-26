@@ -3,6 +3,7 @@
 namespace Impetus\AppBundle\Controller;
 
 use Impetus\AppBundle\Entity\District;
+use Impetus\AppBundle\Entity\Roster;
 use Impetus\AppBundle\Entity\Student;
 use Impetus\AppBundle\Form\Type\NewDistrictType;
 use JMS\SecurityExtraBundle\Annotation\Secure;
@@ -35,7 +36,8 @@ class DistrictController extends BaseController {
 
         $form = $this->createForm(new NewDistrictType(), $district);
 
-        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear(2011);
+        $academicYear = $this->get('session')->get('academic_year');
+        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
 
         $roster = $district->getRosters()->filter(function($roster) use ($year) { return $roster->getYear() === $year; })->first();
 
@@ -87,7 +89,17 @@ class DistrictController extends BaseController {
         $form = $this->createForm(new NewDistrictType(), $district);
 
         if ($request->getMethod() == 'POST') {
-            $this->postNewAction($form, $request);
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($district);
+                $em->flush();
+
+                $this->get('session')->setFlash('notice', 'District created!');
+
+                return $this->redirect($this->generateUrl('_district_list'));
+            }
         }
 
         return $this->render('ImpetusAppBundle:Pages:district-new.html.twig',
@@ -111,11 +123,14 @@ class DistrictController extends BaseController {
         $em = $doctrine->getEntityManager();
 
         $repository = $doctrine->getRepository('ImpetusAppBundle:Student');
-        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear(2011);
+
+        $academicYear = $this->get('session')->get('academic_year');
+        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
+
         $grade = $repository->findOneByUserIdAndYear($userId, $year);
 
         if (!$grade) {
-            throw $this->createNotFoundException('No grade found for year 2011 and user id '.$userId);
+            throw $this->createNotFoundException('No grade found for year '.$academicYear.' and user id '.$userId);
         }
 
         $grade->setGrade($newGrade);
@@ -144,8 +159,24 @@ class DistrictController extends BaseController {
         $em = $doctrine->getEntityManager();
 
         $district = $doctrine->getRepository('ImpetusAppBundle:District')->find($districtId);
-        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear(2011);
-        $roster = $doctrine->getRepository('ImpetusAppBundle:Roster')->findOneByDistrictAndYear($district, $year);
+
+        $academicYear = $this->get('session')->get('academic_year');
+        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
+
+        // Ensure a roster exists for this district-year pair
+        // TODO: Move to RosterService
+        try {
+            $roster = $doctrine->getRepository('ImpetusAppBundle:Roster')->findOneByDistrictAndYear($district, $year);
+        }
+        catch (\Doctrine\ORM\NoResultException $e) {
+            $roster = new Roster();
+            $roster->setDistrict($district);
+            $roster->setYear($year);
+
+            $em->persist($roster);
+            $em->flush();
+        }
+
         $user = $doctrine->getRepository('ImpetusAppBundle:User')->find($userId);
 
         if ($type == 'assistant') {
@@ -189,21 +220,5 @@ class DistrictController extends BaseController {
         $em->flush();
 
         return new Response('success');
-    }
-
-    private function postNewAction($form, Request $request) {
-        $form->bindRequest($request);
-
-        if ($form->isValid()) {
-            return $this->render('ImpetusAppBundle:Pages:district-new.html.twig',
-                                 array('page' => 'district',
-                                       'form' => $form->createView(),
-                                       'message' => 'success'));
-        }
-
-        return $this->render('ImpetusAppBundle:Pages:district-new.html.twig',
-                             array('page' => 'district',
-                                   'form' => $form->createView(),
-                                   'message' => 'error'));
     }
 }

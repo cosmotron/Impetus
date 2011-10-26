@@ -38,10 +38,12 @@
                 {% endif %}
                 <div id="user-info">
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                        Welcome <a href="{{ path('_user_show', {'id': app.user.id}) }}">{{ app.user.username }}</a> &mdash; Term: <select><option>2011</option></select> &mdash; <a href="{{ path('_logout') }}">Logout</a>
+                        Welcome <a href="{{ path('_user_show', {'id': app.user.id}) }}">{{ app.user.username }}</a> &mdash; <a href="{{ path('_logout') }}">Logout</a>
                     {% else %}
                         <a href="{{ path('_login') }}">Login</a>
                     {% endif %}
+                    &mdash;
+                    Academic Year: <select id="academic-year"></select>
                 </div>
             </div>
             <div id="main">
@@ -49,6 +51,7 @@
                     <div id="content">
                         {% block content %}
                         {% endblock %}
+                        <br class="clear-fix" />
                     </div>
                 </div>
                 <div id="navigation">
@@ -67,6 +70,7 @@
 
                         {{ sidebar.nav_link('Analytics', '_analytics', 'analytics', page, 'ROLE_ADMIN') }}
                     </ul>
+                    <br class="clear-fix" />
                 </div>
 
                 <br class="clear-fix" />

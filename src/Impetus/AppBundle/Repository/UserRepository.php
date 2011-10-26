@@ -23,7 +23,7 @@ class UserRepository extends EntityRepository {
     }
 
 
-    public function findByApproximateTeacherName($name) {
+    public function findByApproximateUnenrolledTeacherName($name, $year) {
         $em = $this->getEntityManager();
 
         $query = $em->createQuery("SELECT u.id, CONCAT(u.firstName, CONCAT(' ', u.lastName)) as value
@@ -37,14 +37,15 @@ class UserRepository extends EntityRepository {
                                            INNER JOIN r.district d
                                            INNER JOIN r.teachers t
                                            INNER JOIN r.year y
-                                           WHERE y.year = 2011
+                                           WHERE y = :year
                                        )")->setParameters(array('fname' => "%".$name."%",
-                                                                'lname' => "%".$name."%"));
+                                                                'lname' => "%".$name."%",
+                                                                'year' => $year));
 
         return $query->getResult();
     }
 
-    public function findByApproximateUnenrolledStudentName($name) {
+    public function findByApproximateUnenrolledStudentName($name, $year) {
         $em = $this->getEntityManager();
 
         $query = $em->createQuery("SELECT u.id, CONCAT(u.firstName, CONCAT(' ', u.lastName)) as value
@@ -59,9 +60,10 @@ class UserRepository extends EntityRepository {
                                            INNER JOIN r.students s
                                                INNER JOIN s.user su
                                            INNER JOIN r.year y
-                                           WHERE y.year = 2011
+                                           WHERE y = :year
                                        )")->setParameters(array('fname' => "%".$name."%",
-                                                                'lname' => "%".$name."%"));
+                                                                'lname' => "%".$name."%",
+                                                                'year' => $year));
 
         return $query->getResult();
     }

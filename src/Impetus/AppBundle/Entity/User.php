@@ -73,7 +73,7 @@ class User implements UserInterface {
 
     /**
      * @ORM\Column(type="string", length=6, nullable=true)
-     * @Assert\Choice(choices = {"male", "female"})
+     * @Assert\Choice(choices = {"", "male", "female"})
      */
     protected $gender;
 

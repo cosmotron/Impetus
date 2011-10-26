@@ -4,8 +4,10 @@ namespace Impetus\AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Impetus\AppBundle\Entity\District;
 use Impetus\AppBundle\Entity\Student;
 use Impetus\AppBundle\Entity\User;
+use Impetus\AppBundle\Entity\Year;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -53,7 +55,55 @@ class Roster {
         $this->teachers = new ArrayCollection();
     }
 
-    public function getYear() {
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set district
+     *
+     * @param Impetus\AppBundle\Entity\District $district
+     */
+    public function setDistrict(\Impetus\AppBundle\Entity\District $district)
+    {
+        $this->district = $district;
+    }
+
+    /**
+     * Get district
+     *
+     * @return Impetus\AppBundle\Entity\District
+     */
+    public function getDistrict()
+    {
+        return $this->district;
+    }
+
+    /**
+     * Set year
+     *
+     * @param Impetus\AppBundle\Entity\Year $year
+     */
+    public function setYear(\Impetus\AppBundle\Entity\Year $year)
+    {
+        $this->year = $year;
+    }
+
+    /**
+     * Get year
+     *
+     * @return Impetus\AppBundle\Entity\Year
+     */
+    public function getYear()
+    {
         return $this->year;
     }
 

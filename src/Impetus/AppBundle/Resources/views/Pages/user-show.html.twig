@@ -22,8 +22,12 @@
                     {% for role in user.userRoles %}
                         {% if role == "ROLE_ADMIN" %}
                             Administrator
+                        {% elseif role == "ROLE_TEACHER" %}
+                            Teacher
                         {% elseif role == "ROLE_STUDENT" %}
-                            Student at {{ district.name }}
+                            {% if district != null %}
+                                Student at {{ district.name }}
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 </p>
@@ -50,11 +54,29 @@
             <table>
                 <tr>
                     <th class="label">Academic Term</th>
-                    {% if district != null %}
-                        <td class="data">Grade {{ district.grade }} at {{ district.name }}</td>
-                    {% else %}
-                        <td class="data"><i>Not entered</i></td>
-                    {% endif %}
+                    <td class="data">
+                        {% if district != null %}
+                            Grade {{ district.grade }} at {{ district.name }}
+                        {% else %}
+                            <i>Not entered</i>
+                        {% endif %}
+                    </td>
+                </tr>
+                {{ table.divider }}
+
+                <tr>
+                    <th class="label">Standardized Exams</th>
+                    <td class="data">
+                        {% if exams != null %}
+                            <ul class="data-list">
+                            {% for exam in exams %}
+                                <li>{{ exam.name }}: {{ exam.score }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <i>Not entered</i>
+                        {% endif %}
+                    </td>
                 </tr>
                 {{ table.divider }}
 

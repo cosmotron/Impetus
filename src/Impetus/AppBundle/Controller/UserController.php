@@ -114,19 +114,23 @@ class UserController extends BaseController {
      * @Route("/{type}/search", name="_user_search", options={"expose"=true})
      */
     public function searchAction($type, Request $request) {
-        $repository = $this->getDoctrine()->getRepository('ImpetusAppBundle:User');
+        $doctrine = $this->getDoctrine();
+        $userRepo = $doctrine->getRepository('ImpetusAppBundle:User');
 
         // TODO: add permission checks. e.g. non-admins shouldn't be able to query for admin usernames
 
+        $academicYear = $this->get('session')->get('academic_year');
+        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
+
         switch ($type) {
             case 'assistant':
-                $users = $repository->findByApproximateAssistantName($request->query->get('term'));
+                $users = $userRepo->findByApproximateAssistantName($request->query->get('term'));
                 break;
             case 'teacher':
-                $users = $repository->findByApproximateTeacherName($request->query->get('term'));
+                $users = $userRepo->findByApproximateUnenrolledTeacherName($request->query->get('term'), $year);
                 break;
             case 'student':
-                $users = $repository->findByApproximateUnenrolledStudentName($request->query->get('term'));
+                $users = $userRepo->findByApproximateUnenrolledStudentName($request->query->get('term'), $year);
                 break;
             default:
                 throw $this->createNotFoundException('"'. $type . '" is and invalid user type');
@@ -147,18 +151,22 @@ class UserController extends BaseController {
 
         $user = $doctrine->getRepository('ImpetusAppBundle:User')->find($id);
 
+        $academicYear = $this->get('session')->get('academic_year');
+        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
+
         if (!$user) {
             throw $this->createNotFoundException('No user found for id ' . $id);
         }
 
         $query = $em->createQuery('SELECT d.name, s.grade, y.year
-                                      FROM ImpetusAppBundle:Roster r
-                                      INNER JOIN r.students s
-                                          INNER JOIN s.user u
-                                      INNER JOIN r.district d
-                                      INNER JOIN r.year y
-                                      WHERE y.year = 2011 AND u.id = :id'
-                                     )->setParameter('id', $id)->setMaxResults(1);
+                                   FROM ImpetusAppBundle:Roster r
+                                   INNER JOIN r.students s
+                                       INNER JOIN s.user u
+                                   INNER JOIN r.district d
+                                   INNER JOIN r.year y
+                                   WHERE u = :user AND y = :year
+                                   ')->setParameters(array('user' => $user,
+                                                           'year' => $year));
 
         try {
             $district = $query->getSingleResult();
@@ -167,10 +175,13 @@ class UserController extends BaseController {
             $district = null;
         }
 
+        $exams = $doctrine->getRepository('ImpetusAppBundle:ExamScore')->findByUserAndYear($user, $year);
+
         return $this->render('ImpetusAppBundle:Pages:user-show.html.twig',
                              array('page' => 'user',
                                    'user' => $user,
                                    'district' => $district,
+                                   'exams' => $exams
                                    )
                              );
     }

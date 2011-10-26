@@ -1,7 +1,6 @@
 #content h2 {
     border-bottom: 1px solid black;
     margin-bottom: 10px;
-    width: 48%;
 }
 
 #content input, #content select {
@@ -61,4 +60,12 @@
 
 .user-add-form {
     margin: 0;
+}
+
+.district-panel {
+    border: 0;
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: 48%;
 }

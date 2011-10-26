@@ -22,6 +22,10 @@ class Year {
      */
     protected $year;
 
+    public function getId() {
+        return $this->id;
+    }
+
     public function getYear() {
         return $this->year;
     }
@@ -29,4 +33,5 @@ class Year {
     public function setYear($year) {
         $this->year = $year;
     }
+
 }
