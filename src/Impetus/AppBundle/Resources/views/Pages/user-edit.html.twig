@@ -4,15 +4,28 @@
 
 {% block extrascripts %}
     <link type="text/css" href="{{ asset('bundles/impetusapp/css/user.css') }}" rel="stylesheet" />
+
+    <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/user.js') }}"></script>
+
+    <script type="text/javascript">
+      $(function() {
+          User.init({{ id }});
+      });
+    </script>
+
+    <script type="text/html">
+        {{ form_row(eduForm.activities.get('prototype')) }}
+    </script>
 {% endblock %}
 
 {% block content %}
     <h1>New User</h1>
-    <form action="{{ path('_user_edit', { 'id': id }) }}" id="user-form" method="post" novalidate="novalidate" {{ form_enctype(form) }}>
+
+    <form action="{{ path('_user_edit', { 'id': id }) }}" id="user-form" method="post" novalidate="novalidate">
         {{ form_errors(form) }}
 
-        <fieldset class="user-panel">
-            <legend>Required</legend>
+        <div class="user-panel">
+            <h2>Required</h2>
             <label>Username</label>
             <input type="text" disabled="disabled" value="{{ username }}" />
 
@@ -21,21 +34,108 @@
             {{ form_row(form.lastName) }}
             {{ form_row(form.email) }}
             {{ form_row(form.userRoles) }}
-        </fieldset>
+        </div>
 
-        <fieldset class="user-panel">
-            <legend>Supplemental</legend>
+        <div class="user-panel" style="float: right; width: 48%;">
+            <h2>Supplemental</h2>
 
             {{ form_row(form.gender) }}
             {{ form_row(form.birthday) }}
             {{ form_row(form.ethnicity) }}
 
-        </fieldset>
+        </div>
 
         {{ form_rest(form) }}
 
         <br class="clear-fix" />
 
+    <div class="user-panel education-panel">
+        <h2>Educational</h2>
+        {{ form_errors(eduForm) }}
+        {{ form_row(eduForm._token) }}
+
+        <div id="activities">
+            {{ form_label(eduForm.activities) }}
+            {% for activity in eduForm.activities %}
+                <div class="activities-row">
+                    {{ form_widget(activity.activity) }}
+                    &mdash;
+                    <a href="#" class="remove-activity">Remove</a>
+                </div>
+            {% endfor %}
+            <div class="activities-row"></div>
+            <p style="margin-top: 0;">
+                <a href="#" class="add-activity">Add Activity</a>
+            </p>
+        </div>
+    </div>
+
+        <br class="clear-fix" />
         <input type="submit" value="Edit User" />
     </form>
+
+
+<!--
+        <form id="activity-form">
+            <select id="activities">
+                <option></option>
+                <option>MathCounts</option>
+            </select>
+            &mdash; <a href="#">Remove</a>
+            <p style="margin-top: 0;">
+                <a href="#">Add Activity</a>
+            </p>
+        </form>
+
+        <label>Courses</label>
+        <form id="course-form">
+            <select id="courses">
+                <option></option>
+                <option>Biology</option>
+                <option>Math A</option>
+            </select>
+            &mdash; <a href="#">Remove</a>
+            <p style="margin-top: 0;">
+                <a href="#">Add Course</a>
+            </p>
+        </form>
+
+        <label>Exams</label>
+        <form id="exam-form">
+            <select id="courses" style="width: 320px;">
+                <option></option>
+                <option>SAT Math</option>
+                <option>SAT Verbal</option>
+            </select>
+            &mdash; Score:
+            <input type="text" style="width: 100px;" />
+            &mdash; <a href="#">Remove</a>
+            <p style="margin-top: 0;">
+                <a href="#">Add Exam</a>
+            </p>
+        </form>
+
+        <label>Graduated</label>
+        <form id="graduated-form">
+            <select id="graduated">
+                <option></option>
+                <option>2011</option>
+            </select>
+        </form>
+
+        <label>College</label>
+        <form id="college-form">
+            <input type="text" id="college" />
+
+            <input type="submit" value="Edit College" />
+        </form>
+
+        <label>Major</label>
+        <form id="major-form">
+            <input type="text" id="major" />
+
+            <input type="submit" value="Edit Major" />
+        </form>
+    </div>
+-->
 {% endblock %}

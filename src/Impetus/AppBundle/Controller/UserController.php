@@ -2,11 +2,16 @@
 
 namespace Impetus\AppBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Impetus\AppBundle\Entity\Activity;
+use Impetus\AppBundle\Entity\Student;
 use Impetus\AppBundle\Entity\User;
+use Impetus\AppBundle\Form\StudentType;
 use Impetus\AppBundle\Form\Type\CoreUserType;
 use Impetus\AppBundle\Form\Type\CreateUserType;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -32,14 +37,48 @@ class UserController extends BaseController {
 
         $form = $this->createForm(new CoreUserType(), $user);
 
+        $academicYear = $this->get('session')->get('academic_year');
+        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
+
+        // TODO: Ensure a Student entity exists before editing. It not, either create one or error
+        $student = $doctrine->getRepository('ImpetusAppBundle:Student')->findOneByUserAndYear($user, $year);
+
+        $origStudentActivities = new ArrayCollection($student->getActivities()->toArray());
+
+
+
+        $eduForm = $this->createForm(new StudentType(), $student);
+
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
+            $eduForm->bindRequest($request);
 
-            // TODO: Solve issue with ignoring blank password validation
-            if ($form->isValid()) {
+            // TODO: Solve issue with ignoring blank password validation (solved somewhat, still need to validate non-blank password)
+            if ($form->getData()->getPassword()) {
+                $user->setSalt(md5(rand()));
+
+                $encoder = new MessageDigestPasswordEncoder('sha256', true, 10);
+                $password = $encoder->encodePassword('impetus', $user->getSalt());
+                $user->setPassword($password);
+            }
+
+            if ($eduForm->isValid()) {
+                // TODO: Move to service.
+                // Removes activities that are not present in the POST data
+                foreach ($origStudentActivities as $studentActivity) {
+                    if (!$eduForm->getData()->getActivities()->contains($studentActivity)) {
+                        $student->getActivities()->removeElement($studentActivity);
+                        $em->remove($studentActivity);
+                    }
+
+                }
+
                 $em->flush();
 
                 $this->get('session')->setFlash('notice', 'Your changes were saved!');
+            }
+            else {
+                echo 'ERROR';
             }
         }
 
@@ -47,7 +86,8 @@ class UserController extends BaseController {
                              array('page' => 'user',
                                    'id' => $id,
                                    'username' => $user->getUsername(),
-                                   'form' => $form->createView())
+                                   'form' => $form->createView(),
+                                   'eduForm' => $eduForm->createView())
                              );
     }
 
@@ -146,8 +186,9 @@ class UserController extends BaseController {
      */
     public function showAction($id) {
         // TODO: Secure so that only shown user, parent, district ta/teach, and admin can see
+
         $doctrine = $this->getDoctrine();
-        $em = $doctrine->getEntityManager();
+        //$em = $doctrine->getEntityManager();
 
         $user = $doctrine->getRepository('ImpetusAppBundle:User')->find($id);
 
@@ -158,30 +199,18 @@ class UserController extends BaseController {
             throw $this->createNotFoundException('No user found for id ' . $id);
         }
 
-        $query = $em->createQuery('SELECT d.name, s.grade, y.year
-                                   FROM ImpetusAppBundle:Roster r
-                                   INNER JOIN r.students s
-                                       INNER JOIN s.user u
-                                   INNER JOIN r.district d
-                                   INNER JOIN r.year y
-                                   WHERE u = :user AND y = :year
-                                   ')->setParameters(array('user' => $user,
-                                                           'year' => $year));
-
-        try {
-            $district = $query->getSingleResult();
+        if (in_array('ROLE_STUDENT', $user->getRoles())) {
+            $student = $doctrine->getRepository('ImpetusAppBundle:Student')->findOneByUserAndYear($user, $year);
         }
-        catch(\Doctrine\Orm\NoResultException $e) {
-            $district = null;
+        else {
+            $student = null;
         }
 
-        $exams = $doctrine->getRepository('ImpetusAppBundle:ExamScore')->findByUserAndYear($user, $year);
 
         return $this->render('ImpetusAppBundle:Pages:user-show.html.twig',
                              array('page' => 'user',
                                    'user' => $user,
-                                   'district' => $district,
-                                   'exams' => $exams
+                                   'student' => $student,
                                    )
                              );
     }

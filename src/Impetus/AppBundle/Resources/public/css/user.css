@@ -47,16 +47,22 @@
     vertical-align: top;
 }
 
+#user-profile tr .data-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
 #user-form {
     margin-top: 10px;
 }
 
-#user-form label {
+#content label {
     font-size: 18px;
     display:block;
 }
 
-#user-form legend {
+#content legend {
     border-bottom: 1px solid black;
     font-size: 20px;
     font-weight: bold;
@@ -65,12 +71,12 @@
     width: 93%;
 }
 
-#user-form input, #user-form select {
+#content input, #content select {
     font-size: 18px;
     margin-bottom: 15px;
 }
 
-#user-form input:not([type=submit]) {
+#content input:not([type=submit]), #content .education-panel select {
     width: 500px;
 }
 
@@ -80,4 +86,9 @@
     margin: 0;
     padding: 0;
     width: 48%;
+}
+
+.user-panel h2 {
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
 }

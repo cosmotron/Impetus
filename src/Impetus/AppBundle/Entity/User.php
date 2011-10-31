@@ -22,8 +22,6 @@ class User implements UserInterface {
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Assert\MinLength(6)
-     * @Assert\NotBlank(message="Enter a password")
      */
     protected $password;
 

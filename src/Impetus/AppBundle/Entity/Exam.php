@@ -7,10 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Impetus\AppBundle\Repository\ExamScoreRepository")
- * @ORM\Table(name="exam_score")
+ * @ORM\Entity
+ * @ORM\Table(name="exam")
  */
-class ExamScore {
+class Exam {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -29,19 +29,14 @@ class ExamScore {
     protected $score;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="Student", inversedBy="exams")
      */
-    protected $user;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Year")
-     */
-    protected $year;
+    protected $student;
 
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -61,7 +56,7 @@ class ExamScore {
     /**
      * Get name
      *
-     * @return string
+     * @return string 
      */
     public function getName()
     {
@@ -81,7 +76,7 @@ class ExamScore {
     /**
      * Get score
      *
-     * @return integer
+     * @return integer 
      */
     public function getScore()
     {
@@ -89,42 +84,22 @@ class ExamScore {
     }
 
     /**
-     * Set user
+     * Set student
      *
-     * @param Impetus\AppBundle\Entity\User $user
+     * @param Impetus\AppBundle\Entity\Student $student
      */
-    public function setUser(\Impetus\AppBundle\Entity\User $user)
+    public function setStudent(\Impetus\AppBundle\Entity\Student $student)
     {
-        $this->user = $user;
+        $this->student = $student;
     }
 
     /**
-     * Get user
+     * Get student
      *
-     * @return Impetus\AppBundle\Entity\User
+     * @return Impetus\AppBundle\Entity\Student 
      */
-    public function getUser()
+    public function getStudent()
     {
-        return $this->user;
-    }
-
-    /**
-     * Set year
-     *
-     * @param Impetus\AppBundle\Entity\Year $year
-     */
-    public function setYear(\Impetus\AppBundle\Entity\Year $year)
-    {
-        $this->year = $year;
-    }
-
-    /**
-     * Get year
-     *
-     * @return Impetus\AppBundle\Entity\Year
-     */
-    public function getYear()
-    {
-        return $this->year;
+        return $this->student;
     }
 }

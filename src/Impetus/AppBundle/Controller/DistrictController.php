@@ -122,12 +122,16 @@ class DistrictController extends BaseController {
         $doctrine = $this->getDoctrine();
         $em = $doctrine->getEntityManager();
 
-        $repository = $doctrine->getRepository('ImpetusAppBundle:Student');
+        $user = $doctrine->getRepository('ImpetusAppBundle:User')->find($userId);
+
+        if (!$user) {
+            throw $this->createNotFoundException('No user found for id ' . $userId);
+        }
 
         $academicYear = $this->get('session')->get('academic_year');
         $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
 
-        $grade = $repository->findOneByUserIdAndYear($userId, $year);
+        $grade = $doctrine->getRepository('ImpetusAppBundle:Student')->findOneByUserAndYear($user, $year);
 
         if (!$grade) {
             throw $this->createNotFoundException('No grade found for year '.$academicYear.' and user id '.$userId);
@@ -206,10 +210,9 @@ class DistrictController extends BaseController {
                 $roster->addStudent($student);
             }
             else if ($action == 'remove') {
-                $student = $doctrine->getRepository('ImpetusAppBundle:Student')->findOneByUserIdAndYear($userId, $year);
+                $student = $doctrine->getRepository('ImpetusAppBundle:Student')->findOneByUserAndYear($user, $year);
 
                 $roster->removeStudent($student);
-                $student->setRoster(null);
                 $em->remove($student);
             }
         }

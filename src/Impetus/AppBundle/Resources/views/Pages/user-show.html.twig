@@ -25,8 +25,8 @@
                         {% elseif role == "ROLE_TEACHER" %}
                             Teacher
                         {% elseif role == "ROLE_STUDENT" %}
-                            {% if district != null %}
-                                Student at {{ district.name }}
+                            {% if student != null %}
+                                Student at {{ student.roster.district.name }}
                             {% endif %}
                         {% endif %}
                     {% endfor %}
@@ -50,13 +50,14 @@
                 {{ table.info_row('Gender', user.gender) }}
             </table>
 
+        {% if student != null %}
             <h2>Education</h2>
             <table>
                 <tr>
                     <th class="label">Academic Term</th>
                     <td class="data">
-                        {% if district != null %}
-                            Grade {{ district.grade }} at {{ district.name }}
+                        {% if student.roster.district != null %}
+                            Grade {{ student.grade }} at {{ student.roster.district.name }}
                         {% else %}
                             <i>Not entered</i>
                         {% endif %}
@@ -67,20 +68,29 @@
                 <tr>
                     <th class="label">Standardized Exams</th>
                     <td class="data">
-                        {% if exams != null %}
-                            <ul class="data-list">
-                            {% for exam in exams %}
-                                <li>{{ exam.name }}: {{ exam.score }}</li>
-                            {% endfor %}
-                            </ul>
+                        <ul class="data-list">
+                        {% for exam in student.exams %}
+                            <li>{{ exam.name }}: {{ exam.score }}</li>
                         {% else %}
-                            <i>Not entered</i>
-                        {% endif %}
+                            <li><i>Not entered</i></li>
+                        {% endfor %}
+                        </ul>
                     </td>
                 </tr>
                 {{ table.divider }}
 
-                {{ table.info_row('STEP Participation') }}
+                <tr>
+                    <th class="label">Activities</th>
+                    <td class="data">
+                        <ul class="data-list">
+                        {% for activity in student.activities %}
+                            <li>{{ activity.name }}</li>
+                        {% else %}
+                            <li><i>Not entered</i></li>
+                        {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
                 {{ table.divider }}
 
                 {{ table.info_row('College') }}
@@ -88,6 +98,7 @@
 
                 {{ table.info_row('Major') }}
             </table>
+        {% endif %}
 
             <br class="clear-fix" />
         </div>
