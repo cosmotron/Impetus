@@ -24,14 +24,9 @@ class Course {
     protected $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Student", inversedBy="courses")
-     */
-    protected $student;
-
-    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,30 +46,14 @@ class Course {
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * Set student
-     *
-     * @param Impetus\AppBundle\Entity\Student $student
-     */
-    public function setStudent(\Impetus\AppBundle\Entity\Student $student)
-    {
-        $this->student = $student;
-    }
-
-    /**
-     * Get student
-     *
-     * @return Impetus\AppBundle\Entity\Student 
-     */
-    public function getStudent()
-    {
-        return $this->student;
+    public function __toString() {
+        return $this->name;
     }
 }

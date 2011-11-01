@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class UserController extends BaseController {
     /**
-     * @Route("/{id}/edit", name="_user_edit", requirements={"id"="\d+"})
+     * @Route("/{id}/edit", name="_user_edit", options={"expose"=true}, requirements={"id"="\d+"})
      * @Secure(roles="ROLE_ADMIN")
      */
     public function editAction($id, Request $request) {
@@ -40,12 +40,18 @@ class UserController extends BaseController {
         $academicYear = $this->get('session')->get('academic_year');
         $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
 
-        // TODO: Ensure a Student entity exists before editing. It not, either create one or error
+        // TODO: Ensure a Student entity exists before editing. It not, either create one or error (somewhat solved, error is displayed)
         $student = $doctrine->getRepository('ImpetusAppBundle:Student')->findOneByUserAndYear($user, $year);
 
-        $origStudentActivities = new ArrayCollection($student->getActivities()->toArray());
-
-
+        if (!$student) {
+            $studentError = 'User is either not a student or not in a roster for the selected year.';
+        }
+        else {
+            $origStudentActivities = new ArrayCollection($student->getActivities()->toArray());
+            $origStudentCourses = new ArrayCollection($student->getCourses()->toArray());
+            $origStudentExams = new ArrayCollection($student->getExams()->toArray());
+            $studentError = null;
+        }
 
         $eduForm = $this->createForm(new StudentType(), $student);
 
@@ -62,15 +68,30 @@ class UserController extends BaseController {
                 $user->setPassword($password);
             }
 
-            if ($eduForm->isValid()) {
+            if ($form->isValid() && $eduForm->isValid()) {
                 // TODO: Move to service.
                 // Removes activities that are not present in the POST data
-                foreach ($origStudentActivities as $studentActivity) {
-                    if (!$eduForm->getData()->getActivities()->contains($studentActivity)) {
-                        $student->getActivities()->removeElement($studentActivity);
-                        $em->remove($studentActivity);
+                if (!$studentError) {
+                    foreach ($origStudentActivities as $studentActivity) {
+                        if (!$eduForm->getData()->getActivities()->contains($studentActivity)) {
+                            $student->getActivities()->removeElement($studentActivity);
+                            $em->remove($studentActivity);
+                        }
                     }
 
+                    foreach ($origStudentCourses as $studentCourse) {
+                        if (!$eduForm->getData()->getCourses()->contains($studentCourse)) {
+                            $student->getCourses()->removeElement($studentCourse);
+                            $em->remove($studentCourse);
+                        }
+                    }
+
+                    foreach ($origStudentExams as $studentExam) {
+                        if (!$eduForm->getData()->getExams()->contains($studentExam)) {
+                            $student->getExams()->removeElement($studentExam);
+                            $em->remove($studentExam);
+                        }
+                    }
                 }
 
                 $em->flush();
@@ -87,7 +108,8 @@ class UserController extends BaseController {
                                    'id' => $id,
                                    'username' => $user->getUsername(),
                                    'form' => $form->createView(),
-                                   'eduForm' => $eduForm->createView())
+                                   'eduForm' => $eduForm->createView(),
+                                   'studentError' => $studentError)
                              );
     }
 

@@ -13,6 +13,7 @@
 
         <fieldset class="user-panel">
             <legend>Required</legend>
+
             {{ form_row(form.username) }}
             {{ form_row(form.password) }}
             {{ form_row(form.firstName) }}
@@ -27,7 +28,9 @@
             {{ form_row(form.gender) }}
             {{ form_row(form.birthday) }}
             {{ form_row(form.ethnicity) }}
-
+            {{ form_row(form.graduated) }}
+            {{ form_row(form.college) }}
+            {{ form_row(form.major) }}
         </fieldset>
 
         {{ form_rest(form) }}

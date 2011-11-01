@@ -23,20 +23,11 @@ class Exam {
      */
     protected $name;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    protected $score;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Student", inversedBy="exams")
-     */
-    protected $student;
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,50 +47,14 @@ class Exam {
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * Set score
-     *
-     * @param integer $score
-     */
-    public function setScore($score)
-    {
-        $this->score = $score;
-    }
-
-    /**
-     * Get score
-     *
-     * @return integer 
-     */
-    public function getScore()
-    {
-        return $this->score;
-    }
-
-    /**
-     * Set student
-     *
-     * @param Impetus\AppBundle\Entity\Student $student
-     */
-    public function setStudent(\Impetus\AppBundle\Entity\Student $student)
-    {
-        $this->student = $student;
-    }
-
-    /**
-     * Get student
-     *
-     * @return Impetus\AppBundle\Entity\Student 
-     */
-    public function getStudent()
-    {
-        return $this->student;
+    public function __toString() {
+        return $this->name;
     }
 }

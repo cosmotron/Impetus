@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta http-equiv="Cache-Control" content="no-cache" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>IMPETUS - {% block title %}{% endblock %}</title>
 
@@ -15,7 +16,8 @@
 
         <script type="text/javascript">
           $(function() {
-              Impetus.init();
+              var currentUrl = 'http://localhost{{ app.request.getRequestUri }}';
+              Impetus.init(currentUrl);
           });
         </script>
 

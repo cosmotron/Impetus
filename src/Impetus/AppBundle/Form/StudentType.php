@@ -10,21 +10,27 @@ class StudentType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        /*
-        $builder
-            ->add('activities', 'entity', array('empty_value' => 'Choose an activity',
-                                                'class' => 'ImpetusAppBundle:Activity',
-                                                'label' => 'Activities',
-                                                'property' => 'name',
-                                                'multiple' => true,
-                                                )
-                  )
-            ;
-        */
-
         $builder
             ->add('activities', 'collection',
                   array('type' => new StudentActivityType(),
+                        'allow_add' => true,
+                        'allow_delete' => true,
+                        'prototype' => true,
+                        'by_reference' => false,
+                        'required' => false,
+                        )
+                  )
+            ->add('courses', 'collection',
+                  array('type' => new StudentCourseType(),
+                        'allow_add' => true,
+                        'allow_delete' => true,
+                        'prototype' => true,
+                        'by_reference' => false,
+                        'required' => false,
+                        )
+                  )
+            ->add('exams', 'collection',
+                  array('type' => new StudentExamType(),
                         'allow_add' => true,
                         'allow_delete' => true,
                         'prototype' => true,

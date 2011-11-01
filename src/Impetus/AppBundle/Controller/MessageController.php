@@ -20,7 +20,10 @@ class MessageController extends BaseController {
      * @Secure(roles="ROLE_ADMIN")
      */
     public function listAction() {
-        ;
+        return $this->render('ImpetusAppBundle:Pages:message-list.html.twig',
+                             array('page' => 'messages',
+                                   )
+                             );
     }
 
     /**

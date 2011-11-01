@@ -66,11 +66,11 @@
                 {{ table.divider }}
 
                 <tr>
-                    <th class="label">Standardized Exams</th>
+                    <th class="label">Activities</th>
                     <td class="data">
                         <ul class="data-list">
-                        {% for exam in student.exams %}
-                            <li>{{ exam.name }}: {{ exam.score }}</li>
+                        {% for activity in student.activities %}
+                            <li>{{ activity.activity.name }}</li>
                         {% else %}
                             <li><i>Not entered</i></li>
                         {% endfor %}
@@ -80,11 +80,25 @@
                 {{ table.divider }}
 
                 <tr>
-                    <th class="label">Activities</th>
+                    <th class="label">Courses</th>
                     <td class="data">
                         <ul class="data-list">
-                        {% for activity in student.activities %}
-                            <li>{{ activity.name }}</li>
+                        {% for course in student.courses %}
+                            <li>{{ course.course.name }}</li>
+                        {% else %}
+                            <li><i>Not entered</i></li>
+                        {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                {{ table.divider }}
+
+                <tr>
+                    <th class="label">Standardized Exams</th>
+                    <td class="data">
+                        <ul class="data-list">
+                        {% for exam in student.exams %}
+                            <li>{{ exam.exam.name }}: {{ exam.score }}</li>
                         {% else %}
                             <li><i>Not entered</i></li>
                         {% endfor %}
@@ -107,8 +121,7 @@
             <h2>Actions</h2>
 
             <ul style="padding-left: 16px;">
-                <li><a href="#">View Classes</a></li>
-                <li><a href="#">View Assessment and Exam Data</a></li>
+                <li><a href="#">View Assessment Data</a></li>
                 <li><a href="{{ path('_user_edit', {'id': user.id }) }}">Edit User</a></li>
             </ul>
         </div>

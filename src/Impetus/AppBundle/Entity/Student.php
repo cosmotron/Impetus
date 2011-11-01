@@ -25,17 +25,12 @@ class Student {
     protected $activities;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $college;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Course", mappedBy="student")
+     * @ORM\OneToMany(targetEntity="StudentCourse", mappedBy="student", cascade={"all"})
      */
     protected $courses;
 
     /**
-     * @ORM\OneToMany(targetEntity="Exam", mappedBy="student")
+     * @ORM\OneToMany(targetEntity="StudentExam", mappedBy="student", cascade={"all"})
      */
     protected $exams;
 
@@ -43,16 +38,6 @@ class Student {
      * @ORM\Column(type="integer")
      */
     protected $grade;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected $graduated;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $major;
 
     /**
      * @ORM\ManyToOne(targetEntity="Roster")
@@ -83,26 +68,6 @@ class Student {
     }
 
     /**
-     * Set college
-     *
-     * @param string $college
-     */
-    public function setCollege($college)
-    {
-        $this->college = $college;
-    }
-
-    /**
-     * Get college
-     *
-     * @return string
-     */
-    public function getCollege()
-    {
-        return $this->college;
-    }
-
-    /**
      * Set grade
      *
      * @param integer $grade
@@ -120,46 +85,6 @@ class Student {
     public function getGrade()
     {
         return $this->grade;
-    }
-
-    /**
-     * Set graduated
-     *
-     * @param integer $graduated
-     */
-    public function setGraduated($graduated)
-    {
-        $this->graduated = $graduated;
-    }
-
-    /**
-     * Get graduated
-     *
-     * @return integer
-     */
-    public function getGraduated()
-    {
-        return $this->graduated;
-    }
-
-    /**
-     * Set major
-     *
-     * @param string $major
-     */
-    public function setMajor($major)
-    {
-        $this->major = $major;
-    }
-
-    /**
-     * Get major
-     *
-     * @return string
-     */
-    public function getMajor()
-    {
-        return $this->major;
     }
 
     /**
@@ -183,6 +108,10 @@ class Student {
         return $this->activities;
     }
 
+    /**
+     * Set activities
+     *
+     */
     public function setActivities($activities){
         $this->activities = $activities;
         foreach ($activities as $studentActivity){
@@ -198,6 +127,7 @@ class Student {
     public function addCourse(\Impetus\AppBundle\Entity\Course $courses)
     {
         $this->courses[] = $courses;
+        $courses->setStudent($this);
     }
 
     /**
@@ -211,6 +141,17 @@ class Student {
     }
 
     /**
+     * Set courses
+     *
+     */
+    public function setCourses($courses){
+        $this->courses = $courses;
+        foreach ($courses as $studentCourse){
+            $studentCourse->setStudent($this);
+        }
+    }
+
+    /**
      * Add exams
      *
      * @param Impetus\AppBundle\Entity\Exam $exams
@@ -218,6 +159,7 @@ class Student {
     public function addExam(\Impetus\AppBundle\Entity\Exam $exams)
     {
         $this->exams[] = $exams;
+        $exams->setStudent($this);
     }
 
     /**
@@ -228,6 +170,17 @@ class Student {
     public function getExams()
     {
         return $this->exams;
+    }
+
+    /**
+     * Set exams
+     *
+     */
+    public function setExams($exams){
+        $this->exams = $exams;
+        foreach ($exams as $studentExam){
+            $studentExam->setStudent($this);
+        }
     }
 
     /**

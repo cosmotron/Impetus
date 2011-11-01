@@ -51,6 +51,11 @@ class User implements UserInterface {
     protected $birthday;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $college;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Email()
      * @Assert\NotBlank()
@@ -76,11 +81,22 @@ class User implements UserInterface {
     protected $gender;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $graduated;
+
+    /**
      * @ORM\Column(type="string", length=255)
      * @Assert\MinLength(2)
      * @Assert\NotBlank()
      */
     protected $lastName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $major;
+
 
     public function __construct() {
         $this->userRoles = new ArrayCollection();
@@ -135,6 +151,15 @@ class User implements UserInterface {
         $this->birthday = $birthday;
     }
 
+    public function setCollege($college) {
+        $this->college = $college;
+    }
+
+    public function getCollege() {
+        return $this->college;
+    }
+
+
     public function getEmail() {
         return $this->email;
     }
@@ -167,6 +192,14 @@ class User implements UserInterface {
         $this->gender = $gender;
     }
 
+    public function setGraduated($graduated) {
+        $this->graduated = $graduated;
+    }
+
+    public function getGraduated() {
+        return $this->graduated;
+    }
+
     public function getLastName() {
         return $this->lastName;
     }
@@ -174,6 +207,16 @@ class User implements UserInterface {
     public function setLastName($lastName) {
         $this->lastName = $lastName;
     }
+
+    public function setMajor($major) {
+        $this->major = $major;
+    }
+
+    public function getMajor() {
+        return $this->major;
+    }
+
+
 
     public function equals(UserInterface $user) {
         return md5($this->getUsername()) == md5($user->getUsername());

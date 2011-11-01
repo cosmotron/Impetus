@@ -1,5 +1,9 @@
 var Impetus = {
-    init: function() {
+    url: null,
+
+    init: function(currentUrl) {
+        this.url = currentUrl;
+
         this.createYearChanger();
 
         this.bindFlashNoticeButtons();
@@ -73,7 +77,7 @@ var Impetus = {
                 error: Impetus.errorAlert,
                 success: function(data) {
                     if (data == 'success') {
-                        window.location.reload();
+                        window.location = Impetus.url;
                     }
                 }
             });

@@ -1,0 +1,23 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Message List" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/message.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Messages</h1>
+    <p><a href="{{ path('_message_new') }}" style="font-size: 16px;">New Message</a></p>
+
+    <h2>Unread</h2>
+    <ul>
+        <li><i>None</i></li>
+    </ul>
+
+    <h2>Read</h2>
+    <ul>
+        <li><a href="{{ path('_message_show', { 'id': 1 }) }}">New Website Announcement</a> &mdash; October 31, 2011</li>
+    </ul>
+
+{% endblock %}

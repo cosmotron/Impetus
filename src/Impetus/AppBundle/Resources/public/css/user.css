@@ -76,14 +76,19 @@
     margin-bottom: 15px;
 }
 
-#content input:not([type=submit]), #content .education-panel select {
+#content input:not([type=submit]) {
     width: 500px;
+}
+
+#content .education-panel select {
+    width: 300px;
 }
 
 .user-panel {
     border: 0;
     float: left;
     margin: 0;
+    min-width: 500px;
     padding: 0;
     width: 48%;
 }
@@ -91,4 +96,13 @@
 .user-panel h2 {
     border-bottom: 1px solid black;
     margin-bottom: 10px;
+}
+
+#exams select {
+    width: 170px !important;
+}
+
+#exams input {
+    display: inline;
+    width: 50px !important;
 }
