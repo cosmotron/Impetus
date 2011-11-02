@@ -1,6 +1,7 @@
 #user-profile h2 {
     border-bottom: 1px solid black;
     margin-bottom: 10px;
+    width: 93%;
 }
 
 #user-profile #user-avatar {
@@ -18,9 +19,9 @@
     margin-left: 20px;
 }
 
-#user-profile table{
+#user-profile table {
     margin-right: 40px;
-    width: 100%;
+    width: 93%;
 }
 
 #user-profile table .divider hr {

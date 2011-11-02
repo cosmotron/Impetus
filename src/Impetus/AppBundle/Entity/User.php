@@ -81,7 +81,7 @@ class User implements UserInterface {
     protected $gender;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $graduated;
 

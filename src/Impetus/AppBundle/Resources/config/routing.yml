@@ -7,7 +7,8 @@ _attendance:
     defaults: { _controller: ImpetusAppBundle:Attendance:get }
 
 _analytics:
-    pattern: /analytics
+    resource: "@ImpetusAppBundle/Controller/AnalyticsController.php"
+    type:     annotation
 
 _district:
     resource: "@ImpetusAppBundle/Controller/DistrictController.php"

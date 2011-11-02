@@ -1,6 +1,7 @@
 #content h2 {
     border-bottom: 1px solid black;
     margin-bottom: 10px;
+    width: 93%;
 }
 
 #content input, #content select {
@@ -66,6 +67,7 @@
     border: 0;
     float: left;
     margin: 0;
+    min-width: 500px;
     padding: 0;
     width: 48%;
 }

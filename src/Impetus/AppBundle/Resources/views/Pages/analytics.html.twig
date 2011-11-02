@@ -1,0 +1,21 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Analytics" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/analytics.css') }}" rel="stylesheet" />
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/analytics.js') }}"></script>
+
+    <script type="text/javascript">
+      Analytics.init();
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h1>Analytics</h1>
+
+    <h2>Graduation Rates</h2>
+    <div id="graduation-rates" style="height: 300px; width: 400px;"></div>
+{% endblock %}

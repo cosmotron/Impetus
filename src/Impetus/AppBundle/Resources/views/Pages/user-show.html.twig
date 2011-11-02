@@ -107,17 +107,20 @@
                 </tr>
                 {{ table.divider }}
 
-                {{ table.info_row('College') }}
+                {{ table.info_row('Graduated', user.graduated) }}
                 {{ table.divider }}
 
-                {{ table.info_row('Major') }}
+                {{ table.info_row('College', user.college) }}
+                {{ table.divider }}
+
+                {{ table.info_row('Major', user.major) }}
             </table>
         {% endif %}
 
             <br class="clear-fix" />
         </div>
 
-        <div style="float: right; width: 48%">
+        <div class="user-panel">
             <h2>Actions</h2>
 
             <ul style="padding-left: 16px;">
