@@ -29,4 +29,22 @@ class StudentRepository extends EntityRepository {
 
         return $result;
     }
+
+    public function findByYear($year) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT CONCAT(u.lastName, CONCAT(', ', u.firstName)) as name,
+                                          s.grade as class,
+                                          d.name as school
+                                   FROM ImpetusAppBundle:Student s
+                                   INNER JOIN s.user u
+                                   INNER JOIN s.roster r
+                                       INNER JOIN r.year y
+                                   INNER JOIN r.district d
+                                   WHERE y = :year
+                                   ORDER BY name ASC
+                                   ")->setParameter('year', $year);
+
+        return $query->getResult();
+    }
 }

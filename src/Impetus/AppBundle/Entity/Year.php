@@ -34,4 +34,7 @@ class Year {
         $this->year = $year;
     }
 
+    public function __toString() {
+        return (string) $this->year;
+    }
 }

@@ -56,6 +56,11 @@ class User implements UserInterface {
     protected $college;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $diploma;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Email()
      * @Assert\NotBlank()
@@ -81,7 +86,7 @@ class User implements UserInterface {
     protected $gender;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\OneToOne(targetEntity="Year")
      */
     protected $graduated;
 
@@ -159,6 +164,13 @@ class User implements UserInterface {
         return $this->college;
     }
 
+    public function setDiploma($diploma) {
+        $this->diploma = $diploma;
+    }
+
+    public function getDiploma() {
+        return $this->diploma;
+    }
 
     public function getEmail() {
         return $this->email;

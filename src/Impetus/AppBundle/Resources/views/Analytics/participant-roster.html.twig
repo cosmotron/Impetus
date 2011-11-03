@@ -1,0 +1,32 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Analytics - Participant Roster" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/analytics.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Participant Roster for {{ app.session.get('academic_year') }}</h1>
+
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Name (Last, First)</th>
+            <th>Class Level</th>
+            <th>School</th>
+        </tr>
+    {% for result in results %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ result.name }}</td>
+            <td>{{ result.class }}</td>
+            <td>{{ result.school }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <p>
+        <a href="{{ path('_analytics_participant_roster', { '_format': 'csv' }) }}">Download CSV</a>
+    </p>
+{% endblock %}

@@ -1,11 +1,19 @@
 parameters:
-#    impetus_app.example.class: Impetus\AppBundle\Example
+    service_base: Impetus\AppBundle\Service
 
 services:
     impetus_app.event.initial_academic_year_setter:
         class: Impetus\AppBundle\EventListener\ImpetusControllerListener
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
+
+    year_service:
+        class: %service_base%\YearService
+        arguments: [@doctrine, @session]
+
+    csv_service:
+        class: %service_base%\CsvService
+
 
 #    impetus_app.example:
 #        class: %impetus_app.example.class%

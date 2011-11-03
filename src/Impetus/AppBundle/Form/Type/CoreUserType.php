@@ -37,19 +37,19 @@ class CoreUserType extends AbstractType {
                         )
                   )
             ->add('ethnicity', 'choice',
-                  array('choices' => array('american_indian' => 'American Indian',
-                                           'asian' => 'Asian',
-                                           'black' => 'Black or African American',
-                                           'hispanic' => 'Hispanic of any race',
-                                           'pacific_islander' => 'Pacific Islander',
-                                           'white' => 'White',
-                                           'other' => 'Other'),
+                  array('choices' => array('American Indian' => 'American Indian',
+                                           'Asian' => 'Asian',
+                                           'Black or African American' => 'Black or African American',
+                                           'Hispanic of any race' => 'Hispanic of any race',
+                                           'Pacific Islander' => 'Pacific Islander',
+                                           'White' => 'White',
+                                           'Other' => 'Other'),
                         'required'  => false,
                         )
                   )
             ->add('gender', 'choice',
-                  array('choices' => array('male' => 'Male',
-                                           'female' => 'Female'
+                  array('choices' => array('Male' => 'Male',
+                                           'Female' => 'Female'
                                            ),
                         'required'  => false,
                         )
@@ -61,9 +61,16 @@ class CoreUserType extends AbstractType {
                         'multiple'    => true,
                         )
                   )
-            ->add('graduated', 'choice',
-                  array('choices' => range(date('Y'), (date('Y') - 10)),
+            ->add('graduated', 'entity',
+                  array('class' => 'ImpetusAppBundle:Year',
+                        'query_builder' => function ($repository) { return $repository->createQueryBuilder('y')->orderBy('y.year', 'DESC'); },
                         'required' => false,
+                        )
+                  )
+            ->add('diploma', 'choice',
+                  array('choices' => array('Advanced Regents' => 'Advanced Regents',
+                                           'Regents' => 'Regents'),
+                        'required' => false
                         )
                   )
             ->add('college', 'text',
@@ -71,10 +78,19 @@ class CoreUserType extends AbstractType {
                         )
                   )
             ->add('major', 'choice',
-                  array('choices' => array('cs' => 'Computer Science',
-                                           'math' => 'Mathematics',
-                                           'physics' => 'Physics',
-                                           'other' => 'Other'),
+                  array('choices' => array('Architechture' => 'Architecture',
+                                           'Biological and Biomedical Sciences' => 'Biological and Biomedical Sciences',
+                                           'Business, Management, and Marketing' => 'Business, Management, and Marketing',
+                                           'Communications' => 'Communications',
+                                           'Computer and Information Science' => 'Computer and Information Science',
+                                           'Education' => 'Education',
+                                           'Engineering' => 'Engineering',
+                                           'Humanities' => 'Humanities',
+                                           'Mathematics and Statistics' => 'Mathematics and Statistics',
+                                           'Physical Science' => 'Physical Science',
+                                           'Psychology' => 'Psychology',
+                                           'Other' => 'Other',
+                                           ),
                         'required'  => false,
                         )
                   )

@@ -22,64 +22,56 @@ class AnalyticsController extends BaseController {
      * @Secure(roles="ROLE_ADMIN")
      */
     public function indexAction() {
-        return $this->render('ImpetusAppBundle:Pages:analytics.html.twig',
+        return $this->render('ImpetusAppBundle:Analytics:analytics.html.twig',
                              array('page' => 'analytics'));
     }
 
     /**
-     * @Route("/graduation_rates", name="_analytics_graduation_rates", options={"expose"=true})
+     * @Route("/participant-roster.{_format}", name="_analytics_participant_roster", defaults={"_format"="html"}, options={"expose"=true}, requirements={"_format"="html|csv"})
      * @Secure(roles="ROLE_ADMIN")
      */
-    public function fetchGraduateRatesAction() {
-        $em = $this->getDoctrine()->getEntityManager();
+    public function participantRosterAction($_format) {
+        $year = $this->get('year_service')->getCurrentAcademicYear();
 
-        $query = $em->createQuery("SELECT u.graduated as year, COUNT(u.graduated) as total
-                                   FROM ImpetusAppBundle:User u
-                                   INNER JOIN u.userRoles r
-                                   WHERE u.graduated IS NOT NULL AND
-                                         r.name = 'ROLE_STUDENT'
-                                   GROUP BY u.graduated
-                                   ORDER BY u.graduated ASC");
+        $results = $this->getDoctrine()->getRepository('ImpetusAppBundle:Student')->findByYear($year);
 
-        $result = $query->getResult();
-
-        $dataTable = array();
-        $dataTable['cols'] = array(
-                                   array('label' => 'Year', 'type' => 'string'),
-                                   array('label' => 'Students', 'type' => 'number')
-                                   );
-        $dataTable['rows'] = $this->dataTableRows($result, 'year', 'total');
-
-        $response = new Response(json_encode($dataTable));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return $this->outputResults($results,
+                                    $_format,
+                                    'participant-roster.csv',
+                                    'participant-roster.html.twig');
     }
 
-    private function dataTableRows() {
-        $resultSet = func_get_arg(0);
-        $numargs = func_num_args();
-        $rows = array();
+    /**
+     * @Route("/graduate-placement.{_format}", name="_analytics_graduate_placement", defaults={"_format"="html"}, options={"expose"=true}, requirements={"_format"="html|csv"})
+     * @Secure(roles="ROLE_ADMIN")
+     */
+    public function graduatePlacementAction($_format) {
+        $year = $this->get('year_service')->getCurrentAcademicYear();
 
-        foreach ($resultSet as $result) {
-            $row = array();
+        $results = $this->getDoctrine()->getRepository('ImpetusAppBundle:User')->getGraduatePlacementsByYear($year);
 
-            for ($i = 1; $i < $numargs; $i++) {
-                $cell = array();
+        return $this->outputResults($results,
+                                    $_format,
+                                    'graduate-placement.csv',
+                                    'graduate-placement.html.twig');
+    }
 
-                // Make first column a string so it becomes an axis
-                if ($i == 1) {
-                    $cell['v'] = $result[func_get_arg($i)];
-                }
-                else {
-                    $cell['v'] = (is_numeric($result[func_get_arg($i)])) ? intval($result[func_get_arg($i)]) : $result[func_get_arg($i)];
-                }
 
-                $row['c'][] = $cell;
-            }
-            $rows[] = $row;
+    private function outputResults($results, $format, $csvName, $templateName) {
+        if (!$results) {
+            throw $this->createNotFoundException('No results found for year '.$this->get('session')->get('academic_year'));
         }
 
-        return $rows;
+        switch($format) {
+            case 'csv':
+                return $this->get('csv_service')->createHttpResponse($results, $csvName);
+            case 'html':
+                return $this->render('ImpetusAppBundle:Analytics:'.$templateName,
+                                     array('page' => 'analytics',
+                                           'results' => $results));
+            default:
+                throw $this->createNotFoundException('Invalid format');
+                break;
+        }
     }
 }

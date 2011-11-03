@@ -1,0 +1,34 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Analytics - Graduate Placement" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/analytics.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Graduate Placement for {{ app.session.get('academic_year') }}</h1>
+
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Name of Graduate</th>
+            <th>Diploma Type</th>
+            <th>Name of College</th>
+            <th>Program of Study</th>
+        </tr>
+    {% for result in results %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ result.graduate }}</td>
+            <td>{{ result.diploma }}</td>
+            <td>{{ result.college }}</td>
+            <td>{{ result.major }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <p>
+        <a href="{{ path('_analytics_graduate_placement', { '_format': 'csv' }) }}">Download CSV</a>
+    </p>
+{% endblock %}

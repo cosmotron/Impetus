@@ -67,4 +67,20 @@ class UserRepository extends EntityRepository {
 
         return $query->getResult();
     }
+
+    public function getGraduatePlacementsByYear($year) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT CONCAT(u.lastName, CONCAT(', ', u.firstName)) as graduate,
+                                          u.diploma as diploma,
+                                          u.college as college,
+                                          u.major as major
+                                   FROM ImpetusAppBundle:User u
+                                   INNER JOIN u.graduated y
+                                   WHERE y = :year
+                                   ORDER BY graduate ASC
+                                   ")->setParameter('year', $year);
+
+        return $query->getResult();
+    }
 }
