@@ -21,9 +21,13 @@ table {
 }
 
 th {
-    background-color: #eee;
+    background-color: #F5F5F5;
 }
 
 th, td {
     padding: 5px;
+}
+
+.grade {
+    width: 50px;
 }

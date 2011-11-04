@@ -20,5 +20,6 @@
     <h1>Analytics for {{ app.session.get('academic_year') }}</h1>
 
     {{ analytics.table('Participant Roster', '_analytics_participant_roster') }}
+    {{ analytics.table('Students Served', '_analytics_students_served') }}
     {{ analytics.table('Graduate Placement', '_analytics_graduate_placement') }}
 {% endblock %}

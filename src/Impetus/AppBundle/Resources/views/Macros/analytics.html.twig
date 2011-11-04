@@ -6,3 +6,47 @@
         <a href="{{ path(path_name, { '_format': 'csv' }) }}">Download CSV</a>
     </p>
 {% endmacro %}
+
+{% macro element(value) %}
+    {% if value != 0 %}
+        {{ value }}
+    {% endif %}
+{% endmacro %}
+
+{% macro ethnicity_table(data, rowTotals, columnTotals) %}
+    <table>
+        <tr>
+            <th rowspan="2" style="width: 250px;">Ethnicity</th>
+            <th colspan="6">Class Level</th>
+            <th class="grade" rowspan="2">Total</th>
+        </tr>
+
+        <tr>
+        {% for grade in 7..12 %}
+            <th class="grade">{{ grade }}</th>
+        {% endfor %}
+        </tr>
+
+    {% for key, row in data %}
+        <tr>
+            <th>{{ key }}</th>
+        {% for grade in 7..12 %}
+            <td>{{ _self.element(row[grade]) }}</td>
+        {% endfor %}
+            <td>{{ _self.element(rowTotals[key]) }}</td>
+        </tr>
+    {% endfor %}
+
+        <tr>
+            <td colspan="9"></td>
+        </tr>
+
+        <tr>
+            <th>Total</th>
+        {% for grade in 7..12 %}
+            <td>{{ _self.element(columnTotals[grade]) }}</td>
+        {% endfor %}
+            <td>{{ _self.element(columnTotals['grandTotal']) }}</td>
+        </tr>
+    </table>
+{% endmacro %}

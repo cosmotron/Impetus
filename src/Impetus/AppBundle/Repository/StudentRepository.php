@@ -47,4 +47,24 @@ class StudentRepository extends EntityRepository {
 
         return $query->getResult();
     }
+
+    public function getEthnicityCountsByGenderAndEthnicityAndYear($gender, $ethnicity, $year) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT s.grade,
+                                          COUNT(u.id) as ethnicityCount
+                                   FROM ImpetusAppBundle:Student s
+                                   INNER JOIN s.user u
+                                   INNER JOIN s.roster r
+                                       INNER JOIN r.year y
+                                   WHERE u.gender = :gender AND
+                                         u.ethnicity = :ethnicity AND
+                                         y = :year
+                                   GROUP BY s.grade
+                                   ")->setParameters(array('gender' => $gender,
+                                                           'ethnicity' => $ethnicity,
+                                                           'year' => $year));
+
+        return $query->getResult();
+    }
 }

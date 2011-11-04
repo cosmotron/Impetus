@@ -1,0 +1,24 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+{% import "ImpetusAppBundle:Macros:analytics.html.twig" as analytics %}
+
+{% block title "Analytics - Students Served" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/analytics.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Students Served for {{ app.session.get('academic_year') }}</h1>
+
+    <h2>Males</h2>
+    {{ analytics.ethnicity_table(maleTable, maleRowTotals, maleColumnTotals) }}
+
+    <h2>Females</h2>
+
+    {{ analytics.ethnicity_table(femaleTable, femaleRowTotals, femaleColumnTotals) }}
+
+
+    <p>
+        <a href="{{ path('_analytics_students_served', { '_format': 'csv' }) }}">Download CSV</a>
+    </p>
+{% endblock %}

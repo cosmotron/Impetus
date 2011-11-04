@@ -6,20 +6,25 @@ use Symfony\Component\HttpFoundation\Response;
 
 
 class CsvService {
-    public function create($results) {
+    public function createSimpleTable($results) {
         $csv = '';
 
-        $csv .= $this->headerRow($results[0]);
+        $csv .= $this->headerRow(reset($results));
         $csv .= $this->dataRows($results);
 
         return $csv;
     }
 
-    public function createHttpResponse($results, $filename) {
-        //echo '<pre>';
-        $csv = $this->create($results);
-        //echo $csv;
-        //echo '</pre>';
+    public function createComplexTable($data, $firstColumnName) {
+        $csv = '';
+
+        $csv .= $firstColumnName . ',' . $this->headerRow(reset($data));
+        $csv .= $this->dataRows($data, true);
+
+        return $csv;
+    }
+
+    public function generateHttpResponse($csv, $filename) {
         $response = new Response($csv);
 
         $response->headers->set('Content-Type', 'text/csv');
@@ -34,12 +39,18 @@ class CsvService {
         return implode(',', $columnHeaders) . "\n";
     }
 
-    private function dataRows($results) {
+    private function dataRows($results, $columnKeyAsFirstElement = false) {
         $data = '';
 
-        foreach($results as $row) {
-            $line = '';
-            $delim = '';
+        foreach($results as $key => $row) {
+            if ($columnKeyAsFirstElement) {
+                $line = $key;
+                $delim = ',';
+            }
+            else {
+                $line = '';
+                $delim = '';
+            }
 
             foreach ($row as $key => $value) {
                 if (strpos($value, ',') === false) {

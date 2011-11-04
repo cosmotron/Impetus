@@ -37,10 +37,11 @@ class CoreUserType extends AbstractType {
                         )
                   )
             ->add('ethnicity', 'choice',
-                  array('choices' => array('American Indian' => 'American Indian',
+                  array('choices' => array('American Indian or Alaskan Native' => 'American Indian or Alaskan Native',
                                            'Asian' => 'Asian',
+                                           'Bi-racial' => 'Bi-racial',
                                            'Black or African American' => 'Black or African American',
-                                           'Hispanic of any race' => 'Hispanic of any race',
+                                           'Hispanic' => 'Hispanic',
                                            'Pacific Islander' => 'Pacific Islander',
                                            'White' => 'White',
                                            'Other' => 'Other'),
