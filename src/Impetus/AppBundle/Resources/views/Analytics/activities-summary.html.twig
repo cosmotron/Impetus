@@ -1,0 +1,30 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+{% import "ImpetusAppBundle:Macros:analytics.html.twig" as analytics %}
+
+{% block title "Analytics - Activities Summary" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/analytics.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Activities Summary for {{ app.session.get('academic_year') }}</h1>
+
+    <table>
+        <tr>
+            <th>Activity</th>
+            <th># of Students</th>
+        </tr>
+
+    {% for key, row in results %}
+        <tr>
+            <td>{{ key }}</td>
+            <td>{{ row['count'] }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <p>
+        <a href="{{ path('_analytics_activities_summary', { '_format': 'csv' }) }}">Download CSV</a>
+    </p>
+{% endblock %}

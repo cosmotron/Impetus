@@ -1,7 +1,7 @@
 {% macro table(title, path_name) %}
     <h2>{{ title }}</h2>
     <p>
-        <a href="{{ path(path_name) }}">View as HTML</a>
+        <a href="{{ path(path_name) }}">View</a>
         &mdash;
         <a href="{{ path(path_name, { '_format': 'csv' }) }}">Download CSV</a>
     </p>

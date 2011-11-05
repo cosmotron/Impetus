@@ -11,12 +11,10 @@
     <h1>Students Served for {{ app.session.get('academic_year') }}</h1>
 
     <h2>Males</h2>
-    {{ analytics.ethnicity_table(maleTable, maleRowTotals, maleColumnTotals) }}
+    {{ analytics.ethnicity_table(results.maleTable, results.maleRowTotals, results.maleColumnTotals) }}
 
     <h2>Females</h2>
-
-    {{ analytics.ethnicity_table(femaleTable, femaleRowTotals, femaleColumnTotals) }}
-
+    {{ analytics.ethnicity_table(results.femaleTable, results.femaleRowTotals, results.femaleColumnTotals) }}
 
     <p>
         <a href="{{ path('_analytics_students_served', { '_format': 'csv' }) }}">Download CSV</a>

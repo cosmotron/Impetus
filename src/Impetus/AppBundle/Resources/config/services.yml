@@ -1,4 +1,5 @@
 parameters:
+    analytics_base: Impetus\AppBundle\Analytics
     service_base: Impetus\AppBundle\Service
 
 services:
@@ -8,11 +9,34 @@ services:
             - { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
 
     year_service:
-        class: %service_base%\YearService
-        arguments: [@doctrine, @session]
+        class:     %service_base%\YearService
+        arguments: [ @doctrine, @session ]
 
     csv_service:
         class: %service_base%\CsvService
+
+    analytics_service:
+        class: %service_base%\AnalyticsService
+        arguments: [ @doctrine ]
+
+    abstract_result:
+        class:    %analytics_base%\AbstractResult
+        abstract: true
+        calls:
+            - [ setCsvService, [ @csv_service ] ]
+            - [ setTemplatingService, [ @templating ] ]
+
+    simple_result:
+        class:  %analytics_base%\SimpleResult
+        parent: abstract_result
+
+    complex_result:
+        class:  %analytics_base%\ComplexResult
+        parent: abstract_result
+
+    students_served_result:
+        class:  %analytics_base%\StudentsServedResult
+        parent: abstract_result
 
 
 #    impetus_app.example:

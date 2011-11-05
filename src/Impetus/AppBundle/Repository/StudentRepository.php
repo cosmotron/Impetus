@@ -48,6 +48,23 @@ class StudentRepository extends EntityRepository {
         return $query->getResult();
     }
 
+    public function getActivityCountByActivityAndYear($activity, $year) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT COUNT(s.id) as activityCount
+                                   FROM ImpetusAppBundle:Student s
+                                   INNER JOIN s.activities activities
+                                       INNER JOIN activities.activity a
+                                   INNER JOIN s.roster r
+                                       INNER JOIN r.year y
+                                   WHERE a = :activity AND
+                                         y = :year
+                                   ")->setParameters(array('activity' => $activity,
+                                                           'year' => $year));
+
+        return $query->getResult();
+    }
+
     public function getEthnicityCountsByGenderAndEthnicityAndYear($gender, $ethnicity, $year) {
         $em = $this->getEntityManager();
 
