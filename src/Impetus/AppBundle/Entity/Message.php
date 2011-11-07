@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Impetus\AppBundle\Repository\StudentRepository")
+ * @ORM\Entity
  * @ORM\Table(name="message")
  */
 class Message {
@@ -20,6 +20,8 @@ class Message {
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\MinLength(1)
+     * @Assert\NotBlank()
      */
     protected $content;
 
@@ -29,8 +31,7 @@ class Message {
     protected $parent;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="message_recipients")
+     * @ORM\OneToMany(targetEntity="MessageRecipient", mappedBy="message", cascade={"delete"})
      */
     protected $recipients;
 
@@ -39,27 +40,152 @@ class Message {
      */
     protected $sender;
 
-    /*
-     * @ORM\Column(type="string")
-     */
-    protected $subject;
-
     /**
      * @ORM\Column(type="datetime", name="created_at")
      */
-    protected $createdAt;
+    protected $sentAt;
 
-    public function __construct() {
-        $this->recipients = new ArrayCollection();
-        $this->createdAt = new \DateTime();
+    /**
+     * @ORM\Column(type="string")
+     * @Assert\MinLength(1)
+     * @Assert\NotBlank()
+     */
+    protected $subject;
+
+
+    public function __construct()
+    {
+        $this->recipients = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->sentAt = new \DateTime();
     }
 
-    // TODO: add getters/setters
-    public function getContent() {
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set content
+     *
+     * @param text $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    /**
+     * Get content
+     *
+     * @return text
+     */
+    public function getContent()
+    {
         return $this->content;
     }
 
-    public function getSubject() {
+    /**
+     * Set sentAt
+     *
+     * @param datetime $sentAt
+     */
+    public function setSentAt($sentAt)
+    {
+        $this->sentAt = $sentAt;
+    }
+
+    /**
+     * Get sentAt
+     *
+     * @return datetime
+     */
+    public function getSentAt()
+    {
+        return $this->sentAt;
+    }
+
+    /**
+     * Set subject
+     *
+     * @param string $subject
+     */
+    public function setSubject($subject)
+    {
+        $this->subject = $subject;
+    }
+
+    /**
+     * Get subject
+     *
+     * @return string
+     */
+    public function getSubject()
+    {
         return $this->subject;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param Impetus\AppBundle\Entity\Message $parent
+     */
+    public function setParent(\Impetus\AppBundle\Entity\Message $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return Impetus\AppBundle\Entity\Message
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Add recipients
+     *
+     * @param Impetus\AppBundle\Entity\MessageRecipient $recipients
+     */
+    public function addMessageRecipient(\Impetus\AppBundle\Entity\MessageRecipient $recipients)
+    {
+        $this->recipients[] = $recipients;
+    }
+
+    /**
+     * Get recipients
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getRecipients()
+    {
+        return $this->recipients;
+    }
+
+    /**
+     * Set sender
+     *
+     * @param Impetus\AppBundle\Entity\User $sender
+     */
+    public function setSender(\Impetus\AppBundle\Entity\User $sender)
+    {
+        $this->sender = $sender;
+    }
+
+    /**
+     * Get sender
+     *
+     * @return Impetus\AppBundle\Entity\User
+     */
+    public function getSender()
+    {
+        return $this->sender;
     }
 }

@@ -61,7 +61,6 @@ var District = {
             source: Routing.generate('_user_search', { 'type': type }),
             minLength: 2,
             select: function(event, ui) {
-                // TODO: $.ajax call to add student to the roster
                 $.ajax({
                     url: Routing.generate('_district_roster_add', { 'districtId': District.id, 'type': type, 'userId': ui.item.id }),
                     type: 'GET',

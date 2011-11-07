@@ -7,6 +7,17 @@ use Impetus\AppBundle\Entity\User;
 
 
 class UserRepository extends EntityRepository {
+    public function findByApproximateName($name) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT u.id, CONCAT(u.firstName, CONCAT(' ', u.lastName)) as value
+                                   FROM ImpetusAppBundle:User u
+                                   WHERE CONCAT(u.firstName, CONCAT(' ', u.lastName)) LIKE :name
+                                  ")->setParameter('name', "%".$name."%");
+
+        return $query->getResult();
+    }
+
     public function findByApproximateAssistantName($name) {
         $em = $this->getEntityManager();
 
@@ -14,9 +25,8 @@ class UserRepository extends EntityRepository {
                                    FROM ImpetusAppBundle:User u
                                    INNER JOIN u.userRoles role
                                    WHERE (role.name = 'ROLE_TA' OR role.name = 'ROLE_MENTOR')
-                                       AND (u.firstName LIKE :fname OR u.lastName LIKE :lname)
-                                   ")->setParameters(array('fname' => "%".$name."%",
-                                                           'lname' => "%".$name."%"));
+                                       AND (CONCAT(u.firstName, CONCAT(' ', u.lastName)) LIKE :name)
+                                   ")->setParameter('name', "%".$name."%");
 
 
         return $query->getResult();
@@ -30,7 +40,7 @@ class UserRepository extends EntityRepository {
                                    FROM ImpetusAppBundle:User u
                                    INNER JOIN u.userRoles role
                                    WHERE role.name = 'ROLE_TEACHER'
-                                       AND (u.firstName LIKE :fname OR u.lastName LIKE :lname)
+                                       AND CONCAT(u.firstName, CONCAT(' ', u.lastName)) LIKE :name
                                        AND u.id NOT IN (
                                            SELECT t.id
                                            FROM ImpetusAppBundle:Roster r
@@ -38,8 +48,7 @@ class UserRepository extends EntityRepository {
                                            INNER JOIN r.teachers t
                                            INNER JOIN r.year y
                                            WHERE y = :year
-                                       )")->setParameters(array('fname' => "%".$name."%",
-                                                                'lname' => "%".$name."%",
+                                       )")->setParameters(array('name' => "%".$name."%",
                                                                 'year' => $year));
 
         return $query->getResult();
@@ -52,7 +61,7 @@ class UserRepository extends EntityRepository {
                                    FROM ImpetusAppBundle:User u
                                    INNER JOIN u.userRoles role
                                    WHERE role.name = 'ROLE_STUDENT'
-                                       AND (u.firstName LIKE :fname OR u.lastName LIKE :lname)
+                                       AND CONCAT(u.firstName, CONCAT(' ', u.lastName)) LIKE :name
                                        AND u.id NOT IN (
                                            SELECT su.id
                                            FROM ImpetusAppBundle:Roster r
@@ -61,9 +70,20 @@ class UserRepository extends EntityRepository {
                                                INNER JOIN s.user su
                                            INNER JOIN r.year y
                                            WHERE y = :year
-                                       )")->setParameters(array('fname' => "%".$name."%",
-                                                                'lname' => "%".$name."%",
+                                       )")->setParameters(array('name' => "%".$name."%",
                                                                 'year' => $year));
+
+        return $query->getResult();
+    }
+
+    public function findByUserRole($role) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT u
+                                   FROM ImpetusAppBundle:User u
+                                   INNER JOIN u.userRoles r
+                                   WHERE r = :role
+                                   ")->setParameter('role', $role);
 
         return $query->getResult();
     }

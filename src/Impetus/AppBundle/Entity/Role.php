@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Impetus\AppBundle\Repository\RoleRepository")
  * @ORM\Table(name="role")
  */
 class Role implements RoleInterface {
@@ -58,6 +58,10 @@ class Role implements RoleInterface {
 
     public function getRole() {
         return $this->getName();
+    }
+
+    public function toHumanReadable() {
+        return ucfirst(strtolower(substr($this->getName(), 5)));
     }
 
     public function __toString() {

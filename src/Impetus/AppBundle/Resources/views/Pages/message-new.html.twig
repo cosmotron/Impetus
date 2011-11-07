@@ -4,6 +4,16 @@
 
 {% block extrascripts %}
     <link type="text/css" href="{{ asset('bundles/impetusapp/css/message.css') }}" rel="stylesheet" />
+
+    <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/json2.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/jquery-ui-autocomplete.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/message.js') }}"></script>
+
+    <script type="text/javascript">
+      $(function() {
+          Message.init();
+      });
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -11,8 +21,28 @@
     <form action="{{ path('_message_new') }}" id="message-form" method="post" novalidate="novalidate" {{ form_enctype(form) }}>
         {{ form_errors(form) }}
 
-        <label for="recipients">To</label>
-        <input type="text" id="recipients" />
+        <label>To</label>
+        <div id="recipients">
+            <div>
+                <span id="recipient-add">
+                    <span>
+                        <a href="#">Add recipient</a>
+                    </span>
+                    <input type="text" name="recipient-search" />
+                </span>
+            </div>
+<!--
+            <div id="autocomplete-box">
+                <ul id="ac-users"></ul>
+                <ul id="ac-roles">
+
+                </ul>
+            </div>
+-->
+        </div>
+
+        <input type="hidden" id="role-recipients" name="role-recipients" />
+        <input type="hidden" id="user-recipients" name="user-recipients" />
 
         {{ form_rest(form) }}
 
