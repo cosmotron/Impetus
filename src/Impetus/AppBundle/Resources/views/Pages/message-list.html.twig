@@ -10,14 +10,24 @@
     <h1>Messages</h1>
     <p><a href="{{ path('_message_new') }}" style="font-size: 16px;">New Message</a></p>
 
-    <h2>Unread</h2>
-    <ul>
-        <li><i>None</i></li>
-    </ul>
+    <table id="message-table">
+        <tr>
+            <th>Subject</th>
+            <th>From</th>
+            <th>Sent At</th>
+        </tr>
+    {% for message in messages %}
+            <tr class="
+                {%- if not message.messageRead %}unread{% endif -%}
+            ">
+                <td><a href="{{ path('_message_show', { 'id': message.id }) }}">{{ message.subject }}</a></td>
+                <td style="width: 180px;"><a href="{{ path('_user_show', { 'id': message.user_id  }) }}">{{ message.sender }}</a></td>
+                <td style="width: 250px;">{{ message.sentAt | date('D, M j, Y \\a\\t g:iA') }}</td>
+            </tr>
+    {% else %}
+        <li style="font-style: italic;">No messages</li>
+    {% endfor %}
+    </table>
 
-    <h2>Read</h2>
-    <ul>
-        <li><a href="{{ path('_message_show', { 'id': 1 }) }}">New Website Announcement</a> &mdash; October 31, 2011</li>
-    </ul>
 
 {% endblock %}

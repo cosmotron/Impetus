@@ -1,0 +1,13 @@
+{% macro message_display(user, message, index) %}
+    <div class="message-box
+        {%- if index|default(0) is odd %} odd-row{% endif -%}
+    ">
+        <div class="message-top">
+            <div class="message-date">{{ message.sentAt | date('D, M j, Y \\a\\t g:iA') }}</div>
+            <div class="message-sender"><a href="{{ path('_user_show', { 'id': user.id }) }}">{{ user.firstName }} {{ user.lastName }}</a></div>
+        </div>
+        <div class="message-content">
+            {{ message.content }}
+        </div>
+    </div>
+{% endmacro %}

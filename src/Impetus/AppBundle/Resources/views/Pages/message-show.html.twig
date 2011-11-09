@@ -1,0 +1,39 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+{% import "ImpetusAppBundle:Macros:message.html.twig" as message_macro %}
+
+{% block title "Message - "~parent.message.subject %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/message.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>{{ parent.message.subject }}</h1>
+
+    <div style="margin: 10px 0;">
+        <span style="font-weight: bold;">Recipients:</span>
+        <ul id="recipient-list">
+        {% for recipient in parent.message.recipients %}
+            <li><a href="{{ path('_user_show', { 'id': recipient.user.id }) }}">{{ recipient.user.firstName }} {{ recipient.user.lastName }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+
+    <div id="message-container">
+        {{ message_macro.message_display(parent.user, parent.message) }}
+
+    {% for reply in replies %}
+        {{ message_macro.message_display(reply.sender, reply, loop.index) }}
+    {% endfor %}
+    </div>
+
+    <h2>Reply</h2>
+    <form action="{{ path('_message_show', { 'id': parent.message.id }) }}" id="message-form" method="post" novalidate="novalidate" {{ form_enctype(replyForm) }}>
+        {{ form_errors(replyForm) }}
+
+        {{ form_row(replyForm.content) }}
+        {{ form_row(replyForm._token) }}
+
+        <input type="submit" value="Send Reply" />
+    </form>
+{% endblock %}

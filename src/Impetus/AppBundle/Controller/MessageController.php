@@ -3,6 +3,7 @@
 namespace Impetus\AppBundle\Controller;
 
 use Impetus\AppBundle\Entity\Message;
+use Impetus\AppBundle\Entity\MessageRecipient;
 use Impetus\AppBundle\Form\Type\MessageType;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,10 +21,16 @@ class MessageController extends BaseController {
      * @Secure(roles="ROLE_ADMIN")
      */
     public function listAction() {
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $messages = $this->getDoctrine()->getRepository('ImpetusAppBundle:Message')->getMessageListByRecipient($user);
+
+        // TODO: mark messages as unread when a new reply is posted
+
         return $this->render('ImpetusAppBundle:Pages:message-list.html.twig',
-                             array('page' => 'messages',
-                                   )
-                             );
+                             array('page' => 'message',
+                                   'messages' => $messages
+                                   ));
     }
 
     /**
@@ -38,60 +45,21 @@ class MessageController extends BaseController {
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                //echo '<pre>';
                 $doctrine = $this->getDoctrine();
+                $em = $doctrine->getEntityManager();
+                $messageService = $this->get('message_service');
 
-                $roles = json_decode($request->request->get('role-recipients'));
-                $users = json_decode($request->request->get('user-recipients'));
+                $currentUser = $this->getCurrentUser();
 
-                if ($roles) {
-                    //echo "== Role Users\n";
-                    foreach ($roles as $key => $value) {
-                        $roleData = $doctrine->getRepository('ImpetusAppBundle:Role')->find($value);
-                        $usersData = $doctrine->getRepository('ImpetusAppBundle:User')->findByUserRole($roleData);
+                $message->setSender($currentUser);
+                $em->persist($message);
+                $em->flush();
 
-                        foreach ($usersData as $userData) {
-                            /*
-                            echo '"'
-                                . $userData->getFirstName(). ' '
-                                . $userData->getLastName() . '": '
-                                . $userData->getEmail() . "\n";
-                            */
+                $recipients = json_decode($request->request->get('recipients'));
+                $emailAddresses = $messageService->addRecipientsToMessage($recipients, $message);
 
-                            $toArray[] = $userData->getEmail();
-                        }
-                    }
-                    echo "\n";
-                }
-
-                if ($users) {
-                    //echo "== Explicit Users\n";
-                    foreach ($users as $key => $value) {
-                        $userData = $doctrine->getRepository('ImpetusAppBundle:User')->find($value);
-                        /*
-                        echo '"'
-                            . $userData->getFirstName(). ' '
-                            . $userData->getLastName() . '": '
-                            . $userData->getEmail() . "\n";
-                        */
-
-                        $toArray[] = $userData->getEmail();
-                    }
-                    //echo "\n";
-                }
-
-                //echo "== Subject\n" . $message->getSubject() . "\n\n";
-                //echo "== Content\n" . $message->getContent() . "\n";
-
-                //echo '</pre>';
-
-                $swiftMessage = \Swift_Message::newInstance()
-                    ->setSubject($message->getSubject())
-                    ->setFrom('impetustem@gmail.com')
-                    ->setTo($toArray)
-                    ->setBody($message->getContent());
-
-                $this->get('mailer')->send($swiftMessage);
+                $email = $messageService->createEmail($emailAddresses, $message->getSubject(), $message->getContent());
+                $messageService->send($email);
 
                 $this->get('session')->setFlash('notice', 'Your message was sent!');
             }
@@ -99,8 +67,8 @@ class MessageController extends BaseController {
 
         return $this->render('ImpetusAppBundle:Pages:message-new.html.twig',
                              array('page' => 'messages',
-                                   'form' => $form->createView())
-                             );
+                                   'form' => $form->createView()
+                                   ));
     }
 
     /**
@@ -138,9 +106,6 @@ class MessageController extends BaseController {
         });
 
         $json = json_encode($json);
-        //echo '<pre>';
-        //print_r(json_decode($json));
-        //echo '</pre>';
 
         return new Response($json);
     }
@@ -150,6 +115,71 @@ class MessageController extends BaseController {
      * @Secure(roles="ROLE_ADMIN")
      */
     public function showAction($id, Request $request) {
+        $doctrine = $this->getDoctrine();
+        $em = $doctrine->getEntityManager();
 
+        $user = $this->getCurrentUser();
+
+        $parent = $doctrine->getRepository('ImpetusAppBundle:Message')->getParentByIdAndUser($id, $user);
+
+        if (!$parent) {
+            throw $this->createNotFoundException('No message found for id ' . $id);
+        }
+
+        $replies = $doctrine->getRepository('ImpetusAppBundle:Message')->getRepliesByParent($parent);
+
+        // TODO: mark all replies as read too
+
+        $parent->setMessageRead(true);
+        $em->flush();
+
+        $reply = new Message();
+        $replyForm = $this->createForm(new MessageType(), $reply);
+
+        if ($request->getMethod() == 'POST') {
+            $replyForm->bindRequest($request);
+
+            if ($replyForm->isValid()) {
+                $messageService = $this->get('message_service');
+
+                $reply->setParent($parent->getMessage());
+                $reply->setSender($user);
+                $reply->setSubject($parent->getMessage()->getSubject());
+
+                $em->persist($reply);
+                $em->flush();
+
+                $emailAddresses = array();
+
+                $recipients = $parent->getMessage()->getRecipients();
+
+                foreach ($recipients as $recipient) {
+                    $messageRecipient = new MessageRecipient();
+                    $messageRecipient->setMessage($reply);
+                    $messageRecipient->setMessageRead(false);
+                    $messageRecipient->setMessageDeleted(false);
+                    $messageRecipient->setUser($recipient->getUser());
+                    $em->persist($messageRecipient);
+
+                    $reply->addRecipient($messageRecipient);
+
+                    $emailAddresses[] = $recipient->getUser()->getEmail();
+                }
+
+                $em->flush();
+
+                $email = $messageService->createEmail($emailAddresses, $reply->getSubject(), $reply->getContent());
+                $messageService->send($email);
+
+                $this->get('session')->setFlash('notice', 'Your reply was added!');
+            }
+        }
+
+        return $this->render('ImpetusAppBundle:Pages:message-show.html.twig',
+                             array('page' => 'message',
+                                   'parent' => $parent,
+                                   'replies' => $replies,
+                                   'replyForm' => $replyForm->createView()
+                                   ));
     }
 }

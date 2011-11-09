@@ -22,7 +22,7 @@
         {{ form_errors(form) }}
 
         <label>To</label>
-        <div id="recipients">
+        <div id="recipients-wrapper">
             <div>
                 <span id="recipient-add">
                     <span>
@@ -31,18 +31,9 @@
                     <input type="text" name="recipient-search" />
                 </span>
             </div>
-<!--
-            <div id="autocomplete-box">
-                <ul id="ac-users"></ul>
-                <ul id="ac-roles">
 
-                </ul>
-            </div>
--->
+            <input type="hidden" id="recipients" name="recipients" />
         </div>
-
-        <input type="hidden" id="role-recipients" name="role-recipients" />
-        <input type="hidden" id="user-recipients" name="user-recipients" />
 
         {{ form_rest(form) }}
 

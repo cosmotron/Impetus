@@ -81,4 +81,8 @@ class BaseController extends Controller {
 
         throw new InvalidDomainObjectException('$domainObject must either implement the DomainObjectInterface, or have a method named "getId".');
     }
+
+    protected function getCurrentUser() {
+        return $user = $this->get('security.context')->getToken()->getUser();
+    }
 }

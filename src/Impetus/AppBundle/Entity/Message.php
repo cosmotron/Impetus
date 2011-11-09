@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Impetus\AppBundle\Repository\MessageRepository")
  * @ORM\Table(name="message")
  */
 class Message {
@@ -47,8 +47,6 @@ class Message {
 
     /**
      * @ORM\Column(type="string")
-     * @Assert\MinLength(1)
-     * @Assert\NotBlank()
      */
     protected $subject;
 
@@ -154,7 +152,7 @@ class Message {
      *
      * @param Impetus\AppBundle\Entity\MessageRecipient $recipients
      */
-    public function addMessageRecipient(\Impetus\AppBundle\Entity\MessageRecipient $recipients)
+    public function addRecipient(\Impetus\AppBundle\Entity\MessageRecipient $recipients)
     {
         $this->recipients[] = $recipients;
     }

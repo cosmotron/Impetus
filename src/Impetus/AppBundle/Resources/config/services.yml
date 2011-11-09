@@ -1,6 +1,6 @@
 parameters:
     analytics_base: Impetus\AppBundle\Analytics
-    service_base: Impetus\AppBundle\Service
+    service_base:   Impetus\AppBundle\Service
 
 services:
     impetus_app.event.initial_academic_year_setter:
@@ -8,16 +8,21 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
 
-    year_service:
-        class:     %service_base%\YearService
-        arguments: [ @doctrine, @session ]
+    analytics_service:
+        class:     %service_base%\AnalyticsService
+        arguments: [ @doctrine ]
 
     csv_service:
         class: %service_base%\CsvService
 
-    analytics_service:
-        class: %service_base%\AnalyticsService
-        arguments: [ @doctrine ]
+    message_service:
+        class:     %service_base%\MessageService
+        arguments: [ @doctrine, @mailer ]
+
+    year_service:
+        class:     %service_base%\YearService
+        arguments: [ @doctrine, @session ]
+
 
     abstract_result:
         class:    %analytics_base%\AbstractResult
@@ -26,12 +31,12 @@ services:
             - [ setCsvService, [ @csv_service ] ]
             - [ setTemplatingService, [ @templating ] ]
 
-    simple_result:
-        class:  %analytics_base%\SimpleResult
-        parent: abstract_result
-
     complex_result:
         class:  %analytics_base%\ComplexResult
+        parent: abstract_result
+
+    simple_result:
+        class:  %analytics_base%\SimpleResult
         parent: abstract_result
 
     students_served_result:

@@ -6,12 +6,21 @@ var recipient_box =
 
 var Message = {
     recipient_box_html: $(recipient_box),
-    role_recipients: {},
-    user_recipients: {},
+    recipients: {},
 
     init: function() {
+        $.ui.autocomplete.prototype._renderItem = function(ul, item) {
+            var term = this.term.split(' ').join('|');
+            var re = new RegExp("(" + term + ")", "gi") ;
+            var t = item.label.replace(re, "<b>$1</b>");
+            return $( "<li></li>" )
+                .data( "item.autocomplete", item )
+                .append( "<a>" + t + "</a>" )
+                .appendTo( ul );
+        };
+
         this.bindRecipientAdd();
-        this.bindRecipientBox();
+        this.bindRecipientRemove();
     },
 
     bindRecipientAdd: function() {
@@ -31,7 +40,7 @@ var Message = {
                 source: Routing.generate('_message_recipient_search'),
                 minLength: 2,
                 select: function(event, ui) {
-                    Message.addSelectedToRecipientGroup(ui.item);
+                    Message.addSelectedRecipient(ui.item);
                     $('#recipient-add input').val('');
                     return false;
                 }
@@ -39,54 +48,35 @@ var Message = {
         ;
     },
 
-    bindRecipientBox: function() {
+    bindRecipientRemove: function() {
         $('.recipient-remove a').live('click', function(event) {
             event.preventDefault();
 
+            var box_id = $(this).parents('recipient-box').attr('id');
             var recipient_name = $(this).parent().siblings('.recipient-name').text();
             alert(recipient_name);
 
-            if ($(this).parents('.recipient-box').hasClass('role-box')) {
-                delete Message.role_recipients[recipient_name]
-            }
-            else if ($(this).parents('.recipient-box').hasClass('user-box')) {
-                delete Message.user_recipients[recipient_name]
-            }
+            delete Message.recipients[box_id]
 
             $(this).parents('.recipient-box').remove();
         });
     },
 
-    addSelectedToRecipientGroup: function(item) {
-        var box = this.recipient_box_html.clone();
+    addSelectedRecipient: function(item) {
+        var box_id = item.type + '-' + item.id;
 
-        if (item.type == 'role') {
-            box.addClass('role-box');
+        // Make sure the recipient isn't already added
+        if (!(box_id in this.recipients)) {
+            var box = this.recipient_box_html.clone();
+
+            box.attr('id', box_id);
             box.find('.recipient-name').html(item.value);
 
-            // Make sure the recipient isn't already added
-            if (!(item.value in this.role_recipients)) {
-                this.role_recipients[item.value] = item.id;
-                $('#recipient-add').before(box);
+            Message.recipients[box_id] = { 'id': item.id, 'value': item.value, 'type': item.type };
 
-                var role_json = JSON.stringify(Message.role_recipients);
-                $('#role-recipients').val(role_json);
-            }
-        }
-        else if (item.type == 'user') {
-            box.addClass('user-box');
-            box.find('.recipient-name').html(item.value);
+            $('#recipient-add').before(box);
 
-            if (!(item.value in this.user_recipients)) {
-                this.user_recipients[item.value] = item.id;
-                $('#recipient-add').before(box);
-
-                var user_json = JSON.stringify(Message.user_recipients);
-                $('#user-recipients').val(user_json);
-            }
-        }
-        else {
-            Impetus.errorAlert('Could not add selected to group - bad group type');
+            $('#recipients').val(JSON.stringify(Message.recipients));
         }
     }
 }
