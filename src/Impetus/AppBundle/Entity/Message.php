@@ -26,7 +26,7 @@ class Message {
     protected $content;
 
     /**
-     * @ORM\OneToOne(targetEntity="Message")
+     * @ORM\ManyToOne(targetEntity="Message")
      */
     protected $parent;
 
@@ -41,7 +41,7 @@ class Message {
     protected $sender;
 
     /**
-     * @ORM\Column(type="datetime", name="created_at")
+     * @ORM\Column(type="datetime", name="sent_at")
      */
     protected $sentAt;
 

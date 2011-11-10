@@ -34,6 +34,13 @@ class MessageRecipient {
     protected $user;
 
 
+    public function __construct($message, $user) {
+        $this->message = $message;
+        $this->messageRead = false;
+        $this->messageDeleted = false;
+        $this->user = $user;
+    }
+
     /**
      * Set messageDeleted
      *

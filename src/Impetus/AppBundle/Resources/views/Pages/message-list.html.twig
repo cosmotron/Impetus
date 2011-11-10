@@ -18,14 +18,16 @@
         </tr>
     {% for message in messages %}
             <tr class="
-                {%- if not message.messageRead %}unread{% endif -%}
+                {%- if message.messageRead is not null %}unread{% endif -%}
             ">
                 <td><a href="{{ path('_message_show', { 'id': message.id }) }}">{{ message.subject }}</a></td>
                 <td style="width: 180px;"><a href="{{ path('_user_show', { 'id': message.user_id  }) }}">{{ message.sender }}</a></td>
                 <td style="width: 250px;">{{ message.sentAt | date('D, M j, Y \\a\\t g:iA') }}</td>
             </tr>
     {% else %}
-        <li style="font-style: italic;">No messages</li>
+        <tr>
+            <td colspan="3"><i>No messages</i></td>
+        </tr>
     {% endfor %}
     </table>
 

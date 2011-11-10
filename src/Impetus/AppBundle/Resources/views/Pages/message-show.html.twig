@@ -23,7 +23,7 @@
         {{ message_macro.message_display(parent.user, parent.message) }}
 
     {% for reply in replies %}
-        {{ message_macro.message_display(reply.sender, reply, loop.index) }}
+        {{ message_macro.message_display(reply.message.sender, reply.message, loop.index) }}
     {% endfor %}
     </div>
 

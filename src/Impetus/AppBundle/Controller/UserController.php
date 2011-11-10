@@ -56,6 +56,9 @@ class UserController extends BaseController {
         $eduForm = $this->createForm(new StudentType(), $student);
 
         if ($request->getMethod() == 'POST') {
+            $origPassword = $user->getPassword();
+            $origSalt = $user->getSalt();
+
             $form->bindRequest($request);
             $eduForm->bindRequest($request);
 
@@ -66,6 +69,10 @@ class UserController extends BaseController {
                 $encoder = new MessageDigestPasswordEncoder('sha256', true, 10);
                 $password = $encoder->encodePassword('impetus', $user->getSalt());
                 $user->setPassword($password);
+            }
+            else {
+                $user->setPassword($origPassword);
+                $user->setSalt($origSalt);
             }
 
             if ($form->isValid() && $eduForm->isValid()) {

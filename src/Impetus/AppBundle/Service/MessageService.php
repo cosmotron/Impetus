@@ -27,11 +27,7 @@ class MessageService {
                     $users = $this->doctrine->getRepository('ImpetusAppBundle:User')->findByUserRole($role);
 
                     foreach ($users as $user) {
-                        $messageRecipient = new MessageRecipient();
-                        $messageRecipient->setMessage($message);
-                        $messageRecipient->setMessageRead(false);
-                        $messageRecipient->setMessageDeleted(false);
-                        $messageRecipient->setUser($user);
+                        $messageRecipient = new MessageRecipient($message, $user);
                         $em->persist($messageRecipient);
 
                         $message->addRecipient($messageRecipient);
@@ -43,11 +39,7 @@ class MessageService {
                 case 'user':
                     $user = $this->doctrine->getRepository('ImpetusAppBundle:User')->find($recipient->id);
 
-                    $messageRecipient = new MessageRecipient();
-                    $messageRecipient->setMessage($message);
-                    $messageRecipient->setMessageRead(false);
-                    $messageRecipient->setMessageDeleted(false);
-                    $messageRecipient->setUser($user);
+                    $messageRecipient = new MessageRecipient($message, $user);
                     $em->persist($messageRecipient);
 
                     $message->addRecipient($messageRecipient);

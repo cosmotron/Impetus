@@ -18,12 +18,15 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class MessageController extends BaseController {
     /**
      * @Route("/", name="_message_list")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_PARENT")
      */
     public function listAction() {
+        $doctrine = $this->getDoctrine();
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $messages = $this->getDoctrine()->getRepository('ImpetusAppBundle:Message')->getMessageListByRecipient($user);
+        $messages = $doctrine->getRepository('ImpetusAppBundle:Message')->getMessageListByRecipient($user);
+
+        //$sentMessage = $doctrine->getRepository('ImpetusAppBundle:Message')->getSentMessageListBySender($user);
 
         // TODO: mark messages as unread when a new reply is posted
 
@@ -35,7 +38,7 @@ class MessageController extends BaseController {
 
     /**
      * @Route("/new", name="_message_new", options={"expose"=true})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_PARENT")
      */
     public function newAction(Request $request) {
         $message = new Message();
@@ -43,6 +46,9 @@ class MessageController extends BaseController {
 
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
+
+            // TODO: validate recipient list
+            $recipients = json_decode($request->request->get('recipients'));
 
             if ($form->isValid()) {
                 $doctrine = $this->getDoctrine();
@@ -55,8 +61,15 @@ class MessageController extends BaseController {
                 $em->persist($message);
                 $em->flush();
 
-                $recipients = json_decode($request->request->get('recipients'));
                 $emailAddresses = $messageService->addRecipientsToMessage($recipients, $message);
+
+                // Sender is an implicit recipient
+                $sender = new MessageRecipient($message, $currentUser);
+                $sender->setMessageRead(true);
+                $em->persist($sender);
+
+                $message->addRecipient($sender);
+                $em->flush();
 
                 $email = $messageService->createEmail($emailAddresses, $message->getSubject(), $message->getContent());
                 $messageService->send($email);
@@ -73,6 +86,7 @@ class MessageController extends BaseController {
 
     /**
      * @Route("/recipient/search", name="_message_recipient_search", options={"expose"=true})
+     * @Secure(roles="ROLE_PARENT")
      */
     public function recipientSearchAction(Request $request) {
         $doctrine = $this->getDoctrine();
@@ -112,7 +126,7 @@ class MessageController extends BaseController {
 
     /**
      * @Route("/{id}", name="_message_show", requirements={"id"="\d+"})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_PARENT")
      */
     public function showAction($id, Request $request) {
         $doctrine = $this->getDoctrine();
@@ -126,11 +140,14 @@ class MessageController extends BaseController {
             throw $this->createNotFoundException('No message found for id ' . $id);
         }
 
-        $replies = $doctrine->getRepository('ImpetusAppBundle:Message')->getRepliesByParent($parent);
+        $replies = $doctrine->getRepository('ImpetusAppBundle:Message')->getRepliesByParentAndUser($parent->getMessage(), $user);
 
-        // TODO: mark all replies as read too
-
+        // Set replies as read
         $parent->setMessageRead(true);
+        foreach ($replies as $replyMsg) {
+            $replyMsg->setMessageRead(true);
+        }
+
         $em->flush();
 
         $reply = new Message();
@@ -154,11 +171,7 @@ class MessageController extends BaseController {
                 $recipients = $parent->getMessage()->getRecipients();
 
                 foreach ($recipients as $recipient) {
-                    $messageRecipient = new MessageRecipient();
-                    $messageRecipient->setMessage($reply);
-                    $messageRecipient->setMessageRead(false);
-                    $messageRecipient->setMessageDeleted(false);
-                    $messageRecipient->setUser($recipient->getUser());
+                    $messageRecipient = new MessageRecipient($reply, $recipient->getUser());
                     $em->persist($messageRecipient);
 
                     $reply->addRecipient($messageRecipient);
