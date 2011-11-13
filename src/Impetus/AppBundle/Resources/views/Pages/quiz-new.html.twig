@@ -18,7 +18,6 @@
 {% block content %}
     <h1>New Quiz</h1>
     <form action="{{ path('_quiz_new') }}" id="quiz-form" method="post" novalidate="novalidate" {{ form_enctype(quizForm) }}>
-        hello
         {{ form_errors(quizForm) }}
         {{ form_row(quizForm._token) }}
 
@@ -26,8 +25,10 @@
         {{ form_row(quizForm.instructions) }}
 
         {% set question = quizForm.questions.get('prototype') %}
-
         <div id="problems" data-prototype="{{ block('new_problem')|escape }}">
+            {% for question in quizForm.questions %}
+                {{ block('new_problem') }}
+            {% endfor %}
 
             <div id="problems-marker"></div>
             <p style="margin-bottom: 15px;">

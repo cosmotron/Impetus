@@ -12,6 +12,10 @@
 
         {% set answer = question.answers.get('prototype') %}
         <div class="answers" data-prototype="{{ block('new_answer')|escape }}">
+            {% for answer in question.answers %}
+                {{ block('new_answer') }}
+            {% endfor %}
+
             <div class="answers-marker"></div>
             <p style="margin-top: 15px;">
                 <a href="#" class="add-answer">Add Answer</a>
