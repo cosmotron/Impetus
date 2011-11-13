@@ -140,16 +140,6 @@ class MessageController extends BaseController {
             throw $this->createNotFoundException('No message found for id ' . $id);
         }
 
-        $replies = $doctrine->getRepository('ImpetusAppBundle:Message')->getRepliesByParentAndUser($parent->getMessage(), $user);
-
-        // Set replies as read
-        $parent->setMessageRead(true);
-        foreach ($replies as $replyMsg) {
-            $replyMsg->setMessageRead(true);
-        }
-
-        $em->flush();
-
         $reply = new Message();
         $replyForm = $this->createForm(new MessageType(), $reply);
 
@@ -187,6 +177,16 @@ class MessageController extends BaseController {
                 $this->get('session')->setFlash('notice', 'Your reply was added!');
             }
         }
+
+        $replies = $doctrine->getRepository('ImpetusAppBundle:Message')->getRepliesByParentAndUser($parent->getMessage(), $user);
+
+        // Set replies as read
+        $parent->setMessageRead(true);
+        foreach ($replies as $replyMsg) {
+            $replyMsg->setMessageRead(true);
+        }
+
+        $em->flush();
 
         return $this->render('ImpetusAppBundle:Pages:message-show.html.twig',
                              array('page' => 'message',

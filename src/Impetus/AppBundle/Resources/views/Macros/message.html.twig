@@ -7,7 +7,7 @@
             <div class="message-sender"><a href="{{ path('_user_show', { 'id': user.id }) }}">{{ user.firstName }} {{ user.lastName }}</a></div>
         </div>
         <div class="message-content">
-            {{ message.content }}
+            {{ message.content|striptags|replace({"\n": "<br/>"})|raw }}
         </div>
     </div>
 {% endmacro %}

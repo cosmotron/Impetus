@@ -1,0 +1,34 @@
+{% block new_problem %}
+    <h2>Problem</h2>
+    <div class="problem">
+        <div class="question">
+            {{ form_row(question.text) }}
+            <p>
+                <a href="#" class="remove-problem">Remove Problem</a>
+            </p>
+        </div>
+
+        <div class="divider"></div>
+
+        {% set answer = question.answers.get('prototype') %}
+        <div class="answers" data-prototype="{{ block('new_answer')|escape }}">
+            <div class="answers-marker"></div>
+            <p style="margin-top: 15px;">
+                <a href="#" class="add-answer">Add Answer</a>
+            </p>
+        </div>
+
+        <br class="clear-fix" />
+    </div>
+{% endblock new_problem %}
+
+{% block new_answer %}
+    <div class="answer">
+        {{ form_row(answer.label) }}
+        {{ form_row(answer.value) }}
+        {{ form_row(answer.correctAnswer) }}
+        <p>
+            <a href="#" class="remove-answer">Remove Answer</a>
+        </p>
+    </div>
+{% endblock new_answer %}

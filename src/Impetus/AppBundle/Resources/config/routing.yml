@@ -41,18 +41,8 @@ _survey:
     defaults: { _controller: ImpetusAppBundle:Survey:get }
 
 _quiz:
-    pattern: /quiz
-    defaults: { _controller: ImpetusAppBundle:Quiz:list }
-
-_quiz_show:
-    pattern: /quiz/{id}
-    defaults: { _controller: ImpetusAppBundle:Quiz:show }
-    requirements:
-        id: \d+
-
-_quiz_new:
-    pattern: /quiz/new
-    defaults: { _controller: ImpetusAppBundle:Quiz:new }
+    resource: "@ImpetusAppBundle/Controller/QuizController.php"
+    type:     annotation
 
 _user:
     resource: "@ImpetusAppBundle/Controller/UserController.php"

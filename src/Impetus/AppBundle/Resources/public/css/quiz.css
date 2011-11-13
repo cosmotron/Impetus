@@ -3,6 +3,28 @@ p {
     padding: 0;
 }
 
+#quiz-form {
+    margin-top: 10px;
+}
+
+#quiz-form label {
+    display:block;
+    font-size: 18px;
+}
+
+#quiz-form input, #quiz-form select {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+#quiz-form textarea {
+    font-size: 18px;
+    height: 100px;
+    margin-bottom: 15px;
+    width: 500px;
+}
+
+
 #instructions {
     background-color: #FFE5E5;
     border: 1px solid #B3698E;
@@ -19,20 +41,24 @@ p {
 .question {
     float: left;
     min-height: 50px;
-    padding: 20px;
     width: 45%;
 }
 
-.question, .answer {
-    font-size: 20px;
+.question, .answers {
+    /* font-size: 20px; */
+    padding: 20px;
+}
+
+.answers {
+    float: right;
+    /* font-family: STIXGeneral;
+    font-style: italic; */
+    width: 45%;
 }
 
 .answer {
-    float: right;
-    font-family: STIXGeneral;
-    font-style: italic;
-    padding: 30px 20px;
-    width: 45%;
+    border: 1px solid #C7D49E;
+    padding: 15px;
 }
 
 .divider {

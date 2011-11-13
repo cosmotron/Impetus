@@ -2,6 +2,11 @@
 
 {% block title "Quiz Creator" %}
 
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/quiz.css') }}" rel="stylesheet" />
+{% endblock %}
+
+
 {% block content %}
 <h1>Quiz Creator</h1>
 <form id="new-quiz">

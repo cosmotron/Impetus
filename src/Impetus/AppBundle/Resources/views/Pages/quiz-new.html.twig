@@ -1,0 +1,40 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+{% use "ImpetusAppBundle:Macros:quiz-questions.html.twig" %}
+
+{% block title "New Quiz" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/quiz.css') }}" rel="stylesheet" />
+
+    <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/quiz.js') }}"></script>
+
+    <script type="text/javascript">
+      $(function() {
+          Quiz.init();
+      });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h1>New Quiz</h1>
+    <form action="{{ path('_quiz_new') }}" id="quiz-form" method="post" novalidate="novalidate" {{ form_enctype(quizForm) }}>
+        hello
+        {{ form_errors(quizForm) }}
+        {{ form_row(quizForm._token) }}
+
+        {{ form_row(quizForm.name) }}
+        {{ form_row(quizForm.instructions) }}
+
+        {% set question = quizForm.questions.get('prototype') %}
+
+        <div id="problems" data-prototype="{{ block('new_problem')|escape }}">
+
+            <div id="problems-marker"></div>
+            <p style="margin-bottom: 15px;">
+                <a href="#" id="add-problem">Add Problem</a>
+            </p>
+        </div>
+
+        <input type="submit" value="Create Quiz" />
+    </form>
+{% endblock %}
