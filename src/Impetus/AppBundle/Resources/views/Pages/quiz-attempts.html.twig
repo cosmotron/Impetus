@@ -1,0 +1,31 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Attempts" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/quiz.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Quiz Attempts: {{ quiz.name }}</h1>
+
+    <table id="quiz-attempts-table">
+        <tr>
+            <th>Attempted</th>
+            <th style="width: 100px;">Score</th>
+        </tr>
+    {% for attempt in quizAttempts %}
+            <tr class="">
+                <td><a href="{{ path('_quiz_show_attempt', { 'quizId': quiz.id, 'attemptId': attempt.id }) }}">{{ attempt.submittedAt | date('D, M j, Y \\a\\t g:iA') }}</a></td>
+                <td style="background-color:
+                    {%- if attempt.correct == attempt.total %}#59AB59{% else %}#AB5959{% endif -%}
+                ;">
+                {{ attempt.correct }} / {{ attempt.total }}</td>
+            </tr>
+    {% else %}
+        <tr>
+            <td colspan="3"><i>No attempts</i></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

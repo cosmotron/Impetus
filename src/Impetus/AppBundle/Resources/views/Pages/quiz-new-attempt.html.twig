@@ -1,0 +1,21 @@
+{% extends "ImpetusAppBundle:Pages:quiz-show.html.twig" %}
+
+{% block quiz_answer %}
+    {% if question.answers|length == 1 %}
+        <div class="answer">
+            {{ question.answers[0].label }}
+            <input type="text" name="user_answer[{{ question_number - 1  }}]" />
+        </div>
+    {% else %}
+        {% for answer in question.answers %}
+        <div class="answer">
+            {{ answer.label }}
+            <input type="radio" name="user_answer[{{ question_number - 1 }}]" value="{{ answer.value }}" />
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block quiz_submit %}
+    <input type="submit" value="Grade Quiz" />
+{% endblock %}

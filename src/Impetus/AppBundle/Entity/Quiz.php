@@ -20,6 +20,11 @@ class Quiz {
     protected $id;
 
     /**
+     * @ORM\Column(type="datetime", name="created_at")
+     */
+    protected $createdAt;
+
+    /**
      * @ORM\Column(type="text")
      */
     protected $instructions;
@@ -44,6 +49,7 @@ class Quiz {
 
     public function __construct()
     {
+        $this->createdAt = new \DateTime();
         $this->questions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -55,6 +61,26 @@ class Quiz {
     public function getId()
     {
         return $this->id;
+    }
+
+   /**
+     * Set createdAt
+     *
+     * @param datetime $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return datetime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 
     /**

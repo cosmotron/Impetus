@@ -1,0 +1,38 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Quiz List" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/quiz.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Quiz List</h1>
+    {% if is_granted('ROLE_TA') %}
+        <p style="margin: 16px 0;"><a href="{{ path('_quiz_new') }}" style="font-size: 16px;">New Quiz</a></p>
+    {% endif %}
+
+    <table id="quizzes-table">
+        <tr>
+            <th>Quiz</th>
+            <th style="width: 300px;">Created At</th>
+            <th style="width: 130px;">Actions</th>
+        </tr>
+    {% for quiz in quizzes %}
+            <tr class="
+{#
+                {%- if message.messageRead is not null %}unread{% endif -%}
+#}
+            ">
+                <td><a href="{{ path('_quiz_show', { 'id': quiz.id }) }}">{{ quiz.name }}</a></td>
+                <td>{{ quiz.createdAt | date('D, M j, Y \\a\\t g:iA') }}</td>
+                <td><a href="{{ path('_quiz_list_attempts', { 'id': quiz.id }) }}">View Attempts</a></td>
+            </tr>
+    {% else %}
+        <tr>
+            <td colspan="3"><i>No quizzes</i></td>
+        </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}

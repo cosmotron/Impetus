@@ -1,0 +1,57 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+{% use "ImpetusAppBundle:Macros:quiz-questions.html.twig" %}
+
+{% block title "Quiz: "~quiz.name %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/quiz.css') }}" rel="stylesheet" />
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            extensions: ["tex2jax.js"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                processEscapes: true
+            },
+            "HTML-CSS": { scale: 100 }
+        });
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+{% endblock %}
+
+{% block content %}
+    <h1>Quiz: {{ quiz.name }}</h1>
+    {% block attempt_details %}
+    {% endblock %}
+    <h2>Instructions</h2>
+    <div id="instructions">
+        {{ quiz.instructions }}
+    </div>
+
+    <form action="{{ path('_quiz_show', { 'id': quiz.id }) }}" id="take-quiz-form" method="post" novalidate="novalidate">
+        <div id="problems">
+            {% for question in quiz.questions %}
+            {% set question_number = loop.index %}
+            <h2>Problem {{ question_number }}</h2>
+            <div class="problem">
+                <div class="question">
+                    {{ question.text }}
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="answers">
+                {% block quiz_answer %}
+                {% endblock %}
+                </div>
+
+                <br class="clear-fix" />
+            </div>
+            {% endfor %}
+        </div>
+        {% block quiz_submit %}
+        {% endblock %}
+    </form>
+{% endblock %}

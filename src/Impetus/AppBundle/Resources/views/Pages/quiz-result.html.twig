@@ -1,0 +1,53 @@
+{% extends "ImpetusAppBundle:Pages:quiz-show.html.twig" %}
+
+{% block attempt_details %}
+<div style="margin-top: 15px;">
+<p><b>Submitted at:</b> {{ quizAttempt.submittedAt | date('D, M j, Y \\a\\t g:iA') }}</p>
+</div>
+{% endblock %}
+
+{% block quiz_answer %}
+    {% if question.answers|length == 1 %}
+        <div class="answer">
+            {{ question.answers[0].label }}
+            <input type="text" value="{{ user_answer[question_number - 1].answer }}" disabled="disabled" />
+        </div>
+        <div>
+            {% if user_answer[question_number - 1].correct %}
+                <p style="color: #59AB59;">Correct!</p>
+            {% else %}
+{#
+                <p style="color: #AB5959;">Incorrect, the answer is: <b>{{ question.answers[0].value }}</b></p>
+#}
+                <p style="color: #AB5959;">Incorrect, try again.</p>
+            {% endif %}
+        </div>
+    {% else %}
+        {% set correct_answer = -1 %}
+        {% for answer in question.answers %}
+        <div class="answer">
+            {{ answer.label }}
+            {% if answer.correctAnswer %}
+                {% set correct_answer = answer.value %}
+            {% endif %}
+
+            {% if answer.value == user_answer[question_number - 1].answer %}
+                <input type="radio" value="{{ answer.value }}" checked="checked" disabled="disabled" />
+            {% else %}
+                <input type="radio" value="{{ answer.value }}" disabled="disabled" />
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <div>
+            {% if user_answer[question_number - 1].correct %}
+                <p style="color: #59AB59;">Correct!</p>
+            {% else %}
+{#
+                <p style="color: #AB5959;">Incorrect, the answer is: <b>{{ correct_answer }}</b></p>
+#}
+                <p style="color: #AB5959;">Incorrect, try again.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
