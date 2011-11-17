@@ -1,6 +1,9 @@
 var Quiz = {
     init: function() {
         this.bindProblemControls();
+
+        $('#add-problem').click();
+        $('.add-answer').click();
     },
 
     bindProblemControls: function() {
@@ -21,6 +24,12 @@ var Quiz = {
         var index = $('.remove-answer', $context).length;
         var answer_prototype = $($context).attr('data-prototype');
         var $answer = $(answer_prototype.replace(/\$\$answers\$\$/g, index));
+        if (index == 0) {
+            $answer.find('input[type=checkbox]').attr('checked', 'checked');
+        }
+        else {
+
+        }
 
         $('.answers-marker', $context).before($answer.clone());
     },

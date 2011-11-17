@@ -8,10 +8,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
- * @ORM\Entity(repositoryClass="Impetus\AppBundle\Repository\QuizRepository")
- * @ORM\Table(name="quiz")
+ * @ORM\Entity(repositoryClass="Impetus\AppBundle\Repository\SurveyRepository")
+ * @ORM\Table(name="survey")
  */
-class Quiz {
+class Survey {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -25,11 +25,6 @@ class Quiz {
     protected $createdAt;
 
     /**
-     * @ORM\Column(type="text")
-     */
-    protected $instructions;
-
-    /**
      * @ORM\Column(type="string")
      * @Assert\MinLength(1)
      * @Assert\NotBlank()
@@ -37,14 +32,14 @@ class Quiz {
     protected $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="QuizQuestion", mappedBy="quiz", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="SurveyQuestion", mappedBy="survey", cascade={"all"})
      */
     protected $questions;
 
     /**
-     * @ORM\OneToMany(targetEntity="QuizAttempt", mappedBy="quiz", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="SurveySubmission", mappedBy="survey", cascade={"all"})
      */
-    protected $quizAttempts;
+    protected $surveySubmissions;
 
     /**
      * @ORM\ManyToOne(targetEntity="Year")
@@ -56,7 +51,7 @@ class Quiz {
     {
         $this->createdAt = new \DateTime();
         $this->questions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->quizAttempts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->surveySubmissions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -69,7 +64,7 @@ class Quiz {
         return $this->id;
     }
 
-   /**
+    /**
      * Set createdAt
      *
      * @param datetime $createdAt
@@ -87,26 +82,6 @@ class Quiz {
     public function getCreatedAt()
     {
         return $this->createdAt;
-    }
-
-    /**
-     * Set instructions
-     *
-     * @param text $instructions
-     */
-    public function setInstructions($instructions)
-    {
-        $this->instructions = $instructions;
-    }
-
-    /**
-     * Get instructions
-     *
-     * @return text
-     */
-    public function getInstructions()
-    {
-        return $this->instructions;
     }
 
     /**
@@ -132,9 +107,9 @@ class Quiz {
     /**
      * Add question
      *
-     * @param Impetus\AppBundle\Entity\QuizQuestion $question
+     * @param Impetus\AppBundle\Entity\SurveyQuestion $question
      */
-    public function addQuestion(\Impetus\AppBundle\Entity\QuizQuestion $question)
+    public function addSurveyQuestion(\Impetus\AppBundle\Entity\SurveyQuestion $question)
     {
         $this->questions[] = $question;
     }
@@ -155,39 +130,39 @@ class Quiz {
      */
     public function setQuestions($questions){
         $this->questions = $questions;
-        foreach ($questions as $quizQuestion){
-            $quizQuestion->setQuiz($this);
+        foreach ($questions as $surveyQuestion){
+            $surveyQuestion->setSurvey($this);
         }
     }
 
     /**
-     * Add quizAttempt
+     * Add surveySubmissions
      *
-     * @param Impetus\AppBundle\Entity\QuizQuestion $quizAttempt
+     * @param Impetus\AppBundle\Entity\SurveySubmission $surveySubmissions
      */
-    public function addQuizAttempt(\Impetus\AppBundle\Entity\QuizAttempt $quizAttempt)
+    public function addSurveySubmission(\Impetus\AppBundle\Entity\SurveySubmission $surveySubmissions)
     {
-        $this->quizAttempts[] = $quizAttempt;
+        $this->surveySubmissions[] = $surveySubmissions;
     }
 
     /**
-     * Get quizAttempts
+     * Get surveySubmissions
      *
      * @return Doctrine\Common\Collections\Collection
      */
-    public function getQuizAttempts()
+    public function getSurveySubmissions()
     {
-        return $this->quizAttempts;
+        return $this->surveySubmissions;
     }
 
     /**
-     * Set quizAttempts
+     * Set surveySubmissions
      *
      */
-    public function setQuizAttempts($quizAttempts){
-        $this->quizAttempts = $quizAttempts;
-        foreach ($quizAttempts as $quizAttempt){
-            $quizAttempt->setQuiz($this);
+    public function setSurveySubmissions($surveySubmissions){
+        $this->surveySubmissions = $surveySubmissions;
+        foreach ($surveySubmissions as $surveySubmission){
+            $surveySubmission->setSurvey($this);
         }
     }
 

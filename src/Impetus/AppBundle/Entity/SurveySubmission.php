@@ -9,9 +9,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="quiz_attempt")
+ * @ORM\Table(name="survey_submission")
  */
-class QuizAttempt {
+class SurveySubmission {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -20,14 +20,14 @@ class QuizAttempt {
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Quiz", inversedBy="quizAttempts")
+     * @ORM\ManyToOne(targetEntity="Survey", inversedBy="surveySubmissions")
      */
-    protected $quiz;
+    protected $survey;
 
     /**
-     * @ORM\OneToMany(targetEntity="QuizResult", mappedBy="quizAttempt", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="SurveyResult", mappedBy="surveyAttempt", cascade={"all"})
      */
-    protected $quizResults;
+    protected $surveyResults;
 
     /**
      * @ORM\Column(type="datetime", name="submitted_at")
@@ -40,9 +40,9 @@ class QuizAttempt {
     protected $user;
 
 
-    public function __construct($quiz, $user) {
-        $this->quiz = $quiz;
-        $this->quizResults = new \Doctrine\Common\Collections\ArrayCollection();
+    public function __construct($survey, $user) {
+        $this->survey = $survey;
+        $this->surveyResults = new \Doctrine\Common\Collections\ArrayCollection();
         $this->submittedAt = new \DateTime();
         $this->user = $user;
     }
@@ -50,7 +50,7 @@ class QuizAttempt {
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -70,7 +70,7 @@ class QuizAttempt {
     /**
      * Get submittedAt
      *
-     * @return datetime
+     * @return datetime 
      */
     public function getSubmittedAt()
     {
@@ -78,54 +78,43 @@ class QuizAttempt {
     }
 
     /**
-     * Set quiz
+     * Set survey
      *
-     * @param Impetus\AppBundle\Entity\Quiz $quiz
+     * @param Impetus\AppBundle\Entity\Survey $survey
      */
-    public function setQuiz(\Impetus\AppBundle\Entity\Quiz $quiz)
+    public function setSurvey(\Impetus\AppBundle\Entity\Survey $survey)
     {
-        $this->quiz = $quiz;
+        $this->survey = $survey;
     }
 
     /**
-     * Get quiz
+     * Get survey
      *
-     * @return Impetus\AppBundle\Entity\Quiz
+     * @return Impetus\AppBundle\Entity\Survey 
      */
-    public function getQuiz()
+    public function getSurvey()
     {
-        return $this->quiz;
+        return $this->survey;
     }
 
     /**
-     * Add quizResults
+     * Add surveyResults
      *
-     * @param Impetus\AppBundle\Entity\QuizResult $quizResults
+     * @param Impetus\AppBundle\Entity\SurveyResult $surveyResults
      */
-    public function addQuizResult(\Impetus\AppBundle\Entity\QuizResult $quizResults)
+    public function addSurveyResult(\Impetus\AppBundle\Entity\SurveyResult $surveyResults)
     {
-        $this->quizResults[] = $quizResults;
+        $this->surveyResults[] = $surveyResults;
     }
 
     /**
-     * Get quizResults
+     * Get surveyResults
      *
-     * @return Doctrine\Common\Collections\Collection
+     * @return Doctrine\Common\Collections\Collection 
      */
-    public function getQuizResults()
+    public function getSurveyResults()
     {
-        return $this->quizResults;
-    }
-
-    /**
-     * Set quizResults
-     *
-     */
-    public function setQuizResults($quizResults){
-        $this->quizResults = $quizResults;
-        foreach ($quizResults as $quizResult){
-            $quizResult->setQuizAttempt($this);
-        }
+        return $this->surveyResults;
     }
 
     /**
@@ -141,7 +130,7 @@ class QuizAttempt {
     /**
      * Get user
      *
-     * @return Impetus\AppBundle\Entity\User
+     * @return Impetus\AppBundle\Entity\User 
      */
     public function getUser()
     {

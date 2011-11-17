@@ -2,8 +2,6 @@
 
 namespace Impetus\AppBundle\Entity;
 
-use Impetus\AppBundle\Entity\QuizQuestion;
-use Impetus\AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;

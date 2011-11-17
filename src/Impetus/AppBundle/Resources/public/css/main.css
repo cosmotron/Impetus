@@ -1,6 +1,7 @@
 html {
     background-color: #efefef;
     font-family: Helvetica, Arial, sans-serif;
+    font-size: 14px;
 }
 
 a {
@@ -16,10 +17,29 @@ h1 {
     padding: 0;
 }
 
+label {
+    display:block;
+    font-size: 14px;
+}
+
+input:not([type=submit]):not([type=radio]):not([type=checkbox]), select {
+    border: 1px solid #5F5F5F;
+    font-size: 14px;
+    margin-bottom: 15px;
+    width: 325px;
+}
+
+textarea {
+    border: 1px solid #5F5F5F;
+    font-size: 14px;
+    height: 100px;
+    margin-bottom: 15px;
+    width: 325px;
+}
+
 #wrapper {
     margin: 0 auto;
-    padding: 0 50px;
-    min-width: 1000px;
+    width: 980px;
 }
 
 #header {
@@ -27,7 +47,7 @@ h1 {
 }
 
 #title {
-    font-size: 24px;
+    font-size: 20px;
 }
 
 #user-info {
@@ -37,6 +57,7 @@ h1 {
 
 #academic-year {
     font-size: 14px;
+    width: 70px;
 }
 
 #flash-notice-wrapper {
@@ -73,24 +94,24 @@ h1 {
 
 #content {
     border-left: 1px solid #dfdfdf;
-    margin-left: 200px;
+    margin-left: 130px;
     min-height: 400px;
-    padding: 40px 50px;
+    padding: 20px;
 }
 
 #content h1 {
-    font-size: 24px;
+    font-size: 20px;
 }
 
 #content h2 {
-    font-size: 20px;
+    font-size: 18px;
 }
 
 #navigation {
     border-right: 1px solid #DFDFDF;
     float: left;
     margin-left: -100%;
-    width: 200px;
+    width: 130px;
 }
 
 #menu-links {
@@ -108,7 +129,7 @@ h1 {
 #menu-links li a {
     cursor: pointer;
     display: block;
-    padding: 20px 40px;
+    padding: 10px 20px;
     text-decoration: none;
 }
 

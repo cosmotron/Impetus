@@ -6,8 +6,14 @@
         {% stylesheets '@ImpetusAppBundle/Resources/public/css/login.css' %}
             <link type="text/css" href="{{ asset_url }}" rel="stylesheet" />
         {% endstylesheets %}
+
+        <script type="text/javascript">
+          function setFocus() {
+              document.getElementById('username').focus();
+          }
+        </script>
     </head>
-    <body>
+    <body onLoad="setFocus()">
         <div id="content">
             <h1>IMPETUS Login</h1>
             {% if error %}

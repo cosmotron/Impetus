@@ -1,0 +1,54 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+{% use "ImpetusAppBundle:Macros:survey-questions.html.twig" %}
+
+{% block title "New Survey" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/survey.css') }}" rel="stylesheet" />
+
+    <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/survey.js') }}"></script>
+
+    <script type="text/javascript">
+      $(function() {
+          Survey.init();
+      });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h1>New Survey</h1>
+    <form action="{{ path('_survey_new') }}" id="survey-form" method="post" novalidate="novalidate" {{ form_enctype(surveyForm) }}>
+        {{ form_errors(surveyForm) }}
+        {{ form_row(surveyForm._token) }}
+
+        {{ form_row(surveyForm.name) }}
+
+        {% set question = surveyForm.questions.get('prototype') %}
+        <div id="questions"
+             multiple-choice-prototype="{{ block('new_multiple_choice_question')|escape }}"
+             short-answer-prototype="{{ block('new_short_answer_question')|escape }}"
+             scale-prototype="{{ block('new_scale_question')|escape }}"
+            >
+            {% for question in surveyForm.questions %}
+                {% if question.type == 'multipleChoice' %}
+                    {{ block('new_multiple_choice_problem') }}
+                {% elseif question.type == 'shortAnswer' %}
+                    {{ block('new_short_answer_problem') }}
+                {% elseif question.type == 'scale' %}
+                    {{ block('new_scale_problem') }}
+                {% endif %}
+            {% endfor %}
+
+            <div id="questions-marker"></div>
+            <p style="margin-bottom: 15px;">
+                <a href="#" id="add-multiple-choice-question">Add Multiple Choice Question</a>
+                &mdash;
+                <a href="#" id="add-short-answer-question">Add Short Answer Question</a>
+                &mdash;
+                <a href="#" id="add-scale-question">Add Scale Question</a>
+            </p>
+        </div>
+
+        <input type="submit" value="Create " />
+    </form>
+{% endblock %}

@@ -11,8 +11,10 @@ class QuizAnswerType extends AbstractType
     {
         $builder
             ->add('label', 'text',
-                  array('required' => false))
-            ->add('value', 'text')
+                  array('label' => 'Text Label',
+                        'required' => false))
+            ->add('value', 'text',
+                  array('label' => 'Answer'))
             ->add('correctAnswer', 'checkbox',
                   array('label' => 'Correct?',
                         'required' => false))

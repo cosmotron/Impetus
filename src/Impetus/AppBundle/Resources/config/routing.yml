@@ -37,8 +37,8 @@ _schedule:
     defaults: { _controller: ImpetusAppBundle:Schedule:get }
 
 _survey:
-    pattern: /survey
-    defaults: { _controller: ImpetusAppBundle:Survey:get }
+    resource: "@ImpetusAppBundle/Controller/SurveyController.php"
+    type:     annotation
 
 _quiz:
     resource: "@ImpetusAppBundle/Controller/QuizController.php"

@@ -37,12 +37,49 @@ class QuizRepository extends EntityRepository {
         $query = $em->createQuery("SELECT q
                                    FROM ImpetusAppBundle:Quiz q
                                    WHERE q.year = :year
+                                   ORDER BY q.createdAt DESC
                                    ")->setParameter('year', $year);
 
         return $query->getResult();
     }
 
-    public function findCorrectAnswersByQuiz(Quiz $quiz) {
+    public function getQuizListByUserAndYear(User $user, Year $year) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT q.id,
+                                       q.name,
+                                       q.createdAt,
+                                       a1.submittedAt AS mostRecentAttempt,
+                                       COUNT(qu) as totalQuestions,
+                                       (
+                                           SELECT COUNT(r)
+                                           FROM ImpetusAppBundle:QuizAttempt a3
+                                           INNER JOIN a3.quizResults r
+                                           WHERE r.quizAttempt = a1
+                                               AND r.correct = TRUE
+                                       ) AS correctAnswers
+                                   FROM ImpetusAppBundle:Quiz q
+                                   LEFT JOIN q.quizAttempts a1
+                                   LEFT JOIN q.questions qu
+                                   WHERE (
+                                             a1.submittedAt = (
+                                                 SELECT MAX(a2.submittedAt)
+                                                 FROM ImpetusAppBundle:QuizAttempt a2
+                                                 WHERE a2.quiz = q
+                                             )
+                                             OR a1.submittedAt IS NULL
+                                         )
+                                       AND q.year = :year
+                                       AND ( a1.user = :user OR a1.user IS NULL)
+                                   GROUP BY q
+                                   ORDER BY q.createdAt DESC
+                                   ")->setParameters(array('year' => $year, 'user' => $user));
+
+        return $query->getResult();
+    }
+
+
+    public function getCorrectAnswersByQuiz(Quiz $quiz) {
         $em = $this->getEntityManager();
 
         $query = $em->createQuery("SELECT qa

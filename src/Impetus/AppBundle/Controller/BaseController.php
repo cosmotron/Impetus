@@ -32,7 +32,7 @@ class BaseController extends Controller {
         $aclProvider->updateAcl($acl);
     }
 
-    protected function checkAdminAuthority() {
+    protected function hasAdminAuthority() {
         $securityContext = $this->get('security.context');
 
         if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
@@ -42,8 +42,8 @@ class BaseController extends Controller {
         return false;
     }
 
-    protected function checkDistrictAuthority($checkDistrictId) {
-        if ($this->checkAdminAuthority()) {
+    protected function hasDistrictAuthority($checkDistrictId) {
+        if ($this->hasAdminAuthority()) {
             return true;
         }
 

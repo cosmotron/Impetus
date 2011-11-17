@@ -49,8 +49,10 @@
 
                 {{ table.info_row('Gender', user.gender) }}
             </table>
+        </div>
 
         {% if student != null %}
+        <div class="user-panel">
             <h2>Education</h2>
             <table>
                 <tr>
@@ -120,14 +122,18 @@
             <br class="clear-fix" />
         </div>
 
+{#
         <div class="user-panel">
             <h2>Actions</h2>
 
             <ul style="padding-left: 16px;">
                 <li><a href="#">View Assessment Data</a></li>
-                <li><a href="{{ path('_user_edit', {'id': user.id }) }}">Edit User</a></li>
+                {% if is_granted('ROLE_TEACHER') %}
+                    <li><a href="{{ path('_user_edit', {'id': user.id }) }}">Edit User</a></li>
+                {% endif %}
             </ul>
         </div>
+#}
 
         <br class="clear-fix" />
     </div>

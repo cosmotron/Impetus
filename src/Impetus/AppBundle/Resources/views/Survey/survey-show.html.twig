@@ -1,0 +1,62 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+{% use "ImpetusAppBundle:Macros:survey-questions.html.twig" %}
+
+{% block title "Survey: "~survey.name %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/survey.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Survey: {{ survey.name }}</h1>
+
+    <form action="{{ path('_survey_show', { 'id': survey.id }) }}" id="take-survey-form" method="post" novalidate="novalidate">
+        <div id="problems">
+            {% for question in survey.questions %}
+                {% set question_number = loop.index %}
+                <h2>Question {{ question_number }}</h2>
+                <div class="problem">
+                    <div class="question">
+                        {{ question.text }}
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="answers">
+                      {% if question.type == 'multipleChoice' %}
+                          {% for answer in question.answers %}
+                              <div class="answer">
+                                  <input type="radio" name="user_answer[{{ question_number - 1 }}]" value="{{ answer.label }}" />
+                                  {{ answer.label }}
+                              </div>
+                          {% endfor %}
+                      {% elseif question.type == 'shortAnswer' %}
+                          <div class="answer">
+                              <textarea name="user_answer[{{ question_number - 1 }}]"></textarea>
+                          </div>
+                      {% elseif question.type == 'scale' %}
+                          {{ _self.scale_item('Disagree Strongly', question_number, 1) }}
+                          {{ _self.scale_item('Disagree', question_number, 2) }}
+                          {{ _self.scale_item('Disagree Somewhat', question_number, 3) }}
+                          {{ _self.scale_item('No Opinion', question_number, 4) }}
+                          {{ _self.scale_item('Agree Somewhat', question_number, 5) }}
+                          {{ _self.scale_item('Agree', question_number, 6) }}
+                          {{ _self.scale_item('Agree Strongly', question_number, 7) }}
+                      {% endif %}
+                    </div>
+
+                    <br class="clear-fix" />
+                </div>
+            {% endfor %}
+        </div>
+
+        <input type="submit" value="Submit Survey" />
+    </form>
+{% endblock %}
+
+{% macro scale_item(label, question_number, value) %}
+<div class="answer">
+    <input type="radio" name="user_answer[{{ question_number - 1 }}]" value="{{ value }}" />
+    {{ label }}
+</div>
+{% endmacro %}

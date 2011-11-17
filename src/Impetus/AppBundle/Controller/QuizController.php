@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class QuizController extends BaseController {
     /**
-     * @Route("/{id}/edit")
+     * @Route("/{id}/edit", name="_quiz_edit", requirements={"id"="\d+"})
      * @Secure(roles="ROLE_TA")
      */
     public function editAction($id, Request $request) {
@@ -31,13 +31,29 @@ class QuizController extends BaseController {
      */
     public function listAction() {
         $doctrine = $this->getDoctrine();
-
         $year = $this->get('year_service')->getCurrentAcademicYear();
-        $quizzes = $doctrine->getRepository('ImpetusAppBundle:Quiz')->findByYear($year);
 
-        return $this->render('ImpetusAppBundle:Pages:quiz-list.html.twig',
-                             array('page' => 'quiz',
-                                   'quizzes' => $quizzes));
+        // TODO: Admin authority is incorrect, should be TA/Mentor for assigned district
+        if ($this->hasAdminAuthority()) {
+            $quizzes = $doctrine->getRepository('ImpetusAppBundle:Quiz')->findByYear($year);
+            return $this->render('ImpetusAppBundle:Quiz:quiz-list-creator.html.twig',
+                                 array('page' => 'quiz',
+                                       'quizzes' => $quizzes));
+        }
+        else {
+            $user = $this->getCurrentUser();
+            $quizzes = $doctrine->getRepository('ImpetusAppBundle:Quiz')->getQuizListByUserAndYear($user, $year);
+            return $this->render('ImpetusAppBundle:Quiz:quiz-list-user.html.twig',
+                                 array('page' => 'quiz',
+                                       'quizzes' => $quizzes));
+        }
+        /*
+        echo '<pre>';
+        print_r($quizzes);
+        echo '</pre>';
+
+        return new Response();
+        */
     }
 
     /**
@@ -55,7 +71,7 @@ class QuizController extends BaseController {
 
         $quizAttempts = $doctrine->getRepository('ImpetusAppBundle:Quiz')->getQuizAttemptsByQuizAndUser($quiz, $user);
 
-        return $this->render('ImpetusAppBundle:Pages:quiz-attempts.html.twig',
+        return $this->render('ImpetusAppBundle:Quiz:quiz-attempts.html.twig',
                              array('page' => 'quiz',
                                    'quiz' => $quiz,
                                    'quizAttempts' => $quizAttempts));
@@ -85,7 +101,7 @@ class QuizController extends BaseController {
             }
         }
 
-        return $this->render('ImpetusAppBundle:Pages:quiz-new.html.twig',
+        return $this->render('ImpetusAppBundle:Quiz:quiz-new.html.twig',
                              array('page' => 'quiz',
                                    'quizForm' => $quizForm->createView()));
     }
@@ -103,13 +119,22 @@ class QuizController extends BaseController {
             throw $this->createNotFoundException('Quiz not found with id '.$id.' and year '.$year->getYear());
         }
 
-        $correctAnswers = $doctrine->getRepository('ImpetusAppBundle:Quiz')->findCorrectAnswersByQuiz($quiz);
+        $correctAnswers = $doctrine->getRepository('ImpetusAppBundle:Quiz')->getCorrectAnswersByQuiz($quiz);
 
         if ($request->getMethod() == 'POST') {
-            // TODO: Make sure POST data is not garbage and is valid
+            $userAnswers = $request->request->get('user_answer');
+
+            // TODO: Move to service, possibly
+            if (count($userAnswers) != count($correctAnswers)) {
+                throw new HttpException(400, 'Bad request (check answers)');
+            }
+            for ($i = 0; $i < count($userAnswers); $i++) {
+                if ($userAnswers[$i] == null) {
+                    throw new HttpException(400, 'Bad request (problem '.($i+1).' is null)');
+                }
+            }
 
             $em = $doctrine->getEntityManager();
-            $userAnswers = $request->request->get('user_answer');
 
             $quizAttempt = new QuizAttempt($quiz, $user);
             $em->persist($quizAttempt);
@@ -135,7 +160,7 @@ class QuizController extends BaseController {
                                                             'attemptId' => $quizAttempt->getId())));
         }
 
-        return $this->render('ImpetusAppBundle:Pages:quiz-new-attempt.html.twig',
+        return $this->render('ImpetusAppBundle:Quiz:quiz-new-attempt.html.twig',
                              array('page' => 'quiz',
                                    'quiz' => $quiz));
     }
@@ -157,7 +182,7 @@ class QuizController extends BaseController {
             throw $this->createNotFoundException('Quiz Attempt not found with it ' . $attemptId);
         }
 
-        return $this->render('ImpetusAppBundle:Pages:quiz-result.html.twig',
+        return $this->render('ImpetusAppBundle:Quiz:quiz-result.html.twig',
                              array('page' => 'quiz',
                                    'quiz' => $quiz,
                                    'quizAttempt' => $quizAttempt,

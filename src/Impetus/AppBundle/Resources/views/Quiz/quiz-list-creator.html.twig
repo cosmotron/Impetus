@@ -8,15 +8,12 @@
 
 {% block content %}
     <h1>Quiz List</h1>
-    {% if is_granted('ROLE_TA') %}
-        <p style="margin: 16px 0;"><a href="{{ path('_quiz_new') }}" style="font-size: 16px;">New Quiz</a></p>
-    {% endif %}
+    <p style="margin: 16px 0;"><a href="{{ path('_quiz_new') }}" style="font-size: 16px;">New Quiz</a></p>
 
     <table id="quizzes-table">
         <tr>
             <th>Quiz</th>
-            <th style="width: 300px;">Created At</th>
-            <th style="width: 130px;">Actions</th>
+            <th>Created</th>
         </tr>
     {% for quiz in quizzes %}
             <tr class="
@@ -24,9 +21,8 @@
                 {%- if message.messageRead is not null %}unread{% endif -%}
 #}
             ">
-                <td><a href="{{ path('_quiz_show', { 'id': quiz.id }) }}">{{ quiz.name }}</a></td>
-                <td>{{ quiz.createdAt | date('D, M j, Y \\a\\t g:iA') }}</td>
-                <td><a href="{{ path('_quiz_list_attempts', { 'id': quiz.id }) }}">View Attempts</a></td>
+                <td><a href="{{ path('_quiz_edit', { 'id': quiz.id }) }}">{{ quiz.name }}</a></td>
+                <td>{{ quiz.createdAt | date('M j, Y') }}</td>
             </tr>
     {% else %}
         <tr>

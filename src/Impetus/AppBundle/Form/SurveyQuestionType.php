@@ -5,16 +5,16 @@ namespace Impetus\AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
-class QuizQuestionType extends AbstractType
+class SurveyQuestionType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
-            ->add('text', 'textarea',
-                  array('label' => 'Question')
-                  )
+            ->add('text', 'text',
+                  array('label' => 'Question'))
+            ->add('type', 'hidden')
             ->add('answers', 'collection',
-                  array('type' => new QuizAnswerType(),
+                  array('type' => new SurveyAnswerType(),
                         'allow_add'      => true,
                         'allow_delete'   => true,
                         'prototype'      => true,
@@ -28,11 +28,11 @@ class QuizQuestionType extends AbstractType
 
     public function getDefaultOptions(array $options)
     {
-        return array('data_class' => 'Impetus\AppBundle\Entity\QuizQuestion');
+        return array('data_class' => 'Impetus\AppBundle\Entity\SurveyQuestion');
     }
 
     public function getName()
     {
-        return 'impetus_appbundle_quizquestiontype';
+        return 'impetus_appbundle_surveyquestiontype';
     }
 }

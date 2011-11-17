@@ -1,0 +1,63 @@
+{% block question_text %}
+        <div class="question">
+            <div>
+                <label for="impetus_appbundle_surveytype_questions_$$questions$$_text" class=" required">Question</label>
+                <textarea id="impetus_appbundle_surveytype_questions_$$questions$$_text" name="impetus_appbundle_surveytype[questions][$$questions$$][text]" required="required" pattern=".{1,}"></textarea>
+            </div>
+            <input id="impetus_appbundle_surveytype_questions_$$questions$$_type" name="impetus_appbundle_surveytype[questions][$$questions$$][type]" value="" type="hidden">
+
+            <p>
+                <a href="#" class="remove-question">Remove Question</a>
+            </p>
+        </div>
+
+        <div class="divider"></div>
+{% endblock %}
+
+{% block new_multiple_choice_question %}
+    <h2>Multiple Choice Question</h2>
+    <div class="problem">
+        {{ block('question_text') }}
+
+        {% set answer = question.answers.get('prototype') %}
+        <div class="answers" data-prototype="{{ block('new_multiple_choice_answer')|escape }}">
+
+            {% for answer in question.answers %}
+                {{ block('new_muliple_choice_answer') }}
+            {% endfor %}
+            <div class="answers-marker"></div>
+            <p style="margin-top: 15px;">
+                <a href="#" class="add-answer">Add Answer</a>
+            </p>
+        </div>
+
+        <br class="clear-fix" />
+    </div>
+{% endblock %}
+
+{% block new_short_answer_question %}
+    <h2>Short-Answer Question</h2>
+    <div class="problem">
+        {{ block('question_text') }}
+
+        <br class="clear-fix" />
+    </div>
+{% endblock %}
+
+{% block new_scale_question %}
+    <h2>Scale Question</h2>
+    <div class="problem">
+        {{ block('question_text') }}
+
+        <br class="clear-fix" />
+    </div>
+{% endblock %}
+
+{% block new_multiple_choice_answer %}
+    <div class="answer">
+        {{ form_row(answer.label) }}
+        <p>
+            <a href="#" class="remove-answer">Remove Answer</a>
+        </p>
+    </div>
+{% endblock %}
