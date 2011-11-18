@@ -77,6 +77,64 @@ class SurveyController extends BaseController {
     }
 
     /**
+     * @Route("/{id}/results", name="_survey_results", requirements={"id"="\d+"})
+     * @Secure(roles="ROLE_TA")
+     */
+    public function resultsAction($id) {
+        $doctrine = $this->getDoctrine();
+        $survey = $doctrine->getRepository('ImpetusAppBundle:Survey')->find($id);
+        if (!$survey) {
+            throw $this->createNotFoundException('No survey found with id '.$id);
+        }
+
+        $surveyQuestions = $survey->getQuestions();
+        $surveySubmissionCount = $doctrine->getRepository('ImpetusAppBundle:Survey')->getSubmissionCountBySurvey($survey);
+
+        $questionResults = array();
+
+        $count = 0;
+        foreach ($surveyQuestions as $question) {
+            $questionResults[$count]['text'] = $question->getText();
+            $questionResults[$count]['type'] = $question->getType();
+
+            switch ($question->getType()) {
+                case 'shortAnswer':
+                    $questionResults[$count]['results'] = $doctrine->getRepository('ImpetusAppBundle:Survey')->getResultsByQuestion($question);
+                    break;
+                case 'multipleChoice':
+                    foreach ($question->getAnswers() as $answer) {
+                        $answerCount = $doctrine->getRepository('ImpetusAppBundle:Survey')->getAnswerCountByQuestion($question, $answer->getLabel());
+
+                        $row = array('key' => $answer->getLabel(),
+                                     'count' => reset($answerCount),
+                                     'percent' => ((reset($answerCount) / reset($surveySubmissionCount)) * 100));
+
+                        $questionResults[$count]['results'][] = $row;
+                    }
+                    break;
+                case 'scale':
+                    for ($scaleItem = 1; $scaleItem <= 7; $scaleItem++) {
+                        $answerCount = $doctrine->getRepository('ImpetusAppBundle:Survey')->getAnswerCountByQuestion($question, $scaleItem);
+
+                        $tuple = array('key' => $scaleItem,
+                                       'count' => reset($answerCount),
+                                       'percent' => ((reset($answerCount) / reset($surveySubmissionCount)) * 100));
+
+                        $questionResults[$count]['results'][$scaleItem] = $tuple;
+                    }
+                    break;
+            }
+
+            $count++;
+        }
+
+        return $this->render('ImpetusAppBundle:Survey:survey-results.html.twig',
+                             array('page' => 'survey',
+                                   'surveyTitle' => $survey->getName(),
+                                   'questionResults' => $questionResults));
+    }
+
+    /**
      * @Route("/{id}", name="_survey_show", options={"expose"=true}, requirements={"id"="\d+"})
      * @Secure(roles="ROLE_PARENT")
      */
@@ -130,7 +188,7 @@ class SurveyController extends BaseController {
             $this->get('session')->setFlash('notice', 'Survey submitted!');
         }
 
-        return $this->render('ImpetusAppBundle:Survey:survey-list.html.twig',
+        return $this->render('ImpetusAppBundle:Survey:survey-show.html.twig',
                              array('page' => 'survey',
                                    'survey' => $survey));
     }

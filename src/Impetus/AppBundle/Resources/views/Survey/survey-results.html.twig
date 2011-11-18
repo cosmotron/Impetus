@@ -1,0 +1,41 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Survey List" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/survey.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Survey: {{ surveyTitle }}</h1>
+
+{% for question in questionResults %}
+    <h2 style="margin-bottom: 5px;">Question {{ loop.index }}: {{ question.text }}</h2>
+
+    {% if question.type == 'multipleChoice' or question.type == 'scale' %}
+        <table id="surveys-table" style="font-size: 12px;">
+            <tr>
+                <th>Answer</th>
+                <th>Count</th>
+                <th>Percent</th>
+            </tr>
+        {% for result in question.results %}
+            <tr>
+                <td>{{ result.key }}</td>
+                <td>{{ result.count }}</td>
+                <td>{{ result.percent }}%</td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% elseif question.type == 'shortAnswer' %}
+        <div style="margin-top: 10px;">
+        {% for result in question.results %}
+            <span style="background-color: #E7E7E7; margin-left: 6px; padding: 2px 4px;">
+                {{ result.answer }}
+            </span>
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endfor %}
+
+{% endblock %}

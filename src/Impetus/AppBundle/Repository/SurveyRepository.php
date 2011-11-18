@@ -39,6 +39,41 @@ class SurveyRepository extends EntityRepository {
         return $result;
     }
 
+    public function getResultsByQuestion($question) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT sr.answer
+                                   FROM ImpetusAppBundle:SurveyResult sr
+                                   WHERE sr.surveyQuestion = :question
+                                   ")->setParameter('question', $question);
+
+        return $query->getResult();
+    }
+
+    public function getAnswerCountByQuestion($question, $answer) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT COUNT(sr)
+                                   FROM ImpetusAppBundle:SurveyResult sr
+                                   WHERE sr.surveyQuestion = :question
+                                       AND sr.answer = :answer
+                                   ")->setParameters(array('question' => $question,
+                                                           'answer' => $answer));
+
+        return $query->getSingleResult();
+    }
+
+    public function getSubmissionCountBySurvey($survey) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT COUNT(ss)
+                                   FROM ImpetusAppBundle:SurveySubmission ss
+                                   WHERE ss.survey = :survey
+                                   ")->setParameter('survey', $survey);
+
+        return $query->getSingleResult();
+    }
+
     public function getSubmissionBySurveyAndUser($survey, User $user) {
         $em = $this->getEntityManager();
 

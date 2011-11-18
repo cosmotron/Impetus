@@ -51,31 +51,17 @@
     margin-top: 10px;
 }
 
-#content label {
-    font-size: 18px;
-    display:block;
-}
-
 #content legend {
     border-bottom: 1px solid black;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     margin-bottom: 15px;
     padding: 0;
     width: 93%;
 }
 
-#content input, #content select {
-    font-size: 18px;
-    margin-bottom: 15px;
-}
-
-#content input:not([type=submit]) {
-    width: 500px;
-}
-
 #content .education-panel select {
-    width: 300px;
+    width: 260px;
 }
 
 .user-panel {
@@ -92,10 +78,10 @@
 }
 
 #exams select {
-    width: 170px !important;
+    width: 150px !important;
 }
 
 #exams input {
     display: inline;
-    width: 50px !important;
+    width: 40px !important;
 }

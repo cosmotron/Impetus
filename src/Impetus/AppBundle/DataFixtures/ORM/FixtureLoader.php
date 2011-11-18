@@ -53,12 +53,40 @@ class FixtureLoader implements FixtureInterface {
         $studentUser = $this->createUser('student', $studentRole);
         $manager->persist($studentUser);
 
-        // Place Student in a Grade
-        $studentGrade = new Grade();
-        $studentGrade->setGrade(11);
-        $studentGrade->setUser($studentUser);
-        $studentGrade->setYear($year);
-        $manager->persist($studentGrade);
+        // Create Activities
+        $activity1 = new Activity();
+        $activity1->setName('Mathcounts');
+        $manager->persist($activity1);
+
+        $activity2 = new Activity();
+        $activity2->setName('Roller Coaster Camp');
+        $manager->persist($activity2);
+
+        // Create Courses
+        $course1 = new Course();
+        $course1->setName('Chemistry');
+        $manager->persist($course1);
+
+        $course2 = new Course();
+        $course2->setName('Physics');
+        $manager->persist($course2);
+
+        $course3 = new Course();
+        $course3->setName('Pre-Calculus');
+        $manager->persist($course3);
+
+        // Create Exams
+        $exam1 = new Exam();
+        $exam1->setName('SAT Math');
+        $manager->persist($exam1);
+
+        $exam2 = new Exam();
+        $exam2->setName('SAT Reading');
+        $manager->persist($exam2);
+
+        $exam3 = new Exam();
+        $exam3->setName('SAT Writing');
+        $manager->persist($exam3);
 
         // Write to database
         $manager->flush();

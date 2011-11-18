@@ -14,12 +14,18 @@
         <tr>
             <th>Survey</th>
             <th>Created</th>
+            <th>Actions</th>
         </tr>
     {% for survey in surveys %}
-            <tr>
-                <td><a href="{{ path('_survey_edit', { 'id': survey.id }) }}">{{ survey.name }}</a></td>
-                <td>{{ survey.createdAt | date('M j, Y') }}</td>
-            </tr>
+        <tr>
+            <td><a href="{{ path('_survey_show', { 'id': survey.id }) }}">{{ survey.name }}</a></td>
+            <td>{{ survey.createdAt | date('M j, Y') }}</td>
+            <td>
+                <a href="{{ path('_survey_results', { 'id': survey.id }) }}">Results</a>
+                &mdash;
+                <a href="#">Edit</a>
+            </td>
+        </tr>
     {% else %}
         <tr>
             <td colspan="3"><i>No surveys</i></td>
