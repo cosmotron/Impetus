@@ -38,6 +38,7 @@
             <br class="clear-fix" />
         </div>
 
+    {% if is_granted('ROLE_TEACHER') %}
         <div class="user-panel">
             <h2>Personal</h2>
             <table>
@@ -123,6 +124,7 @@
             <br class="clear-fix" />
         </div>
         {% endif %}
+    {% endif %}
 
 {#
         <div class="user-panel">

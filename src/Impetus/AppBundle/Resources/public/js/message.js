@@ -5,10 +5,13 @@ var recipient_box =
      '</span>'].join('\n');
 
 var Message = {
+    currentUser: null,
     recipient_box_html: $(recipient_box),
     recipients: {},
 
-    init: function() {
+    init: function(currentUser) {
+        this.currentUser = currentUser;
+
         $.ui.autocomplete.prototype._renderItem = function(ul, item) {
             var term = this.term.split(' ').join('|');
             var re = new RegExp("(" + term + ")", "gi") ;
@@ -52,9 +55,8 @@ var Message = {
         $('.recipient-remove a').live('click', function(event) {
             event.preventDefault();
 
-            var box_id = $(this).parents('recipient-box').attr('id');
+            var box_id = $(this).parents('.recipient-box').attr('id');
             var recipient_name = $(this).parent().siblings('.recipient-name').text();
-            alert(recipient_name);
 
             delete Message.recipients[box_id]
 
@@ -66,7 +68,7 @@ var Message = {
         var box_id = item.type + '-' + item.id;
 
         // Make sure the recipient isn't already added
-        if (!(box_id in this.recipients)) {
+        if (!(box_id in this.recipients) && (item.id != Message.currentUser)) {
             var box = this.recipient_box_html.clone();
 
             box.attr('id', box_id);

@@ -22,10 +22,10 @@
     {% for quiz in quizzes %}
         {% if quiz.mostRecentAttempt %}
             {% set recent_attempt = quiz.mostRecentAttempt | date('M j, Y') %}
-            {% set recent_score = quiz.correctAnswers~'/'~quiz.totalQuestions %}
+            {% set recent_score = quiz.correctAnswers~' / '~quiz.totalQuestions %}
          {% else %}
             {% set recent_attempt = 'No attempts' %}
-            {% set recent_score = '-/-' %}
+            {% set recent_score = '- / -' %}
          {% endif %}
             <tr class="
 {#

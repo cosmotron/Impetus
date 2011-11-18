@@ -75,6 +75,8 @@ class MessageController extends BaseController {
                 $messageService->send($email);
 
                 $this->get('session')->setFlash('notice', 'Your message was sent!');
+
+                return $this->redirect($this->generateUrl('_message_list'));
             }
         }
 

@@ -49,28 +49,31 @@ class QuizRepository extends EntityRepository {
         $query = $em->createQuery("SELECT q.id,
                                        q.name,
                                        q.createdAt,
-                                       a1.submittedAt AS mostRecentAttempt,
-                                       COUNT(qu) as totalQuestions,
+                                       (
+                                           SELECT MAX(a2.submittedAt)
+                                           FROM ImpetusAppBundle:QuizAttempt a2
+                                           WHERE a2.quiz = q AND a2.user = :user
+                                       ) AS mostRecentAttempt,
+                                       (
+                                           SELECT COUNT(qu2)
+                                           FROM ImpetusAppBundle:Quiz q2
+                                               INNER JOIN q2.questions qu2
+                                           WHERE q2 = q
+                                       ) AS totalQuestions,
                                        (
                                            SELECT COUNT(r)
                                            FROM ImpetusAppBundle:QuizAttempt a3
                                            INNER JOIN a3.quizResults r
                                            WHERE r.quizAttempt = a1
                                                AND r.correct = TRUE
+                                               AND a3.user = :user
+                                               AND a3.submittedAt = mostRecentAttempt
                                        ) AS correctAnswers
                                    FROM ImpetusAppBundle:Quiz q
                                    LEFT JOIN q.quizAttempts a1
                                    LEFT JOIN q.questions qu
-                                   WHERE (
-                                             a1.submittedAt = (
-                                                 SELECT MAX(a2.submittedAt)
-                                                 FROM ImpetusAppBundle:QuizAttempt a2
-                                                 WHERE a2.quiz = q
-                                             )
-                                             OR a1.submittedAt IS NULL
-                                         )
-                                       AND q.year = :year
-                                       AND ( a1.user = :user OR a1.user IS NULL)
+                                   WHERE
+                                       q.year = :year
                                    GROUP BY q
                                    ORDER BY q.createdAt DESC
                                    ")->setParameters(array('year' => $year, 'user' => $user));
