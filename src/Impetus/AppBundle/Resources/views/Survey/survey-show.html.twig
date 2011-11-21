@@ -10,6 +10,13 @@
 {% block content %}
     <h1>Survey: {{ survey.name }}</h1>
 
+    {% if survey.instructions %}
+        <h2>Instructions</h2>
+        <div id="instructions">
+            {{ survey.instructions }}
+        </div>
+    {% endif %}
+
     <form action="{{ path('_survey_show', { 'id': survey.id }) }}" id="take-survey-form" method="post" novalidate="novalidate">
         <div id="problems">
             {% for question in survey.questions %}

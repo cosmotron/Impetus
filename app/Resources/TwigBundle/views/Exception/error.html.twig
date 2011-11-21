@@ -1,0 +1,9 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "An Error Occurred: "~status_text~"</title>" %}
+
+{% block content %}
+    <h1>Oops! An Error Occurred!</h1>
+    <h2>The server returned a "{{ status_code }} {{ status_text }}".</h2>
+    <p>{{ exception.message|e|replace({"\n": '<br />'})|format_file_from_text }}</p>
+{% endblock %}

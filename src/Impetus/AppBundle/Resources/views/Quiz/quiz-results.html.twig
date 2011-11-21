@@ -1,0 +1,45 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Quiz Results" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/quiz.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Quiz Results</h1>
+
+{% for district, students in results %}
+    <h2>{{ district }}</h2>
+    <div class="result-wrapper">
+        <table class="results-table">
+            <tr>
+                <th style="width: 150px;">Student</th>
+            {% for quiz in quizzes %}
+                <th>{{ quiz.name }}</th>
+            {% endfor %}
+            </tr>
+        {% for student, quiz_results in students %}
+            <tr>
+                <th style="text-align: left;">{{ student }}</th>
+            {% for quiz_id, quiz_result in quiz_results %}
+                {% if quiz_result is not null %}
+                    <td>
+                        <a href="{{ path('_quiz_show_attempt', { 'quizId': quiz_id, 'attemptId': quiz_result.attemptId}) }}">
+                            {{ quiz_result.correct }} / {{ quiz_result.total }}
+                        </a>
+                    </td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+            {% endfor %}
+            </tr>
+        {% else %}
+            <tr colspan="{{ quizzes.length }}">
+                No students
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+{% endfor %}
+{% endblock %}

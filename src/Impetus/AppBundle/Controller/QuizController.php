@@ -18,6 +18,23 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class QuizController extends BaseController {
     /**
+     * @Route("/delete", name="_quiz_delete", options={"expose"=true}, requirements={"id"="\d+", "_method"="POST"})
+     * @Secure(roles="ROLE_TA")
+     */
+    public function deleteAction(Request $request) {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $quizId = $request->request->get('id');
+
+        $quiz = $em->getRepository('ImpetusAppBundle:Quiz')->find($quizId);
+
+        $em->remove($quiz);
+        $em->flush();
+
+        return new Response('success');
+    }
+
+    /**
      * @Route("/{id}/edit", name="_quiz_edit", requirements={"id"="\d+"})
      * @Secure(roles="ROLE_TA")
      */
@@ -33,8 +50,7 @@ class QuizController extends BaseController {
         $doctrine = $this->getDoctrine();
         $year = $this->get('year_service')->getCurrentAcademicYear();
 
-        // TODO: Admin authority is incorrect, should be TA/Mentor for assigned district
-        if ($this->hasAdminAuthority()) {
+        if ($this->hasAssistantAuthority()) {
             $quizzes = $doctrine->getRepository('ImpetusAppBundle:Quiz')->findByYear($year);
             return $this->render('ImpetusAppBundle:Quiz:quiz-list-creator.html.twig',
                                  array('page' => 'quiz',
@@ -43,6 +59,7 @@ class QuizController extends BaseController {
         else {
             $user = $this->getCurrentUser();
             $quizzes = $doctrine->getRepository('ImpetusAppBundle:Quiz')->getQuizListByUserAndYear($user, $year);
+
             return $this->render('ImpetusAppBundle:Quiz:quiz-list-user.html.twig',
                                  array('page' => 'quiz',
                                        'quizzes' => $quizzes));
@@ -98,12 +115,54 @@ class QuizController extends BaseController {
                 $em->flush();
 
                 $this->get('session')->setFlash('notice', 'Quiz created!');
+
+                return $this->redirect($this->generateUrl('_quiz_list'));
             }
         }
 
         return $this->render('ImpetusAppBundle:Quiz:quiz-new.html.twig',
                              array('page' => 'quiz',
                                    'quizForm' => $quizForm->createView()));
+    }
+
+    /**
+     * @Route("/results", name="_quiz_results")
+     * @Secure(roles="ROLE_TA")
+     */
+    public function resultsAction() {
+        $doctrine = $this->getDoctrine();
+
+        $rosters = $this->getAuthorizedRosters();
+        if (!$rosters) {
+            throw new HttpException(403, 'You do not have access to this data.');
+        }
+
+        $year = $this->get('year_service')->getCurrentAcademicYear();
+        $quizzes = $doctrine->getRepository('ImpetusAppBundle:Quiz')->findByYear($year);
+
+        $results = array();
+        foreach ($rosters as $roster) {
+            $districtKey = $roster->getDistrict()->getName();
+
+            foreach ($roster->getStudents() as $student) {
+                $studentKey = $student->getUser()->getLastName().', '.$student->getUser()->getFirstName();
+
+                foreach ($quizzes as $quiz) {
+                    $latestAttempt = $doctrine->getRepository('ImpetusAppBundle:Quiz')->getLatestQuizAttemptByQuizAndUser($quiz, $student->getUser());
+
+                    $results[$districtKey][$studentKey][$quiz->getId()] = $latestAttempt;
+                }
+            }
+        }
+        /*
+        echo '<pre>';
+        print_r($results);
+        echo '</pre>';
+        */
+        return $this->render('ImpetusAppBundle:Quiz:quiz-results.html.twig',
+                             array('page' => 'quiz',
+                                   'quizzes' => $quizzes,
+                                   'results' => $results));
     }
 
     /**
@@ -182,7 +241,7 @@ class QuizController extends BaseController {
             throw $this->createNotFoundException('Quiz Attempt not found with it ' . $attemptId);
         }
 
-        return $this->render('ImpetusAppBundle:Quiz:quiz-result.html.twig',
+        return $this->render('ImpetusAppBundle:Quiz:quiz-attempt.html.twig',
                              array('page' => 'quiz',
                                    'quiz' => $quiz,
                                    'quizAttempt' => $quizAttempt,

@@ -8,11 +8,20 @@
 
 {% block content %}
     <h1>Districts</h1>
-    <ul>
-    {% for district in districts %}
-        <li><a href="{{ path('_district_edit', { 'id': district.id }) }}">{{ district.name }}</a></li>
-    {% endfor %}
-    </ul>
+    {% if is_granted('ROLE_ADMIN') %}
+        <p style="margin: 16px 0;"><a href="{{ path('_district_new') }}" style="font-size: 16px;">New District</a></p>
+    {% endif %}
 
-    <p><a href="{{ path('_district_new') }}" style="font-size: 16px;">New District</a></p>
+    <table id="district-table">
+        <tr>
+            <th>District</th>
+            <th class="actions">Actions</th>
+        </tr>
+    {% for district in districts %}
+        <tr>
+            <td><a href="{{ path('_district_edit', { 'id': district.id }) }}">{{ district.name }}</a></td>
+            <td><a href="{{ path('_district_edit', { 'id': district.id }) }}">Edit</a></td>
+        </tr>
+    {% endfor %}
+    </table>
 {% endblock %}

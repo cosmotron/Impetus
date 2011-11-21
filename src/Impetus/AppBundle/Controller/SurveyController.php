@@ -18,6 +18,23 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class SurveyController extends BaseController {
     /**
+     * @Route("/delete", name="_survey_delete", options={"expose"=true}, requirements={"id"="\d+", "_method"="POST"})
+     * @Secure(roles="ROLE_TA")
+     */
+    public function deleteAction(Request $request) {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $surveyId = $request->request->get('id');
+
+        $survey = $em->getRepository('ImpetusAppBundle:Survey')->find($surveyId);
+
+        $em->remove($survey);
+        $em->flush();
+
+        return new Response('success');
+    }
+
+    /**
      * @Route("/{id}/edit", name="_survey_edit", requirements={"id"="\d+"})
      * @Secure(roles="ROLE_TA")
      */
@@ -33,14 +50,14 @@ class SurveyController extends BaseController {
         $doctrine = $this->getDoctrine();
         $year = $this->get('year_service')->getCurrentAcademicYear();
 
-        $surveys = $doctrine->getRepository('ImpetusAppBundle:Survey')->findByYear($year);
-
-        if ($this->hasAdminAuthority()) {
+        if ($this->hasAssistantAuthority()) {
+            $surveys = $doctrine->getRepository('ImpetusAppBundle:Survey')->findByYear($year);
             return $this->render('ImpetusAppBundle:Survey:survey-list-creator.html.twig',
                                  array('page' => 'survey',
                                        'surveys' => $surveys));
         }
         else {
+            $surveys = $doctrine->getRepository('ImpetusAppBundle:Survey')->getSurveyListByYear($year);
             return $this->render('ImpetusAppBundle:Survey:survey-list-user.html.twig',
                                  array('page' => 'survey',
                                        'surveys' => $surveys));
@@ -68,6 +85,8 @@ class SurveyController extends BaseController {
                 $em->flush();
 
                 $this->get('session')->setFlash('notice', 'Survey created!');
+
+                return $this->redirect($this->generateUrl('_quiz_list'));
             }
         }
 
@@ -116,11 +135,11 @@ class SurveyController extends BaseController {
                     for ($scaleItem = 1; $scaleItem <= 7; $scaleItem++) {
                         $answerCount = $doctrine->getRepository('ImpetusAppBundle:Survey')->getAnswerCountByQuestion($question, $scaleItem);
 
-                        $tuple = array('key' => $scaleItem,
+                        $row = array('key' => $scaleItem,
                                        'count' => reset($answerCount),
                                        'percent' => ((reset($answerCount) / reset($surveySubmissionCount)) * 100));
 
-                        $questionResults[$count]['results'][$scaleItem] = $tuple;
+                        $questionResults[$count]['results'][$scaleItem] = $row;
                     }
                     break;
             }
@@ -147,9 +166,11 @@ class SurveyController extends BaseController {
             throw $this->createNotFoundException('Survey not found with id '.$id.' and year '.$year->getYear());
         }
 
-        $submission = $doctrine->getRepository('ImpetusAppBundle:Survey')->getSubmissionBySurveyAndUser($survey, $user);
-        if ($submission) {
-            throw new HttpException(403, 'Survey with id '.$id.' has already been submitted by this user.');
+        if (!$this->hasAssistantAuthority()) {
+            $submission = $doctrine->getRepository('ImpetusAppBundle:Survey')->getSubmissionBySurveyAndUser($survey, $user);
+            if ($submission) {
+                throw new HttpException(403, 'Survey with id '.$id.' has already been submitted by this user.');
+            }
         }
 
         if ($request->getMethod() == 'POST') {
@@ -186,6 +207,8 @@ class SurveyController extends BaseController {
             $em->flush();
 
             $this->get('session')->setFlash('notice', 'Survey submitted!');
+
+            return $this->redirect($this->generateUrl('_quiz_list'));
         }
 
         return $this->render('ImpetusAppBundle:Survey:survey-show.html.twig',

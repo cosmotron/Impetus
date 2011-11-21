@@ -4,17 +4,24 @@
 
 {% block extrascripts %}
     <link type="text/css" href="{{ asset('bundles/impetusapp/css/survey.css') }}" rel="stylesheet" />
+    <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/survey.js') }}"></script>
+
+    <script type="text/javascript">
+      $(function() {
+          Survey.listInit();
+      });
+    </script>
 {% endblock %}
 
 {% block content %}
     <h1>Survey List</h1>
-    <p style="margin: 16px 0;"><a href="{{ path('_survey_new') }}" style="font-size: 16px;">New Survey</a></p>
+    <p style="margin: 14px 0;"><a href="{{ path('_survey_new') }}" style="font-size: 16px;">New Survey</a></p>
 
     <table id="surveys-table">
         <tr>
             <th>Survey</th>
             <th>Created</th>
-            <th>Actions</th>
+            <th class="actions">Actions</th>
         </tr>
     {% for survey in surveys %}
         <tr>
@@ -24,6 +31,8 @@
                 <a href="{{ path('_survey_results', { 'id': survey.id }) }}">Results</a>
                 &mdash;
                 <a href="#">Edit</a>
+                &mdash;
+                <a href="#" survey-id="{{ survey.id }}" class="delete-survey">Delete</a>
             </td>
         </tr>
     {% else %}

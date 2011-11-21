@@ -37,8 +37,7 @@ class UserController extends BaseController {
 
         $form = $this->createForm(new CoreUserType(), $user);
 
-        $academicYear = $this->get('session')->get('academic_year');
-        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
+        $year = $this->get('year_service')->getCurrentAcademicYear();
 
         // TODO: Ensure a Student entity exists before editing. It not, either create one or error (somewhat solved, error is displayed)
         $student = $doctrine->getRepository('ImpetusAppBundle:Student')->findOneByUserAndYear($user, $year);
@@ -67,7 +66,7 @@ class UserController extends BaseController {
                 $user->setSalt(md5(rand()));
 
                 $encoder = new MessageDigestPasswordEncoder('sha256', true, 10);
-                $password = $encoder->encodePassword('impetus', $user->getSalt());
+                $password = $encoder->encodePassword($user->getPassword(), $user->getSalt());
                 $user->setPassword($password);
             }
             else {
@@ -122,10 +121,27 @@ class UserController extends BaseController {
 
     /**
      * @Route("/", name="_user_list")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_TA")
      */
     public function listAction() {
-        $users = $this->getDoctrine()->getRepository('ImpetusAppBundle:User')->findAll();
+        $doctrine = $this->getDoctrine();
+
+        if ($this->hasAdminAuthority()) {
+            $users = $doctrine->getRepository('ImpetusAppBundle:User')->findAllOrderedByLastName();
+        }
+        else {
+            $rosters = $this->getAuthorizedRosters();
+            if (!$rosters) {
+                throw new HttpException(403, 'You do not have access to this data.');
+            }
+
+            $users = array();
+            foreach ($rosters as $roster) {
+                foreach($roster->getStudents() as $student) {
+                    $users[] = $student->getUser();
+                }
+            }
+        }
 
         return $this->render('ImpetusAppBundle:Pages:user-list.html.twig',
                              array('page' => 'user',
@@ -149,7 +165,7 @@ class UserController extends BaseController {
                 $user->setSalt(md5(rand()));
 
                 $encoder = new MessageDigestPasswordEncoder('sha256', true, 10);
-                $password = $encoder->encodePassword('impetus', $user->getSalt());
+                $password = $encoder->encodePassword($user->getPassword(), $user->getSalt());
                 $user->setPassword($password);
 
                 $em = $this->getDoctrine()->getEntityManager();
@@ -188,8 +204,7 @@ class UserController extends BaseController {
 
         // TODO: add permission checks. e.g. non-admins shouldn't be able to query for admin usernames
 
-        $academicYear = $this->get('session')->get('academic_year');
-        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
+        $year = $this->get('year_service')->getCurrentAcademicYear();
 
         switch ($type) {
             case 'assistant':
@@ -221,8 +236,7 @@ class UserController extends BaseController {
 
         $user = $doctrine->getRepository('ImpetusAppBundle:User')->find($id);
 
-        $academicYear = $this->get('session')->get('academic_year');
-        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
+        $year = $this->get('year_service')->getCurrentAcademicYear();
 
         if (!$user) {
             throw $this->createNotFoundException('No user found for id ' . $id);

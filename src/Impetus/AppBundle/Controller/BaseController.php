@@ -14,22 +14,29 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 
 class BaseController extends Controller {
-    protected function setAcl($entity, $user, $mask = MaskBuilder::MASK_MASTER) {
-        $this->getDoctrine()->getEntityManager()->flush();
-        $aclProvider = $this->container->get('security.acl.provider');
+    protected function getAuthorizedRosters() {
+        $doctrine = $this->getDoctrine();
+        $user = $this->getCurrentUser();
+        $year = $this->get('year_service')->getCurrentAcademicYear();
 
-        $objectIdentity = ObjectIdentity::fromDomainObject($entity);
-        $securityIdentity = UserSecurityIdentity::fromAccount($user);
-
-        try {
-            $acl = $aclProvider->findAcl($objectIdentity);
-        } catch (AclNotFoundException $e) {
-            $acl = $aclProvider->createAcl($objectIdentity);
+        if ($this->hasAdminAuthority()) {
+            $rosters = $doctrine->getRepository('ImpetusAppBundle:Roster')->findByYear($year);
+        }
+        else if ($this->hasTeacherAuthority()) {
+            $rosters = $doctrine->getRepository('ImpetusAppBundle:Roster')->findByTeacherAndYear($user, $year);
+        }
+        else if ($this->hasAssistantAuthority()) {
+            $rosters = $doctrine->getRepository('ImpetusAppBundle:Roster')->findByTAAndYear($user, $year);
+        }
+        else {
+            return null;
         }
 
-        $acl->insertObjectAce($securityIdentity, $mask);
+        return $rosters;
+    }
 
-        $aclProvider->updateAcl($acl);
+    protected function getCurrentUser() {
+        return $user = $this->get('security.context')->getToken()->getUser();
     }
 
     protected function hasAdminAuthority() {
@@ -42,47 +49,24 @@ class BaseController extends Controller {
         return false;
     }
 
-    protected function hasDistrictAuthority($checkDistrictId) {
-        if ($this->hasAdminAuthority()) {
-            return true;
-        }
+    protected function hasAssistantAuthority() {
+        $securityContext = $this->get('security.context');
 
-        $em = $this->getDoctrine()->getEntityManager();
-        $district = $em->getRepository('ImpetusAppBundle:District')->find($checkDistrictId);
-
-        $districtOI = $this->getDoctrineObjectIdentity($district);
-
-        if (($this->get('security.context')->isGranted('ROLE_TA') ||
-             $this->get('security.context')->isGranted('ROLE_MENTOR')) &&
-            $this->get('security.context')->isGranted('MASTER', $districtOI)) {
+        if ($this->get('security.context')->isGranted('ROLE_TA') ||
+            $this->get('security.context')->isGranted('ROLE_MENTOR')) {
             return true;
         }
 
         return false;
     }
 
-    protected function getDoctrineObjectIdentity($domainObject) {
-        if (!is_object($domainObject)) {
-            throw new InvalidDomainObjectException('$domainObject must be an object.');
+    protected function hasTeacherAuthority() {
+        $securityContext = $this->get('security.context');
+
+        if ($this->get('security.context')->isGranted('ROLE_TEACHER')) {
+            return true;
         }
 
-        try {
-            $className = ($domainObject instanceof \Doctrine\ORM\Proxy\Proxy) ? get_parent_class($domainObject) : get_class($domainObject);
-
-            if ($domainObject instanceof DomainObjectInterface) {
-                return new ObjectIdentity($domainObject->getObjectIdentifier(), $className);
-            }
-            else if (method_exists($domainObject, 'getId')) {
-                return new ObjectIdentity($domainObject->getId(), $className);
-            }
-        } catch (\InvalidArgumentException $invalid) {
-            throw new InvalidDomainObjectException($invalid->getMessage(), 0, $invalid);
-        }
-
-        throw new InvalidDomainObjectException('$domainObject must either implement the DomainObjectInterface, or have a method named "getId".');
-    }
-
-    protected function getCurrentUser() {
-        return $user = $this->get('security.context')->getToken()->getUser();
+        return false;
     }
 }

@@ -19,7 +19,18 @@
             {{ form_row(form.firstName) }}
             {{ form_row(form.lastName) }}
             {{ form_row(form.email) }}
-            {{ form_row(form.userRoles) }}
+
+            <div>
+                <label class=" required" for="createUser_userRoles">User Role</label>
+                <select id="createUser_userRoles" required="required" name="createUser[userRoles][]">
+                    <option value="1">Admin</option>
+                    <option value="2">Teacher</option>
+                    <option value="3">TA</option>
+                    <option value="4">Mentor</option>
+                    <option value="5">Student</option>
+                    <option value="6">Parent</option>
+                </select>
+            </div>
         </fieldset>
 
         <fieldset class="user-panel">
@@ -34,7 +45,7 @@
             {{ form_row(form.major) }}
         </fieldset>
 
-        {{ form_rest(form) }}
+        {{ form_row(form._token) }}
 
         <br class="clear-fix" />
 

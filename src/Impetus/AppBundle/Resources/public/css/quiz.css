@@ -21,6 +21,14 @@ th {
     background-color: #F5F5F5;
 }
 
+.result-wrapper {
+    overflow-x: auto;
+}
+
+.results-table {
+    font-size: 12px;
+}
+
 #quiz-form {
     margin-top: 10px;
 }

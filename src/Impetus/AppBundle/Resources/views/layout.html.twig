@@ -40,7 +40,7 @@
                 {% endif %}
                 <div id="user-info">
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                        Welcome <a href="{{ path('_user_show', {'id': app.user.id}) }}">{{ app.user.username }}</a> &mdash; <a href="{{ path('_logout') }}">Logout</a>
+                        Welcome <a href="{{ path('_user_show', {'id': app.user.id}) }}">{{ app.user.firstName }} {{ app.user.lastName }}</a> &mdash; <a href="{{ path('_logout') }}">Logout</a>
                     {% else %}
                         <a href="{{ path('_login') }}">Login</a>
                     {% endif %}
@@ -59,7 +59,9 @@
                 <div id="navigation">
                     <ul id="menu-links">
                         {{ sidebar.nav_link('Home', '_home', 'home', page) }}
+{#
                         {{ sidebar.nav_link('Path', '_path', 'path', page) }}
+#}
 
                         {{ sidebar.nav_link('Quiz', '_quiz_list', 'quiz', page, 'ROLE_STUDENT') }}
                         {{ sidebar.nav_link('Survey', '_survey_list', 'survey', page, 'ROLE_PARENT') }}

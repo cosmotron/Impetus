@@ -17,10 +17,10 @@ class MessageRepository extends EntityRepository {
                                           s.id AS user_id,
                                           m1.sentAt,
                                           (
-                                              SELECT r2.messageRead
+                                              SELECT COUNT(r2.messageRead)
                                               FROM ImpetusAppBundle:Message m2
                                               INNER JOIN m2.recipients r2
-                                              WHERE ( m2.parent = m1 OR m2.parent IS NULL)
+                                              WHERE ( m2.parent = m1 OR ( m2.parent IS NULL AND m2 = m1 ) )
                                                   AND r2.user = :user
                                                   AND r2.messageRead = FALSE
                                               GROUP BY r2.messageRead

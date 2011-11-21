@@ -28,8 +28,6 @@ class MessageController extends BaseController {
 
         //$sentMessage = $doctrine->getRepository('ImpetusAppBundle:Message')->getSentMessageListBySender($user);
 
-        // TODO: mark messages as unread when a new reply is posted
-
         return $this->render('ImpetusAppBundle:Pages:message-list.html.twig',
                              array('page' => 'message',
                                    'messages' => $messages

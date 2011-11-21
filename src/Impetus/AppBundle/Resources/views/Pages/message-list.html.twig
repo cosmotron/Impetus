@@ -15,6 +15,7 @@
             <th>Subject</th>
             <th>From</th>
             <th>Sent At</th>
+            <th class="actions">Actions</th>
         </tr>
     {% for message in messages %}
             <tr class="
@@ -23,10 +24,13 @@
                 <td><a href="{{ path('_message_show', { 'id': message.id }) }}">{{ message.subject }}</a></td>
                 <td style="width: 180px;"><a href="{{ path('_user_show', { 'id': message.user_id  }) }}">{{ message.sender }}</a></td>
                 <td style="width: 250px;">{{ message.sentAt | date('D, M j, Y \\a\\t g:iA') }}</td>
+                <td>
+                    <a href="#" quiz-id="{{ message.id }}" class="delete-message">Delete</a>
+                </td>
             </tr>
     {% else %}
         <tr>
-            <td colspan="3"><i>No messages</i></td>
+            <td colspan="4"><i>No messages</i></td>
         </tr>
     {% endfor %}
     </table>

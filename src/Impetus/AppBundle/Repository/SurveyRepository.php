@@ -39,17 +39,6 @@ class SurveyRepository extends EntityRepository {
         return $result;
     }
 
-    public function getResultsByQuestion($question) {
-        $em = $this->getEntityManager();
-
-        $query = $em->createQuery("SELECT sr.answer
-                                   FROM ImpetusAppBundle:SurveyResult sr
-                                   WHERE sr.surveyQuestion = :question
-                                   ")->setParameter('question', $question);
-
-        return $query->getResult();
-    }
-
     public function getAnswerCountByQuestion($question, $answer) {
         $em = $this->getEntityManager();
 
@@ -63,15 +52,16 @@ class SurveyRepository extends EntityRepository {
         return $query->getSingleResult();
     }
 
-    public function getSubmissionCountBySurvey($survey) {
+
+    public function getResultsByQuestion($question) {
         $em = $this->getEntityManager();
 
-        $query = $em->createQuery("SELECT COUNT(ss)
-                                   FROM ImpetusAppBundle:SurveySubmission ss
-                                   WHERE ss.survey = :survey
-                                   ")->setParameter('survey', $survey);
+        $query = $em->createQuery("SELECT sr.answer
+                                   FROM ImpetusAppBundle:SurveyResult sr
+                                   WHERE sr.surveyQuestion = :question
+                                   ")->setParameter('question', $question);
 
-        return $query->getSingleResult();
+        return $query->getResult();
     }
 
     public function getSubmissionBySurveyAndUser($survey, User $user) {
@@ -91,5 +81,36 @@ class SurveyRepository extends EntityRepository {
         }
 
         return $result;
+    }
+
+    public function getSubmissionCountBySurvey($survey) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT COUNT(ss)
+                                   FROM ImpetusAppBundle:SurveySubmission ss
+                                   WHERE ss.survey = :survey
+                                   ")->setParameter('survey', $survey);
+
+        return $query->getSingleResult();
+    }
+
+    public function getSurveyListByYear(Year $year) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT s.id,
+                                       s.name,
+                                       s.createdAt,
+                                       (
+                                           SELECT MAX(ss2.submittedAt)
+                                           FROM ImpetusAppBundle:SurveySubmission ss2
+                                           WHERE ss2.survey = s
+                                       ) AS submittedAt
+                                   FROM ImpetusAppBundle:Survey s
+                                   LEFT JOIN s.surveySubmissions ss
+                                   WHERE s.year = :year
+                                   GROUP BY s
+                                   ORDER BY s.createdAt DESC")->setParameter('year', $year);
+
+        return $query->getResult();
     }
 }

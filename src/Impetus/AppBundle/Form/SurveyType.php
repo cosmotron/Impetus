@@ -11,6 +11,7 @@ class SurveyType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('instructions')
             ->add('questions', 'collection',
                   array('type' => new SurveyQuestionType(),
                         'allow_add'      => true,

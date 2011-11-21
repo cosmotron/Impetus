@@ -6,6 +6,7 @@ use Impetus\AppBundle\Entity\District;
 use Impetus\AppBundle\Entity\Roster;
 use Impetus\AppBundle\Entity\Student;
 use Impetus\AppBundle\Form\Type\NewDistrictType;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,22 +23,33 @@ class DistrictController extends BaseController {
     /**
      * @Route("/{id}/edit",
      *        name="_district_edit", requirements={"id"="\d+"})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_TA")
      */
     public function editAction($id, Request $request) {
         $doctrine = $this->getDoctrine();
         $em = $doctrine->getEntityManager();
 
         $district = $doctrine->getRepository('ImpetusAppBundle:District')->find($id);
-
         if (!$district) {
             throw $this->createNotFoundException('No district found for id ' . $id);
         }
 
+        if (!$this->hasAdminAuthority()) {
+            $authorizedRosters = $this->getAuthorizedRosters();
+
+            $authorizedDistricts = new ArrayCollection();
+            foreach ($authorizedRosters as $ar) {
+                $authorizedDistricts->add($ar->getDistrict());
+            }
+
+            if (!$authorizedDistricts->contains($district)) {
+                throw new HttpException(403, 'You do not have access to this data.');
+            }
+        }
+
         $form = $this->createForm(new NewDistrictType(), $district);
 
-        $academicYear = $this->get('session')->get('academic_year');
-        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
+        $year = $this->get('year_service')->getCurrentAcademicYear();
 
         $roster = $district->getRosters()->filter(function($roster) use ($year) { return $roster->getYear() === $year; })->first();
 
@@ -71,10 +83,25 @@ class DistrictController extends BaseController {
 
     /**
      * @Route("/", name="_district_list")
+     * @Secure(roles="ROLE_TA")
      */
     Public function listAction() {
-        $repository = $this->getDoctrine()->getRepository('ImpetusAppBundle:District');
-        $districts = $repository->findAll();
+        $doctrine = $this->getDoctrine();
+
+        if ($this->hasAdminAuthority()) {
+            $districts = $doctrine->getRepository('ImpetusAppBundle:District')->findAllOrderedByName();
+        }
+        else {
+            $rosters = $this->getAuthorizedRosters();
+            if (!$rosters) {
+                throw new HttpException(403, 'You do not have access to this data.');
+            }
+
+            $districts = array();
+            foreach ($rosters as $roster) {
+                $districts[] = $roster->getDistrict();
+            }
+        }
 
         return $this->render('ImpetusAppBundle:Pages:district-list.html.twig',
                              array('page' => 'district',
@@ -83,6 +110,7 @@ class DistrictController extends BaseController {
 
     /**
      * @Route("/new", name="_district_new")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function newAction(Request $request) {
         $district = new District();
@@ -110,7 +138,7 @@ class DistrictController extends BaseController {
     /**
      * @Route("/user/{userId}/grade", name="_district_update_grade", options={"expose"=true}, requirements={"userId"="\d+"})
      * @Method({"POST"})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_TA")
      */
     public function updateGradeAction($userId, Request $request) {
         $newGrade = $request->request->get('grade');
@@ -128,8 +156,7 @@ class DistrictController extends BaseController {
             throw $this->createNotFoundException('No user found for id ' . $userId);
         }
 
-        $academicYear = $this->get('session')->get('academic_year');
-        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
+        $year = $this->get('year_service')->getCurrentAcademicYear();
 
         $grade = $doctrine->getRepository('ImpetusAppBundle:Student')->findOneByUserAndYear($user, $year);
 
@@ -145,6 +172,7 @@ class DistrictController extends BaseController {
 
     /**
      * @Route("/{districtId}/roster/{type}/{userId}/add", name="_district_roster_add", options={"expose"=true}, requirements={"districtId"="\d+", "userId"="\d+"})
+     * @Secure(roles="ROLE_TA")
      */
     public function rosterAddAction($districtId, $type, $userId) {
         return $this->rosterPerformAction($districtId, $type, $userId, 'add');
@@ -152,6 +180,7 @@ class DistrictController extends BaseController {
 
     /**
      * @Route("/{districtId}/roster/{type}/{userId}/delete", name="_district_roster_remove", options={"expose"=true}, requirements={"districtId"="\d+", "userId"="\d+"})
+     * @Secure(roles="ROLE_TA")
      */
     public function rosterRemoveAction($districtId, $type, $userId) {
         return $this->rosterPerformAction($districtId, $type, $userId, 'remove');
@@ -164,8 +193,7 @@ class DistrictController extends BaseController {
 
         $district = $doctrine->getRepository('ImpetusAppBundle:District')->find($districtId);
 
-        $academicYear = $this->get('session')->get('academic_year');
-        $year = $doctrine->getRepository('ImpetusAppBundle:Year')->findOneByYear($academicYear);
+        $year = $this->get('year_service')->getCurrentAcademicYear();
 
         // Ensure a roster exists for this district-year pair
         // TODO: Move to RosterService

@@ -3,7 +3,10 @@
 namespace Impetus\AppBundle\DataFIxtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Impetus\AppBundle\Entity\Activity;
+use Impetus\AppBundle\Entity\Course;
 use Impetus\AppBundle\Entity\District;
+use Impetus\AppBundle\Entity\Exam;
 use Impetus\AppBundle\Entity\Grade;
 use Impetus\AppBundle\Entity\Role;
 use Impetus\AppBundle\Entity\User;

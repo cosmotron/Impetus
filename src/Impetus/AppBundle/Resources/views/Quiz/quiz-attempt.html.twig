@@ -2,6 +2,7 @@
 
 {% block attempt_details %}
 <div style="margin-top: 15px;">
+<p><b>User:</b> <a href="{{ path('_user_show', { 'id': quizAttempt.user.id }) }}">{{ quizAttempt.user.lastName }}, {{ quizAttempt.user.firstName }}</a></p>
 <p><b>Submitted at:</b> {{ quizAttempt.submittedAt | date('D, M j, Y \\a\\t g:iA') }}</p>
 </div>
 {% endblock %}

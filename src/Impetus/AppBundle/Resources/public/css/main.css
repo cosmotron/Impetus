@@ -22,6 +22,10 @@ label {
     font-size: 14px;
 }
 
+input[type=submit] {
+    font-size: 14px;
+}
+
 input:not([type=submit]):not([type=radio]):not([type=checkbox]) {
     border: 1px solid #5F5F5F;
     font-size: 14px;
@@ -173,6 +177,10 @@ a.ui-corner-all {
 a.ui-state-hover {
     background-color: #e7e7e7 !important;
     display: block;
+}
+
+th.actions {
+    width: 180px;
 }
 
 .placeholder {

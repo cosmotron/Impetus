@@ -15,6 +15,7 @@
 {% endblock %}
 
 {% block new_multiple_choice_question %}
+<div class="question-wrapper">
     <h2>Multiple Choice Question</h2>
     <div class="problem">
         {{ block('question_text') }}
@@ -33,24 +34,29 @@
 
         <br class="clear-fix" />
     </div>
+</div>
 {% endblock %}
 
 {% block new_short_answer_question %}
+<div class="question-wrapper">
     <h2>Short-Answer Question</h2>
     <div class="problem">
         {{ block('question_text') }}
 
         <br class="clear-fix" />
     </div>
+</div>
 {% endblock %}
 
 {% block new_scale_question %}
+<div class="question-wrapper">
     <h2>Scale Question</h2>
     <div class="problem">
         {{ block('question_text') }}
 
         <br class="clear-fix" />
     </div>
+</div>
 {% endblock %}
 
 {% block new_multiple_choice_answer %}

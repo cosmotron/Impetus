@@ -8,9 +8,6 @@
 
 {% block content %}
     <h1>Quiz List</h1>
-    {% if is_granted('ROLE_TA') %}
-        <p style="margin: 16px 0;"><a href="{{ path('_quiz_new') }}" style="font-size: 16px;">New Quiz</a></p>
-    {% endif %}
 
     <table id="quizzes-table">
         <tr>
@@ -21,7 +18,7 @@
         </tr>
     {% for quiz in quizzes %}
         {% if quiz.mostRecentAttempt %}
-            {% set recent_attempt = quiz.mostRecentAttempt | date('M j, Y') %}
+            {% set recent_attempt = '<a href="'~path('_quiz_list_attempts', { 'id': quiz.id })~'">'~quiz.mostRecentAttempt|date('M j, Y')~'</a>' %}
             {% set recent_score = quiz.correctAnswers~' / '~quiz.totalQuestions %}
          {% else %}
             {% set recent_attempt = 'No attempts' %}
@@ -34,7 +31,7 @@
             ">
                 <td><a href="{{ path('_quiz_show', { 'id': quiz.id }) }}">{{ quiz.name }}</a></td>
                 <td>{{ quiz.createdAt | date('M j, Y') }}</td>
-                <td><a href="{{ path('_quiz_list_attempts', { 'id': quiz.id }) }}">{{ recent_attempt }}</a></td>
+                <td>{{ recent_attempt|raw }}</td>
                 <td>{{ recent_score }}</td>
             </tr>
     {% else %}

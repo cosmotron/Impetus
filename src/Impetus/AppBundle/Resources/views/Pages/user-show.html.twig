@@ -19,17 +19,12 @@
                 <h1>{{ fullName }} ({{ user.username }})</h1>
 
                 <p>
-                    {% for role in user.userRoles %}
-                        {% if role == "ROLE_ADMIN" %}
-                            Administrator
-                        {% elseif role == "ROLE_TEACHER" %}
-                            Teacher
-                        {% elseif role == "ROLE_STUDENT" %}
-                            {% if student != null %}
-                                Student at {{ student.roster.district.name }}
-                            {% endif %}
+                    {{ user.getRoles[0].toHumanReadable }}
+                    {% if user.getRoles[0] == "ROLE_STUDENT" %}
+                        {% if student != null %}
+                            at {{ student.roster.district.name }}
                         {% endif %}
-                    {% endfor %}
+                    {% endif %}
                 </p>
 
                 <p>{{ user.email }}</p>

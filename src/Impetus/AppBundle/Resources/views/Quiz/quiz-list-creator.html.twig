@@ -4,26 +4,39 @@
 
 {% block extrascripts %}
     <link type="text/css" href="{{ asset('bundles/impetusapp/css/quiz.css') }}" rel="stylesheet" />
+    <script type="text/javascript" src="{{ asset('bundles/impetusapp/js/quiz.js') }}"></script>
+
+    <script type="text/javascript">
+      $(function() {
+          Quiz.listInit();
+      });
+    </script>
 {% endblock %}
 
 {% block content %}
     <h1>Quiz List</h1>
-    <p style="margin: 16px 0;"><a href="{{ path('_quiz_new') }}" style="font-size: 16px;">New Quiz</a></p>
+    <p style="margin: 14px 0;">
+        <a href="{{ path('_quiz_new') }}" style="font-size: 16px;">New Quiz</a>
+        &mdash;
+        <a href="{{ path('_quiz_results') }}" style="font-size: 16px;">Results</a>
+    </p>
 
     <table id="quizzes-table">
         <tr>
             <th>Quiz</th>
             <th>Created</th>
+            <th class="actions">Actions</th>
         </tr>
     {% for quiz in quizzes %}
-            <tr class="
-{#
-                {%- if message.messageRead is not null %}unread{% endif -%}
-#}
-            ">
-                <td><a href="{{ path('_quiz_edit', { 'id': quiz.id }) }}">{{ quiz.name }}</a></td>
-                <td>{{ quiz.createdAt | date('M j, Y') }}</td>
-            </tr>
+        <tr>
+            <td><a href="{{ path('_quiz_show', { 'id': quiz.id }) }}">{{ quiz.name }}</a></td>
+            <td>{{ quiz.createdAt | date('M j, Y') }}</td>
+            <td>
+                <a href="#">Edit</a>
+                &mdash;
+                <a href="#" quiz-id="{{ quiz.id }}" class="delete-quiz">Delete</a>
+            </td>
+        </tr>
     {% else %}
         <tr>
             <td colspan="3"><i>No quizzes</i></td>

@@ -1,3 +1,21 @@
+table#user-table, #user-table td, #user-table th {
+    border: 1px solid #DFDFDF;
+}
+
+table#user-table {
+    border-collapse: collapse;
+    margin-top: 10px;
+    width: 100%;
+}
+
+#user-table th, #user-table td {
+    padding: 5px;
+}
+
+#user-table th {
+    background-color: #F5F5F5;
+}
+
 #user-profile #user-avatar {
     border: 1px solid #dfdfdf;
     color: #bbb;

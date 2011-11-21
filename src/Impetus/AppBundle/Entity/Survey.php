@@ -25,6 +25,11 @@ class Survey {
     protected $createdAt;
 
     /**
+     * @ORM\Column(type="text")
+     */
+    protected $instructions;
+
+    /**
      * @ORM\Column(type="string")
      * @Assert\MinLength(1)
      * @Assert\NotBlank()
@@ -82,6 +87,26 @@ class Survey {
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Set instructions
+     *
+     * @param text $instructions
+     */
+    public function setInstructions($instructions)
+    {
+        $this->instructions = $instructions;
+    }
+
+    /**
+     * Get instructions
+     *
+     * @return text
+     */
+    public function getInstructions()
+    {
+        return $this->instructions;
     }
 
     /**

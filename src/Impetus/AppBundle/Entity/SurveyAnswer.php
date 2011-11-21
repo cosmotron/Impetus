@@ -26,6 +26,7 @@ class SurveyAnswer {
 
     /**
      * @ORM\ManyToOne(targetEntity="SurveyQuestion", inversedBy="answers")
+     * @ORM\JoinColumn(name="survey_question_id", referencedColumnName="id")
      */
     protected $question;
 

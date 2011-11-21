@@ -7,6 +7,16 @@ use Impetus\AppBundle\Entity\User;
 
 
 class UserRepository extends EntityRepository {
+    public function findAllOrderedByLastName() {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT u
+                                   FROM ImpetusAppBundle:User u
+                                   ORDER BY u.lastName");
+
+        return $query->getResult();
+    }
+
     public function findByApproximateName($name) {
         $em = $this->getEntityManager();
 
@@ -89,6 +99,22 @@ class UserRepository extends EntityRepository {
     }
 
     public function getGraduatePlacementsByYear($year) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT CONCAT(u.lastName, CONCAT(', ', u.firstName)) as graduate,
+                                          u.diploma as diploma,
+                                          u.college as college,
+                                          u.major as major
+                                   FROM ImpetusAppBundle:User u
+                                   INNER JOIN u.graduated y
+                                   WHERE y = :year
+                                   ORDER BY graduate ASC
+                                   ")->setParameter('year', $year);
+
+        return $query->getResult();
+    }
+
+    public function getUsersFromDistrict($year) {
         $em = $this->getEntityManager();
 
         $query = $em->createQuery("SELECT CONCAT(u.lastName, CONCAT(', ', u.firstName)) as graduate,

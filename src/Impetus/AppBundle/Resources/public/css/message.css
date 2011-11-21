@@ -1,24 +1,30 @@
+table, td, th {
+    border: 1px solid #DFDFDF;
+}
+
+table {
+    border-collapse: collapse;
+    margin-top: 10px;
+    width: 100%;
+}
+
+th, td {
+    padding: 5px;
+}
+
+th {
+    background-color: #F5F5F5;
+}
+
 #message-form {
     margin-top: 10px;
 }
 
-#message-form label {
-    font-size: 18px;
-    display:block;
-}
-
-#message-form input, #message-form select {
-    font-size: 18px;
-    margin-bottom: 15px;
-}
-
 #message-form textarea {
-    font-size: 18px;
-    height: 200px;
+    height: 100px;
     margin-bottom: 15px;
     width: 500px;
 }
-
 
 #recipients-wrapper {
     border: 1px solid #878787;
@@ -60,24 +66,6 @@
     outline: none;
     padding: 0;
     width: 100%;
-}
-
-table, td, th {
-    border: 1px solid #DFDFDF;
-}
-
-table {
-    border-collapse: collapse;
-    margin-top: 10px;
-    width: 800px;
-}
-
-th, td {
-    padding: 5px;
-}
-
-th {
-    background-color: #F5F5F5;
 }
 
 .unread {

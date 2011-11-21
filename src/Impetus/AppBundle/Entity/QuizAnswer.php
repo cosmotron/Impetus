@@ -31,6 +31,7 @@ class QuizAnswer {
 
     /**
      * @ORM\ManyToOne(targetEntity="QuizQuestion", inversedBy="answers")
+     * @ORM\JoinColumn(name="quiz_question_id", referencedColumnName="id")
      */
     protected $question;
 

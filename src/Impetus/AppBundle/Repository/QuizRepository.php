@@ -61,11 +61,10 @@ class QuizRepository extends EntityRepository {
                                            WHERE q2 = q
                                        ) AS totalQuestions,
                                        (
-                                           SELECT COUNT(r)
+                                           SELECT COUNT(r.correct)
                                            FROM ImpetusAppBundle:QuizAttempt a3
                                            INNER JOIN a3.quizResults r
-                                           WHERE r.quizAttempt = a1
-                                               AND r.correct = TRUE
+                                           WHERE r.correct = TRUE
                                                AND a3.user = :user
                                                AND a3.submittedAt = mostRecentAttempt
                                        ) AS correctAnswers
@@ -95,7 +94,7 @@ class QuizRepository extends EntityRepository {
         return $query->getResult();
     }
 
-   public function getNumberOfQuizAttemptsByQuizAndUser(Quiz $quiz, User $user) {
+    public function getNumberOfQuizAttemptsByQuizAndUser(Quiz $quiz, User $user) {
         $em = $this->getEntityManager();
 
         $query = $em->createQuery("SELECT COUNT(attempt) AS attempts
@@ -108,7 +107,7 @@ class QuizRepository extends EntityRepository {
         return $query->getSingleResult();
     }
 
-   public function getQuizAttemptsByQuizAndUser(Quiz $quiz, User $user) {
+    public function getQuizAttemptsByQuizAndUser(Quiz $quiz, User $user) {
         $em = $this->getEntityManager();
 
         $query = $em->createQuery("SELECT attempt.id,
@@ -131,5 +130,47 @@ class QuizRepository extends EntityRepository {
                                                            'user' => $user));
 
         return $query->getResult();
+   }
+
+    public function getLatestQuizAttemptByQuizAndUser(Quiz $quiz, User $user) {
+        $em = $this->getEntityManager();
+
+
+        $query = $em->createQuery("SELECT a1.id as attemptId,
+                                       (
+                                           SELECT COUNT(qu1)
+                                           FROM ImpetusAppBundle:Quiz q1
+                                           INNER JOIN q1.questions qu1
+                                           WHERE q1 = :quiz
+                                       ) AS total,
+                                       (
+                                           SELECT COUNT(r2)
+                                           FROM ImpetusAppBundle:QuizAttempt a2
+                                           INNER JOIN a2.quizResults r2
+                                           WHERE r2.quizAttempt = a1
+                                               AND r2.correct = TRUE
+                                       ) AS correct
+                                       FROM ImpetusAppBundle:QuizAttempt a1
+                                       INNER JOIN a1.quizResults r1
+                                       WHERE a1.quiz = :quiz
+                                           AND a1.user = :user
+                                           AND a1.submittedAt =
+                                               (
+                                                   SELECT MAX(a3.submittedAt)
+                                                   FROM ImpetusAppBundle:QuizAttempt a3
+                                                   WHERE a3.quiz = :quiz AND a3.user = :user
+                                               )
+                                       GROUP BY a1.id
+                                       ")->setParameters(array('quiz' => $quiz,
+                                                               'user' => $user));
+
+        try {
+            $result = $query->getSingleResult();
+        }
+        catch (\Doctrine\ORM\NoResultException $e) {
+            $result = null;
+        }
+
+        return $result;
     }
 }
