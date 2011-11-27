@@ -32,7 +32,7 @@ class YearController extends BaseController {
     }
 
     /**
-     * @Route("/", name="_year_list", options={"expose"=true})
+     * @Route("", name="_year_list", options={"expose"=true})
      */
     public function listAction() {
         $doctrine = $this->getDoctrine();
@@ -50,6 +50,9 @@ class YearController extends BaseController {
         $newJson['current'] = $this->get('session')->get('academic_year');
         $json = json_encode($newJson);
 
-        return new Response($json);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 }
