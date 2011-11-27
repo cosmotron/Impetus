@@ -4,10 +4,19 @@ var Impetus = {
     init: function(currentUrl) {
         this.url = currentUrl;
 
+        this.ajaxSetup();
+
         this.createYearChanger();
 
         this.bindFlashNoticeButtons();
         this.bindPlaceholderReplacement();
+    },
+
+    ajaxSetup: function() {
+        // Stop aggressive caching (IE)
+        $.ajaxSetup({
+            cache: false
+        });
     },
 
     bindFlashNoticeButtons: function() {
