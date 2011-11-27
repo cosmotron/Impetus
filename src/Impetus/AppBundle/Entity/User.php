@@ -4,6 +4,7 @@ namespace Impetus\AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -11,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="Impetus\AppBundle\Repository\UserRepository")
  * @ORM\Table(name="`user`")
+ * @DoctrineAssert\UniqueEntity(fields={"username"}, message="This username already exists.")
  */
 class User implements UserInterface {
     /**
@@ -31,7 +33,7 @@ class User implements UserInterface {
     protected $salt;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\MinLength(2)
      * @Assert\NotBlank()
      */
