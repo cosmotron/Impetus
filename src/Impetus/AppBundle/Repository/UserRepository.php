@@ -46,7 +46,9 @@ class UserRepository extends EntityRepository {
     public function findByApproximateUnenrolledTeacherName($name, $year) {
         $em = $this->getEntityManager();
 
-        $query = $em->createQuery("SELECT u.id, CONCAT(u.firstName, CONCAT(' ', u.lastName)) as value
+        $query = $em->createQuery("SELECT u.id,
+                                       CONCAT(u.firstName, CONCAT(' ', CONCAT(u.lastName, CONCAT(' - ', u.email)))) as label,
+                                       CONCAT(u.firstName, CONCAT(' ', u.lastName)) as value
                                    FROM ImpetusAppBundle:User u
                                    INNER JOIN u.userRoles role
                                    WHERE role.name = 'ROLE_TEACHER'
