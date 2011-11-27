@@ -57,7 +57,8 @@ class SurveyController extends BaseController {
                                        'surveys' => $surveys));
         }
         else {
-            $surveys = $doctrine->getRepository('ImpetusAppBundle:Survey')->getSurveyListByYear($year);
+            $user = $this->getCurrentUser();
+            $surveys = $doctrine->getRepository('ImpetusAppBundle:Survey')->getSurveyListByUserAndYear($year);
             return $this->render('ImpetusAppBundle:Survey:survey-list-user.html.twig',
                                  array('page' => 'survey',
                                        'surveys' => $surveys));
@@ -86,7 +87,7 @@ class SurveyController extends BaseController {
 
                 $this->get('session')->setFlash('notice', 'Survey created!');
 
-                return $this->redirect($this->generateUrl('_quiz_list'));
+                return $this->redirect($this->generateUrl('_survey_list'));
             }
         }
 
@@ -126,7 +127,7 @@ class SurveyController extends BaseController {
 
                         $row = array('key' => $answer->getLabel(),
                                      'count' => reset($answerCount),
-                                     'percent' => ((reset($answerCount) / reset($surveySubmissionCount)) * 100));
+                                     'percent' => round(((reset($answerCount) / reset($surveySubmissionCount)) * 100)), 2);
 
                         $questionResults[$count]['results'][] = $row;
                     }
@@ -136,8 +137,8 @@ class SurveyController extends BaseController {
                         $answerCount = $doctrine->getRepository('ImpetusAppBundle:Survey')->getAnswerCountByQuestion($question, $scaleItem);
 
                         $row = array('key' => $scaleItem,
-                                       'count' => reset($answerCount),
-                                       'percent' => ((reset($answerCount) / reset($surveySubmissionCount)) * 100));
+                                     'count' => reset($answerCount),
+                                     'percent' => round(((reset($answerCount) / reset($surveySubmissionCount)) * 100)), 2);
 
                         $questionResults[$count]['results'][$scaleItem] = $row;
                     }
@@ -208,7 +209,7 @@ class SurveyController extends BaseController {
 
             $this->get('session')->setFlash('notice', 'Survey submitted!');
 
-            return $this->redirect($this->generateUrl('_quiz_list'));
+            return $this->redirect($this->generateUrl('_survey_list'));
         }
 
         return $this->render('ImpetusAppBundle:Survey:survey-show.html.twig',

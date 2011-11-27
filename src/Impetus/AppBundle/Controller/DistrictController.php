@@ -198,6 +198,7 @@ class DistrictController extends BaseController {
         // Ensure a roster exists for this district-year pair
         // TODO: Move to RosterService
         try {
+            // TODO: Ensure user is authorized to perform this action
             $roster = $doctrine->getRepository('ImpetusAppBundle:Roster')->findOneByDistrictAndYear($district, $year);
         }
         catch (\Doctrine\ORM\NoResultException $e) {
@@ -230,7 +231,7 @@ class DistrictController extends BaseController {
         else if ($type == 'student') {
             if ($action == 'add') {
                 $student = new Student();
-                $student->setGrade(1);
+                $student->setGrade(12);
                 $student->setRoster($roster);
                 $student->setUser($user);
                 $em->persist($student);

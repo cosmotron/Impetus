@@ -35,6 +35,21 @@ class UserController extends BaseController {
             throw $this->createNotFoundException('No user found for id ' . $id);
         }
 
+        if (!$this->hasAdminAuthority()) {
+            $authorizedRosters = $this->getAuthorizedRosters();
+
+            $authorizedUsers = new ArrayCollection();
+            foreach ($authorizedRosters as $ar) {
+                foreach ($ar->getStudents() as $student) {
+                    $authorizedUsers->add($student->getUser());
+                }
+            }
+
+            if (!$authorizedUsers->contains($user)) {
+                throw new HttpException(403, 'You do not have access to this data.');
+            }
+        }
+
         $form = $this->createForm(new CoreUserType(), $user);
 
         $year = $this->get('year_service')->getCurrentAcademicYear();
