@@ -12,6 +12,13 @@ var Message = {
     init: function(currentUser) {
         this.currentUser = currentUser;
 
+        this.autocompleteSetup();
+
+        this.bindRecipientAdd();
+        this.bindRecipientRemove();
+    },
+
+    autocompleteSetup: function() {
         $.ui.autocomplete.prototype._renderItem = function(ul, item) {
             var term = this.term.split(' ').join('|');
             var re = new RegExp("(" + term + ")", "gi") ;
@@ -21,9 +28,6 @@ var Message = {
                 .append( "<a>" + t + "</a>" )
                 .appendTo( ul );
         };
-
-        this.bindRecipientAdd();
-        this.bindRecipientRemove();
     },
 
     bindRecipientAdd: function() {
