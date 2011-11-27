@@ -94,7 +94,7 @@ class SurveyRepository extends EntityRepository {
         return $query->getSingleResult();
     }
 
-    public function getSurveyListByYear(Year $year) {
+    public function getSurveyListByUserAndYear($user, Year $year) {
         $em = $this->getEntityManager();
 
         $query = $em->createQuery("SELECT s.id,
@@ -103,13 +103,15 @@ class SurveyRepository extends EntityRepository {
                                        (
                                            SELECT MAX(ss2.submittedAt)
                                            FROM ImpetusAppBundle:SurveySubmission ss2
-                                           WHERE ss2.survey = s
+                                           WHERE ss2.survey = s AND ss2.user = :user
                                        ) AS submittedAt
                                    FROM ImpetusAppBundle:Survey s
                                    LEFT JOIN s.surveySubmissions ss
                                    WHERE s.year = :year
                                    GROUP BY s
-                                   ORDER BY s.createdAt DESC")->setParameter('year', $year);
+                                   ORDER BY s.createdAt DESC
+                                   ")->setParameters(array('user' => $user,
+                                                           'year' => $year));
 
         return $query->getResult();
     }
