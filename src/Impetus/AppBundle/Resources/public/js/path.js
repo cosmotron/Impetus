@@ -2,7 +2,7 @@ var PathMap = {
     imageRoot: null,
     map: null,
     markers: [],
-    nodes: [],
+    nodes: {},
     nodeSpacing: {lat: 0.392, lng: 0.35},
     overlay: null,
 
@@ -67,7 +67,7 @@ var PathMap = {
                     );
                     node.prereqs = ajaxResponse[i].prereqs;
 
-                    PathMap.nodes.push(node);
+                    PathMap.nodes[node.id] = node;
                 }
             },
             error: function() {
@@ -78,8 +78,8 @@ var PathMap = {
     },
 
     drawMap: function() {
-        for (var i = 0; i < this.nodes.length; i++) {
-            var node = this.nodes[i];
+        $.each(this.nodes, function(node_id) {
+            var node = PathMap.nodes[node_id];
 
             var marker = new com.redfin.FastMarker(
                 'marker-' + node.id,
@@ -89,10 +89,10 @@ var PathMap = {
                 1,
                 0,0);
 
-            this.markers.push(marker);
+            PathMap.markers.push(marker);
 
-            this.drawPrereqPaths(node);
-        }
+            PathMap.drawPrereqPaths(node);
+        });
 
         this.drawOverlay();
     },
@@ -121,11 +121,10 @@ var PathMap = {
     },
 
     drawPrereqPaths: function(node) {
-        // Subtract 1 because sql auto increment starts ids at 1 rather than 0
-        var source = node.id - 1;
+        var source = node.id;
 
         for (var i = 0; i < node.prereqs.length; i++) {
-            var target = node.prereqs[i].id - 1;
+            var target = node.prereqs[i].id;
 
             var endPoints = [
                 this.nodes[source].latLng,
