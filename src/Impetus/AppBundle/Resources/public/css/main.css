@@ -187,3 +187,15 @@ th.actions {
     color: #a1a1a1;
     font-style: italic;
 }
+
+.error_list {
+    background-color: #FFE5E5;
+    border: 1px solid #B3698E;
+    margin: 5px 0;
+    padding: 3px 0;
+    width: 325px;
+}
+
+.error_list li {
+    margin-left: 20px;
+}

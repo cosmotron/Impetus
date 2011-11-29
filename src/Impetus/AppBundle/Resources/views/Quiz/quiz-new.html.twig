@@ -15,6 +15,8 @@
     </script>
 {% endblock %}
 
+{% form_theme quizForm _self %}
+
 {% block content %}
     <h1>New Quiz</h1>
     <form action="{{ path('_quiz_new') }}" id="quiz-form" method="post" novalidate="novalidate" {{ form_enctype(quizForm) }}>

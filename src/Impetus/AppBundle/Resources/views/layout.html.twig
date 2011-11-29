@@ -1,5 +1,17 @@
 {% import "ImpetusAppBundle:Macros:sidebar.html.twig" as sidebar %}
 
+{% block field_errors %}
+{% spaceless %}
+    {% if errors is defined and errors|length > 0 %}
+    <ul class="error_list">
+        {% for error in errors %}
+            <li>{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endspaceless %}
+{% endblock field_errors %}
+
 <!DOCTYPE html>
 <html>
     <head>

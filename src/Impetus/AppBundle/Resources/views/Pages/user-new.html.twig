@@ -6,6 +6,8 @@
     <link type="text/css" href="{{ asset('bundles/impetusapp/css/user.css') }}" rel="stylesheet" />
 {% endblock %}
 
+{% form_theme form _self %}
+
 {% block content %}
     <h1>New User</h1>
     <form action="{{ path('_user_new') }}" id="user-form" method="post" novalidate="novalidate" {{ form_enctype(form) }}>
