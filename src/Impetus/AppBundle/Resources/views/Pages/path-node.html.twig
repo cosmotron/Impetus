@@ -10,22 +10,16 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Exponents 1</h1>
+    <h1>{{ node.name }}</h1>
+
+
     <h2>Common Core State Standards</h2>
-    <ol>
-        <li>Lorem ipsum dolor sit amet...</li>
-    </ol>
-
-    <h2></h2>
-
+    {{ node.data.standard|default('No data')|raw }}
 
     <h2>Quizzes</h2>
-    <ul>
-        <li><a href="#">Exponents Quiz 1</a></li>
-    </ul>
+    {{ node.data.quizzes|default('No data')|raw }}
 
     <h2>Khan Academy Resources</h2>
-    <ul>
-        <li><a href="http://www.khanacademy.org/video/exponent-rules-1?playlist=Algebra+I+Worked+Examples">Exponent Rules 1</a></li>
-    </ul>
+    {{ node.data.videos|default('No data')|raw }}
+
 {% endblock %}

@@ -34,22 +34,24 @@ class PathController extends Controller {
         $result = $query->getArrayResult();
         $json = json_encode($result);
 
-        /*
-        $repository = $this->getDoctrine()->getRepository('ImpetusAppBundle:PathNode');
-        $pathNodes = $repository->findAll();
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
 
-        $serializer = new Serializer(array(new GetSetMethodNormalizer()),
-                                     array('json' => new JsonEncoder()));
-        $json = $serializer->serialize($pathNodes, 'json');
-        */
-
-        return new Response($json);
+        return $response;
     }
 
     /**
      * @Route("/{id}", name="_path_show", options={"expose"=true}, requirements={"id"="\d+"})
      */
     public function showAction($id) {
-        return $this->render('ImpetusAppBundle:Pages:path-node.html.twig', array('page' => 'path'));
+        $node = $this->getDoctrine()->getRepository('ImpetusAppBundle:PathNode')->find($id);
+
+        if (!$node) {
+            throw $this->createNotFoundException('Node not found with id '.$id);
+        }
+
+        return $this->render('ImpetusAppBundle:Pages:path-node.html.twig',
+                             array('page' => 'path',
+                                   'node' => $node));
     }
 }

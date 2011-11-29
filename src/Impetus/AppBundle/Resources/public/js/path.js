@@ -14,8 +14,8 @@ var PathMap = {
                        });
         },
         isPng: false,
-        maxZoom: 10,
-        minZoom: 7,
+        maxZoom: 9,
+        minZoom: 9,
         tileSize: new google.maps.Size(256, 256)
     },
 
@@ -26,6 +26,8 @@ var PathMap = {
             mapTypeControl: false,
             streetViewControl: false,
             scrollwheel: false,
+            zoom: 9,
+            zoomControl: false
         });
 
         var pathMapType = new google.maps.ImageMapType(this.mapTypeOptions);
@@ -33,7 +35,6 @@ var PathMap = {
         this.map.setMapTypeId('pathmap');
 
         this.map.setCenter(new google.maps.LatLng(-0.75, 0));
-        this.map.setZoom(9);
 
         this.getPathNodes();
 
@@ -113,9 +114,10 @@ var PathMap = {
                     var markerId = marker.substring(marker.lastIndexOf('-') + 1);
 
                     window.location.href = Routing.generate('_path_show', { id: markerId });
-                }).hover(function() {
-                    $(this).css('cursor', 'pointer');
-                });
+                }).hover(
+                    function() { $(this).addClass('pathNodeHighlight'); },
+                    function() { $(this).removeClass('pathNodeHighlight'); }
+                );
             });
         }
     },
