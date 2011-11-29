@@ -187,8 +187,33 @@ class UserController extends BaseController {
                 $em->persist($user);
                 $em->flush();
 
+                // If teacher, than
+                // TODO: Move to RosterService
+                $studentRole = $em->getRepository('ImpetusAppBundle:Role')->findByName('ROLE_STUDENT');
+
+                if ($this->hasTeacherAuthority()
+                    && !$this->hasAdminAuthority()
+                    && $user->getUserRoles()->contains($studentRole[0])) {
+                    $authorizedRoster = $this->getAuthorizedRosters();
+
+                    $student = new Student();
+                    $student->setGrade(12);
+                    $student->setRoster($authorizedRoster[0]);
+                    $student->setUser($user);
+                    $em->persist($student);
+
+                    $authorizedRoster[0]->addStudent($student);
+                    $districtName = $authorizedRoster[0]->getDistrict()->getName();
+
+                    $this->get('session')->setFlash('notice', 'User created and added to '.$districtName.'!');
+                }
+                else {
+                    $this->get('session')->setFlash('notice', 'User created!');
+                }
+
+                $em->flush();
+
                 $form = $this->createForm(new CreateUserType(), new User());
-                $this->get('session')->setFlash('notice', 'User created!');
             }
         }
 
