@@ -18,6 +18,14 @@
 {% form_theme quizForm _self %}
 
 {% block content %}
+    <div style="float: right; font-size: 16px;">
+        <span style="display:inline-block;">
+            <a href="{{ path('_quiz_help') }}" style="text-decoration: none;">
+                <img height="24" width="24" src="{{ asset('bundles/impetusapp/images/questionbook24.png') }}" style="vertical-align: middle;" />
+                Help
+            </a>
+        </span>
+    </div>
     <h1>New Quiz</h1>
     <form action="{{ path('_quiz_new') }}" id="quiz-form" method="post" novalidate="novalidate" {{ form_enctype(quizForm) }}>
         {{ form_errors(quizForm) }}
@@ -38,6 +46,6 @@
             </p>
         </div>
 
-        <input type="submit" value="Create Quiz" />
+        <input type="submit" value="Save Quiz" />
     </form>
 {% endblock %}

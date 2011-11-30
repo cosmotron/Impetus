@@ -7,6 +7,8 @@
     <link type="text/css" href="{{ asset('bundles/impetusapp/css/message.css') }}" rel="stylesheet" />
 {% endblock %}
 
+{% form_theme replyForm _self %}
+
 {% block content %}
     <h1>{{ parent.message.subject }}</h1>
 

@@ -15,6 +15,8 @@
     </script>
 {% endblock %}
 
+{% form_theme surveyForm _self %}
+
 {% block content %}
     <h1>New Survey</h1>
     <form action="{{ path('_survey_new') }}" id="survey-form" method="post" novalidate="novalidate" {{ form_enctype(surveyForm) }}>
@@ -22,6 +24,7 @@
         {{ form_row(surveyForm._token) }}
 
         {{ form_row(surveyForm.name) }}
+        {{ form_row(surveyForm.instructions) }}
 
         {% set question = surveyForm.questions.get('prototype') %}
         <div id="questions"
@@ -49,6 +52,6 @@
             </p>
         </div>
 
-        <input type="submit" value="Create " />
+        <input type="submit" value="Save Survey" />
     </form>
 {% endblock %}

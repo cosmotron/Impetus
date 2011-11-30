@@ -16,6 +16,8 @@
     </script>
 {% endblock %}
 
+{% form_theme form _self %}
+
 {% block content %}
     <h1>Edit District</h1>
     {% if message is defined %}
@@ -26,7 +28,7 @@
 
         {{ form_rest(form) }}
 
-        <input type="submit" value="Edit District" />
+        <input type="submit" value="Save District Details" />
     </form>
 
     <h1 style="margin-top: 10px;">Roster</h1>

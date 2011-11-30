@@ -16,6 +16,8 @@
     </script>
 {% endblock %}
 
+{% form_theme form _self %}
+
 {% block content %}
     <h1>New Message</h1>
     <form action="{{ path('_message_new') }}" id="message-form" method="post" novalidate="novalidate" {{ form_enctype(form) }}>
