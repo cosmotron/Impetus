@@ -4,9 +4,6 @@ var Quiz = {
     init: function() {
         this.counter = 0;
         this.bindProblemControls();
-
-        $('#add-problem').click();
-        $('.add-answer').click();
     },
 
     listInit: function() {
