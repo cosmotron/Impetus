@@ -28,7 +28,7 @@
 
         <script type="text/javascript">
           $(function() {
-              var currentUrl = 'http://localhost{{ app.request.getRequestUri }}';
+              var currentUrl = '{{ impetusHostname }}{{ app.request.getRequestUri }}';
               Impetus.init(currentUrl);
           });
         </script>
