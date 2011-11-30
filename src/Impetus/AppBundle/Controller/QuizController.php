@@ -43,6 +43,14 @@ class QuizController extends BaseController {
     }
 
     /**
+     * @Route("/help", name="_quiz_help")
+     * @Secure(roles="ROLE_TA")
+     */
+    public function helpAction() {
+        return $this->render('ImpetusAppBundle:Quiz:quiz-help.html.twig', array('page' => 'quiz'));
+    }
+
+    /**
      * @Route("/", name="_quiz_list")
      * @Secure(roles="ROLE_STUDENT")
      */

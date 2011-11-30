@@ -1,0 +1,58 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "New Quiz" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/quiz.css') }}" rel="stylesheet" />
+
+    <style type="text/css">
+      p {
+          margin-top: 10px;
+      }
+
+      #content li {
+          line-height: 20px;
+          margin-bottom: 5px;
+      }
+
+      .link {
+          font-weight: bold;
+          text-decoration: underline;
+      }
+
+      .label {
+          font-weight: bold;
+      }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>New Quiz Help</h1>
+    <h2>Create a new quiz</h2>
+    <p>To create a new quiz, follow these steps:</p>
+    <ol>
+        <li>Choose a name for the quiz. This name is what will appear in the quiz list.</li>
+        <li>Optionally, enter any instructions that participants should follow while taking the quiz.</li>
+        <li>Click <span class="link">Add Problem</span> to add a single new problem to the quiz.</li>
+        <ul>
+            <li>The problem is divided into halves; the left half is the question and the right half is the answer.</li>
+        </ul>
+        <li>The <span class="label">Question</span> text area is where you can enter the question text.</li>
+        <ul>
+            <li>Question text may be entered as plain text (e.g. <code>2+2=?</code>) or in LaTeX equation shorthand (e.g. <code>\[ 2+2=? \]</code>). If LaTeX is used, then the problem will be rendered using <a href="http://www.mathjax.org/">MathJax</a>.</li>
+        </ul>
+        <li>Answers to a question can be either short answer or multiple choice and are added to a problem by clicking <span class="link">Add Answer</span>:</li>
+        <ul>
+            <li>Short Answer: Add a single answer to a problem. In this case, the <span class="label">Text Label</span> is what will appear before the text input for the answer (e.g. if "x=" was the <span class="label">Text Label</span>, it would appear as: <code>x=<input type="text" style="width: 25px; margin: 0;" /></code>). The <span class="label">Answer</span> is the value that the student's input will be compared against to determine if it is correct.</li>
+            <li>Multple Choice: Add more than one answer to a problem. In this case, the <span class="label">Text Label</span> is what will appear next to the answer radio button (e.g. if "5" was the <span class="label">Text Label</span>, it would appear as: <code>5</code><input type="radio" selected="selected"/>).</li>
+        </ul>
+        <li>Regardless of which type of problem is being added, choose the correct answer by checking the <span class="label">Correct?</span> box. Without doing this, the problem will be impossible to get correct.</li>
+        <li>Repeat steps 3-6 for each question that should be on the quiz.</li>
+    </ol>
+
+    <h2>Remove a problem</h2>
+    <p>To remove a problem from a quiz as it is being created, simply click <span class="link">Remove Problem</span>.</p>
+
+    <h2>Remove an answer</h2>
+    <p>To remove an answer from a problem while creating a quiz, simply click <span class="link">Remove Answer</span>.</p>
+{% endblock %}
