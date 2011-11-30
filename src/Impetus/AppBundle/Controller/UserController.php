@@ -119,9 +119,6 @@ class UserController extends BaseController {
 
                 $this->get('session')->setFlash('notice', 'Your changes were saved!');
             }
-            else {
-                echo 'ERROR';
-            }
         }
 
         return $this->render('ImpetusAppBundle:Pages:user-edit.html.twig',
