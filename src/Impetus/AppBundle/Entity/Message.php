@@ -47,6 +47,8 @@ class Message {
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\MinLength(1)
+     * @Assert\NotBlank()
      */
     protected $subject;
 
