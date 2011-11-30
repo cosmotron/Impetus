@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class UserController extends BaseController {
     /**
      * @Route("/{id}/edit", name="_user_edit", options={"expose"=true}, requirements={"id"="\d+"})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_TEACHER")
      */
     public function editAction($id, Request $request) {
         $doctrine = $this->getDoctrine();
@@ -166,7 +166,7 @@ class UserController extends BaseController {
 
     /**
      * @Route("/new", name="_user_new")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_TEACHER")
      */
     public function newAction(Request $request) {
         $user = new User();

@@ -25,10 +25,12 @@
             <div>
                 <label class=" required" for="createUser_userRoles">User Role</label>
                 <select id="createUser_userRoles" required="required" name="createUser[userRoles][]">
+                {% if is_granted('ROLE_ADMIN') %}
                     <option value="1">Admin</option>
                     <option value="2">Teacher</option>
                     <option value="3">TA</option>
                     <option value="4">Mentor</option>
+                {% endif %}
                     <option value="5">Student</option>
                     <option value="6">Parent</option>
                 </select>
