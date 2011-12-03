@@ -84,7 +84,7 @@ var District = {
                             alert('Error adding user to roster');
                         }
                         else {
-                            District.createUserListRow(ui.item, row_html, list_id);
+                            District.createUserListRow(ui.item, row_html.clone(), list_id);
                             $('input', add_id).val('');
                             return false;
                         }
