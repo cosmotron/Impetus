@@ -239,19 +239,19 @@ class QuizController extends BaseController {
     public function showAttemptAction($quizId, $attemptId) {
         $doctrine = $this->getDoctrine();
 
-        $quiz = $doctrine->getRepository('ImpetusAppBundle:Quiz')->find($quizId);
-        if (!$quiz) {
-            throw $this->createNotFoundException('Quiz not found with it ' . $quizId);
+        $quizAttempt = $doctrine->getRepository('ImpetusAppBundle:Quiz')->findByIdAndAttemptId($quizId, $attemptId);
+        if (!$quizAttempt) {
+            throw $this->createNotFoundException('Quiz Attempt '.$attemptId.' not found for quiz with id ' . $quizId);
         }
 
-        $quizAttempt = $doctrine->getRepository('ImpetusAppBundle:QuizAttempt')->find($attemptId);
-        if (!$quizAttempt) {
-            throw $this->createNotFoundException('Quiz Attempt not found with it ' . $attemptId);
+        if (!$this->hasAssistantAuthority()
+            && $quizAttempt->getUser()->getId() != $this->getCurrentUser()->getId()) {
+            throw new HttpException(403, 'You do not have access to this data.');
         }
 
         return $this->render('ImpetusAppBundle:Quiz:quiz-attempt.html.twig',
                              array('page' => 'quiz',
-                                   'quiz' => $quiz,
+                                   'quiz' => $quizAttempt->getQuiz(),
                                    'quizAttempt' => $quizAttempt,
                                    'user_answer' => $quizAttempt->getQuizResults()->toArray()));
     }

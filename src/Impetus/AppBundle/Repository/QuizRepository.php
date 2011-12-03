@@ -31,6 +31,27 @@ class QuizRepository extends EntityRepository {
         return $result;
     }
 
+    public function findByIdAndAttemptId($id, $attemptId) {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery("SELECT qa
+                                   FROM ImpetusAppBundle:QuizAttempt qa
+                                   INNER JOIN qa.quiz q
+                                   WHERE qa.id = :attemptId
+                                       AND q.id = :id
+                                   ")->setParameters(array('id' => $id,
+                                                           'attemptId' => $attemptId));
+
+        try {
+            $result = $query->getSingleResult();
+        }
+        catch (\Doctrine\ORM\NoResultException $e) {
+            $result = null;
+        }
+
+        return $result;
+    }
+
     public function findByYear(Year $year) {
         $em = $this->getEntityManager();
 
