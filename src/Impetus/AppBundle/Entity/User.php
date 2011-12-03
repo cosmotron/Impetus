@@ -87,7 +87,7 @@ class User implements UserInterface {
     protected $gender;
 
     /**
-     * @ORM\OneToOne(targetEntity="Year")
+     * @ORM\ManyToOne(targetEntity="Year")
      */
     protected $graduated;
 
