@@ -1,7 +1,11 @@
 {% macro info_row(name, value) %}
     <tr>
         <th class="label">{{ name }}</th>
-        <td class="data">{{ value|default('<i>Not entered</i>')|raw }}</td>
+        {% if value != null %}
+            <td class="data">{{ value }}</td>
+        {% else %}
+            <td class="data"><i>Not entered</i></td>
+        {% endif %}
     </tr>
 {% endmacro %}
 
