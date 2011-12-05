@@ -58,7 +58,7 @@ class SurveyController extends BaseController {
         }
         else {
             $user = $this->getCurrentUser();
-            $surveys = $doctrine->getRepository('ImpetusAppBundle:Survey')->getSurveyListByUserAndYear($year);
+            $surveys = $doctrine->getRepository('ImpetusAppBundle:Survey')->getSurveyListByUserAndYear($user, $year);
             return $this->render('ImpetusAppBundle:Survey:survey-list-user.html.twig',
                                  array('page' => 'survey',
                                        'surveys' => $surveys));
