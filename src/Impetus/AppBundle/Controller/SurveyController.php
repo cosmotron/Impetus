@@ -150,7 +150,7 @@ class SurveyController extends BaseController {
 
         return $this->render('ImpetusAppBundle:Survey:survey-results.html.twig',
                              array('page' => 'survey',
-                                   'surveyTitle' => $survey->getName(),
+                                   'survey' => $survey,
                                    'questionResults' => $questionResults));
     }
 

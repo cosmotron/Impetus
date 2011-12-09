@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Survey: {{ surveyTitle }}</h1>
+    <h1>Survey: {{ survey.name }}</h1>
 
 {% for question in questionResults %}
     <h2 style="margin-bottom: 5px;">Question {{ loop.index }}: {{ question.text }}</h2>
@@ -37,5 +37,23 @@
         </div>
     {% endif %}
 {% endfor %}
+
+    <h1 style="margin-top:20px;">Participants ({{ survey.surveySubmissions|length }}): </h1>
+    <table id="surveys-table">
+        <tr>
+            <th>Name</th>
+            <th>Completed</th>
+        </tr>
+    {% for submission in survey.surveySubmissions %}
+        <tr>
+            <td><a href="{{ path('_user_show', { 'id': submission.user.id }) }}">{{ submission.user.lastName }}, {{ submission.user.firstName }}</a></td>
+            <td>{{ submission.submittedAt | date('M j, Y @ h:i A') }}</td>
+        </tr>
+    {% else %}
+       <tr>
+           <td colspan="2">No participants</td>
+       </tr>
+    {% endfor %}
+    </table>
 
 {% endblock %}
