@@ -40,6 +40,12 @@ var Survey = {
 
             Survey.addNewAnswer($(this).parents('.answers'));
         });
+
+        $('.remove-answer').live('click', function(event) {
+            event.preventDefault();
+
+            $(this).parents('.answer').remove();
+        });
     },
 
     bindSurveyDelete: function() {

@@ -59,6 +59,9 @@ class User implements UserInterface {
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Assert\Choice(choices = {"Advanced Regents",
+     *                           "Regents",
+     *                           ""})
      */
     protected $diploma;
 
@@ -71,6 +74,15 @@ class User implements UserInterface {
 
    /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Assert\Choice(choices = {"American Indian or Alaskan Native",
+     *                           "Asian",
+     *                           "Bi-racial",
+     *                           "Black or African American",
+     *                           "Hispanic",
+     *                           "Pacific Islander",
+     *                           "White",
+     *                           "Other",
+     *                           ""})
      */
     protected $ethnicity;
 
@@ -83,6 +95,7 @@ class User implements UserInterface {
 
     /**
      * @ORM\Column(type="string", length=6, nullable=true)
+     * @Assert\Choice(choices = {"Male", "Female", ""})
      */
     protected $gender;
 
@@ -100,6 +113,19 @@ class User implements UserInterface {
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Assert\Choice(choices = {"Architechture",
+     *                           "Biological and Biomedical Sciences",
+     *                           "Business, Management, and Marketing",
+     *                           "Communications",
+     *                           "Computer and Information Science",
+     *                           "Education",
+     *                           "Engineering",
+     *                           "Humanities",
+     *                           "Mathematics and Statistics",
+     *                           "Physical Science",
+     *                           "Psychology",
+     *                           "Other",
+     *                           ""})
      */
     protected $major;
 

@@ -1,0 +1,12 @@
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <p>From: {{ message.sender.firstName }}</p>
+        <p>Sent: {{ message.sentAt | date('D, M j, Y \\a\\t g:iA') }}</p>
+        <p>{{ message.content }}</p>
+
+        <p>Reply to message here: <a href="{{ impetusHostname }}{{ path('_message_show', { 'id': message.id }) }}">{{ impetusHostname }}{{ path('_message_show', { 'id': message.id }) }}</a></p>
+    </body>
+</html>

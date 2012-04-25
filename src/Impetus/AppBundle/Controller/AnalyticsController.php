@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class AnalyticsController extends BaseController {
     /**
      * @Route("/", name="_analytics")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_TEACHER")
      */
     public function indexAction() {
         return $this->render('ImpetusAppBundle:Analytics:analytics.html.twig',
@@ -28,7 +28,7 @@ class AnalyticsController extends BaseController {
 
     /**
      * @Route("/participant-roster.{_format}", name="_analytics_participant_roster", defaults={"_format"="html"}, options={"expose"=true}, requirements={"_format"="html|csv"})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_TEACHER")
      */
     public function participantRosterAction($_format) {
         $year = $this->get('year_service')->getCurrentAcademicYear();
@@ -46,7 +46,7 @@ class AnalyticsController extends BaseController {
 
     /**
      * @Route("/students-served.{_format}", name="_analytics_students_served", defaults={"_format"="html"}, options={"expose"=true}, requirements={"_format"="html|csv"})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_TEACHER")
      */
     public function studentsServedAction($_format) {
         $year = $this->get('year_service')->getCurrentAcademicYear();
@@ -74,7 +74,7 @@ class AnalyticsController extends BaseController {
 
     /**
      * @Route("/graduate-placement.{_format}", name="_analytics_graduate_placement", defaults={"_format"="html"}, options={"expose"=true}, requirements={"_format"="html|csv"})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_TEACHER")
      */
     public function graduatePlacementAction($_format) {
         $year = $this->get('year_service')->getCurrentAcademicYear();
@@ -92,7 +92,7 @@ class AnalyticsController extends BaseController {
 
     /**
      * @Route("/activities-summary.{_format}", name="_analytics_activities_summary", defaults={"_format"="html"}, options={"expose"=true}, requirements={"_format"="html|csv"})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_TEACHER")
      */
     public function activitiesSummaryAction($_format) {
         $year = $this->get('year_service')->getCurrentAcademicYear();

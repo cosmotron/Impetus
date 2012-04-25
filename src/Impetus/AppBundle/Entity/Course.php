@@ -20,6 +20,8 @@ class Course {
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\MinLength(1)
+     * @Assert\NotBlank()
      */
     protected $name;
 

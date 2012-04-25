@@ -1,0 +1,34 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Config: Activities" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/config.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Activities</h1>
+
+    <p style="margin: 14px 0;"><a href="{{ path('_config_activities_new') }}" style="font-size: 16px;">New Activity</a></p>
+
+    <table id="activities-table">
+        <tr>
+            <th>Activity</th>
+            <th class="actions">Actions</th>
+        </tr>
+    {% for activity in activities %}
+        <tr>
+            <td>{{ activity.name }}</td>
+            <td>
+                <a href="#">Edit</a>
+                &mdash;
+                <a href="#" activity-id="{{ activity.id }}" class="delete-activity">Delete</a>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="3"><i>No activities</i></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

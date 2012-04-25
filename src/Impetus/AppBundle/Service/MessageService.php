@@ -58,7 +58,7 @@ class MessageService {
     public function createEmail($emailAddresses, $subject, $body) {
         $swiftMessage = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom('impetustem@gmail.com')
+            ->setFrom('noreply@impetus.cslabs.clarkson.edu')
             ->setTo($emailAddresses)
             ->setBody($body);
 

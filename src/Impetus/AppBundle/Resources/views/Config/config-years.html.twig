@@ -1,0 +1,36 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Config: Years" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/config.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Years</h1>
+
+    <p style="margin: 14px 0;"><a href="{{ path('_config_years_new') }}" style="font-size: 16px;">New Year</a></p>
+
+    <table id="years-table">
+        <tr>
+            <th>Year</th>
+            <th style="width: 100px;">Archive</th>
+            <th class="actions">Actions</th>
+        </tr>
+    {% for year in years %}
+        <tr>
+            <td>{{ year.year }}</td>
+            <td align="center"><input type="checkbox" name="archived" year-id="{{ year.id }}" /> Archived</td>
+            <td>
+                <a href="#">Edit</a>
+                &mdash;
+                <a href="#" year-id="{{ year.id }}" class="delete-year">Delete</a>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="3"><i>No years</i></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

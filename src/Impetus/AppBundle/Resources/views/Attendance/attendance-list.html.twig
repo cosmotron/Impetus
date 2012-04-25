@@ -1,0 +1,38 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Attendance: Event List" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/attendance.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1>Attendance: Event List</h1>
+
+    {% if is_granted('ROLE_ADMIN') %}
+    <p style="margin: 14px 0;"><a href="{{ path('_attendance_event_new') }}" style="font-size: 16px;">New Event</a></p>
+    {% endif %}
+
+    <table id="attendance-table">
+        <tr>
+            <th>Event</th>
+            <th>Date</th>
+            <th class="actions">Actions</th>
+        </tr>
+    {% for event in events %}
+        <tr>
+            <td><a href="{{ path('_attendance_show', { 'id': event.id }) }}">{{ event.name }}</a></td>
+            <td>{{ event.eventDate | date('M j, Y') }}</td>
+            <td>
+                <a href="#">Edit</a>
+                &mdash;
+                <a href="#" event-id="{{ event.id }}" class="delete-event">Delete</a>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="3"><i>No events</i></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

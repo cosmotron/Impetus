@@ -1,0 +1,14 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Config" %}
+
+{% block content %}
+    <h1>Configuration</h1>
+
+    <ul>
+        <li><a href="{{ path('_config_activities') }}">Activities</a></li>
+        <li><a href="{{ path('_config_courses') }}">Courses</a></li>
+        <li><a href="{{ path('_config_exams') }}">Standardized Exams</a></li>
+        <li><a href="{{ path('_config_years') }}">Years</a></li>
+    </ul>
+{% endblock %}

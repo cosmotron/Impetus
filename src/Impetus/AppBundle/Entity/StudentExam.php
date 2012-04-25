@@ -26,8 +26,9 @@ class StudentExam {
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\NotBlank()
-     * @Assert\Type("integer")
+     * @Assert\Type(type="integer", message="The score must be an integer")
+     * @Assert\Min(limit=0, message="The score must non-negative")
+     * @Assert\NotBlank(message="The score must not be blank")
      */
     protected $score;
 

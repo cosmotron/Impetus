@@ -37,7 +37,14 @@
         <div class="user-panel">
             <h2>Personal</h2>
             <table>
-                {{ table.info_row('Birthday', user.birthday|date("Y-m-d")) }}
+                {% if user.birthday != null %}
+                    {{ table.info_row('Birthday', user.birthday|date("Y-m-d")~' (Age: '~userAge~')') }}
+                {% else %}
+                    <tr>
+                        <th class="label">Birthday</th>
+                        <td class="data"><i>Not entered</i></td>
+                    </tr>
+                {% endif %}
                 {{ table.divider }}
 
                 {{ table.info_row('Ethnicity', user.ethnicity) }}
@@ -108,6 +115,9 @@
                 {{ table.divider }}
 
                 {{ table.info_row('Graduated', user.graduated) }}
+                {{ table.divider }}
+
+                {{ table.info_row('Diploma', user.diploma) }}
                 {{ table.divider }}
 
                 {{ table.info_row('College', user.college) }}

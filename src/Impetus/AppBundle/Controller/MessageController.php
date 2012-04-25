@@ -69,11 +69,14 @@ class MessageController extends BaseController {
                 $message->addRecipient($sender);
                 $em->flush();
 
-                $email = $messageService->createEmail($emailAddresses, $message->getSubject(), $message->getContent());
+                $email = $messageService->createEmail($emailAddresses,
+                                                      $message->getSubject(),
+                                                      $this->renderView('ImpetusAppBundle:Message:email.html.twig', array('message' => $message)));
                 $messageService->send($email);
 
                 $this->get('session')->setFlash('notice', 'Your message was sent!');
 
+                //return new Response($this->renderView('ImpetusAppBundle:Message:email.html.twig', array('message' => $message)));
                 return $this->redirect($this->generateUrl('_message_list'));
             }
         }

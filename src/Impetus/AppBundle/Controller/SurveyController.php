@@ -48,6 +48,7 @@ class SurveyController extends BaseController {
      */
     public function listAction() {
         $doctrine = $this->getDoctrine();
+        $user = $this->getCurrentUser();
         $year = $this->get('year_service')->getCurrentAcademicYear();
 
         if ($this->hasAssistantAuthority()) {
@@ -57,7 +58,6 @@ class SurveyController extends BaseController {
                                        'surveys' => $surveys));
         }
         else {
-            $user = $this->getCurrentUser();
             $surveys = $doctrine->getRepository('ImpetusAppBundle:Survey')->getSurveyListByUserAndYear($user, $year);
             return $this->render('ImpetusAppBundle:Survey:survey-list-user.html.twig',
                                  array('page' => 'survey',

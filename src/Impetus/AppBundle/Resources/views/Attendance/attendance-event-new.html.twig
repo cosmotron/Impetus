@@ -1,0 +1,25 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Attendance: New Event" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/attendance.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% form_theme form _self %}
+
+{% block content %}
+    <h1>Attendance: New Event</h1>
+
+    <form action="{{ path('_attendance_event_new') }}" id="event-form" method="post" novalidate="novalidate" {{ form_enctype(form) }}>
+        {{ form_row(form.name) }}
+
+        {{ form_label(form.eventDate) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form.eventDate) }}
+
+        {{ form_row(form._token) }}
+
+        <input type="submit" value="Create" />
+    </form>
+{% endblock %}

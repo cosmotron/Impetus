@@ -286,10 +286,13 @@ class UserController extends BaseController {
             $student = null;
         }
 
+        $now = new \DateTime();
+        $userAge = ($user->getBirthday()) ? $now->diff($user->getBirthday())->y : null;
 
         return $this->render('ImpetusAppBundle:Pages:user-show.html.twig',
                              array('page' => 'user',
                                    'user' => $user,
+                                   'userAge' => $userAge,
                                    'student' => $student,
                                    )
                              );

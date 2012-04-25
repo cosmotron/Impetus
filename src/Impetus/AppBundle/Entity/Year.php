@@ -3,6 +3,7 @@
 namespace Impetus\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -18,23 +19,70 @@ class Year {
     protected $id;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $archived;
+
+    /**
      * @ORM\Column(type="integer")
+     * @Assert\MinLength(1)
+     * @Assert\NotBlank()
      */
     protected $year;
 
-    public function getId() {
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getYear() {
-        return $this->year;
+    /**
+     * Set archived
+     *
+     * @param boolean $archived
+     */
+    public function setArchived($archived)
+    {
+        $this->archived = $archived;
     }
 
-    public function setYear($year) {
+    /**
+     * Get archived
+     *
+     * @return boolean
+     */
+    public function getArchived()
+    {
+        return $this->archived;
+    }
+
+    /**
+     * Set year
+     *
+     * @param integer $year
+     */
+    public function setYear($year)
+    {
         $this->year = $year;
     }
 
-    public function __toString() {
+    /**
+     * Get year
+     *
+     * @return integer
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    public function __toString()
+    {
         return (string) $this->year;
     }
 }

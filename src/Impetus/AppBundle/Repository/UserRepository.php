@@ -12,7 +12,7 @@ class UserRepository extends EntityRepository {
 
         $query = $em->createQuery("SELECT u
                                    FROM ImpetusAppBundle:User u
-                                   ORDER BY u.lastName");
+                                   ORDER BY u.lastName, u.firstName");
 
         return $query->getResult();
     }
@@ -69,7 +69,9 @@ class UserRepository extends EntityRepository {
     public function findByApproximateUnenrolledStudentName($name, $year) {
         $em = $this->getEntityManager();
 
-        $query = $em->createQuery("SELECT u.id, CONCAT(u.firstName, CONCAT(' ', u.lastName)) as value
+        $query = $em->createQuery("SELECT u.id,
+                                       CONCAT(u.firstName, CONCAT(' ', CONCAT(u.lastName, CONCAT(' - ', u.email)))) as label,
+                                       CONCAT(u.firstName, CONCAT(' ', u.lastName)) as value
                                    FROM ImpetusAppBundle:User u
                                    INNER JOIN u.userRoles role
                                    WHERE role.name = 'ROLE_STUDENT'

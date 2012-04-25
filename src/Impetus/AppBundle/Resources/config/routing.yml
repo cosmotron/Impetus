@@ -3,11 +3,15 @@ _home:
     defaults: { _controller: ImpetusAppBundle:Home:get }
 
 _attendance:
-    pattern: /attendance
-    defaults: { _controller: ImpetusAppBundle:Attendance:get }
+    resource: "@ImpetusAppBundle/Controller/AttendanceController.php"
+    type:     annotation
 
 _analytics:
     resource: "@ImpetusAppBundle/Controller/AnalyticsController.php"
+    type:     annotation
+
+_config:
+    resource: "@ImpetusAppBundle/Controller/ConfigController.php"
     type:     annotation
 
 _district:

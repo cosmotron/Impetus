@@ -1,0 +1,23 @@
+{% extends "ImpetusAppBundle::layout.html.twig" %}
+
+{% block title "Config: Courses" %}
+
+{% block extrascripts %}
+    <link type="text/css" href="{{ asset('bundles/impetusapp/css/config.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% form_theme form _self %}
+
+{% block content %}
+    <h1>New Course</h1>
+
+    <form action="{{ path('_config_courses_new') }}" id="course-form" method="post" novalidate="novalidate" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+
+        {{ form_row(form.name) }}
+
+        {{ form_row(form._token) }}
+
+        <input type="submit" value="Create" />
+    </form>
+{% endblock %}
